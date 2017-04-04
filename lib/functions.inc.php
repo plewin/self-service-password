@@ -134,8 +134,12 @@ function user_password_analyzer( $user_password_value ) {
     $hash_and_salt = base64_decode($base64_hash_and_salt);
 
     $unpacked = unpack("H{$schemes[$scheme]['size']}hash/a*salt", $hash_and_salt);
+    //$salt = substr($hash_and_salt, $schemes[$scheme]['size']);
+
 
     $password_hash = $unpacked['hash'];
+    //unset($unpacked['hash']);
+    //$salt = join('',$unpacked);
     $salt          = $schemes[$scheme]['salted'] ? $unpacked['salt'] : false;
 
     return array (
@@ -174,6 +178,12 @@ function ldap_password_verify( $cleartext, $user_password_value ) {
     if ( false === $hash_details ) return false;
 
     $password = make_generic_password($cleartext, $hash_details['scheme'], $hash_details['salt']);
+
+    echo '----';
+    var_dump($cleartext);
+    var_dump($hash_details);
+    var_dump($password);
+    echo '----';
 
     return $user_password_value == $password;
 }
