@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "d6e8053974eaaa81318e519c8330254d",
-    "content-hash": "cc8292c8383b2639e18fa5c071ce5272",
+    "hash": "d0953ba41cdc21e755cc7f50d718e187",
+    "content-hash": "b5ffbc7b21deeef6f83810b45a3f7b1f",
     "packages": [
         {
             "name": "defuse/php-encryption",
@@ -4250,16 +4250,16 @@
         },
         {
             "name": "squizlabs/php_codesniffer",
-            "version": "3.2.0",
+            "version": "3.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/squizlabs/PHP_CodeSniffer.git",
-                "reference": "ba816f2e1bacc16278792c78b67c730dfff064a6"
+                "reference": "4064632daf602552d40dcff30a1658ab76fc1621"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/ba816f2e1bacc16278792c78b67c730dfff064a6",
-                "reference": "ba816f2e1bacc16278792c78b67c730dfff064a6",
+                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/4064632daf602552d40dcff30a1658ab76fc1621",
+                "reference": "4064632daf602552d40dcff30a1658ab76fc1621",
                 "shasum": ""
             },
             "require": {
@@ -4297,7 +4297,7 @@
                 "phpcs",
                 "standards"
             ],
-            "time": "2017-12-12 21:36:10"
+            "time": "2017-12-18 00:24:01"
         },
         {
             "name": "symfony/browser-kit",
