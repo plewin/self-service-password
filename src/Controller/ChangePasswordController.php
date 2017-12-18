@@ -59,6 +59,7 @@ class ChangePasswordController extends Controller
         // Render empty form
         return $this->render('self-service/change_password_form.html.twig', [
             'result' => 'emptychangeform',
+            'problems' => [],
             'login' => $request->get('login'),
         ]);
     }
@@ -103,7 +104,7 @@ class ChangePasswordController extends Controller
         }
 
         if (count($missings) > 0) {
-            return $this->renderFormWithError($missings[0], $request);
+            return $this->renderFormWithError('', $missings, $request);
         }
 
         $errors = [];
@@ -129,7 +130,7 @@ class ChangePasswordController extends Controller
         $errors += $passwordChecker->evaluate($newpassword, $oldpassword, $login);
 
         if (count($errors) > 0) {
-            return $this->renderFormWithError($errors[0], $request);
+            return $this->renderFormWithError('', $errors, $request);
         }
 
         // Check reCAPTCHA
@@ -139,8 +140,12 @@ class ChangePasswordController extends Controller
 
             $result = $recaptchaService->verify($request->request->get('g-recaptcha-response'), $login);
             if ('' !== $result) {
-                return $this->renderFormWithError($result, $request);
+                $errors[] = $result;
             }
+        }
+
+        if (count($errors) > 0) {
+            return $this->renderFormWithError('', $errors, $request);
         }
 
         /** @var LdapClient $ldapClient */
@@ -155,11 +160,14 @@ class ChangePasswordController extends Controller
             $ldapClient->checkOldPassword($oldpassword, $context);
             $ldapClient->changePassword($context['user_dn'], $newpassword, $oldpassword, $context);
         } catch (LdapErrorException $e) {
-            return $this->renderFormWithError('ldaperror', $request);
+            // action probably not needed, problem with configuration or ldap is down
+            return $this->renderFormWithError('ldaperror', [], $request);
         } catch (LdapInvalidUserCredentialsException $e) {
-            return $this->renderFormWithError('badcredentials', $request);
+            // action needed, password is wrong
+            return $this->renderFormWithError('', ['badcredentials'],  $request);
         } catch (LdapUpdateFailedException $e) {
-            return $this->renderFormWithError('passworderror', $request);
+            // action needed ? like password does not respect remote password policy
+            return $this->renderFormWithError('', ['passworderror'], $request);
         }
 
         /** @var EventDispatcher $eventDispatcher */
@@ -179,14 +187,16 @@ class ChangePasswordController extends Controller
 
     /**
      * @param string  $result
+     * @param array   $problems
      * @param Request $request
      *
      * @return Response
      */
-    private function renderFormWithError($result, Request $request)
+    private function renderFormWithError($result, $problems, Request $request)
     {
         return $this->render('self-service/change_password_form.html.twig', [
             'result' => $result,
+            'problems' => $problems,
             'login' => $request->get('login'),
         ]);
     }

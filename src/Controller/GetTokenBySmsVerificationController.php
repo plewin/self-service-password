@@ -76,6 +76,7 @@ class GetTokenBySmsVerificationController extends Controller
         // render search user form empty
         return $this->render('self-service/sms_verification_user_search_form.html.twig', [
             'result' => 'emptysendsmsform',
+            'problems' => [],
             'login' => $request->get('login'),
         ]);
     }
@@ -254,7 +255,7 @@ class GetTokenBySmsVerificationController extends Controller
 
         $result = $usernameChecker->evaluate($login);
         if ('' !== $result) {
-            return $this->renderSearchUserFormWithError($result, $request);
+            return $this->renderSearchUserFormWithError('', [$result], $request);
         }
 
         // Check reCAPTCHA
@@ -264,7 +265,7 @@ class GetTokenBySmsVerificationController extends Controller
 
             $result = $recaptchaService->verify($request->request->get('g-recaptcha-response'), $login);
             if ('' !== $result) {
-                return $this->renderSearchUserFormWithError($result, $request);
+                return $this->renderSearchUserFormWithError('', [$result], $request);
             }
         }
 
@@ -285,11 +286,15 @@ class GetTokenBySmsVerificationController extends Controller
                 throw new LdapEntryFoundInvalidException();
             }
         } catch (LdapErrorException $e) {
-            return $this->renderSearchUserFormWithError('ldaperror', $request);
+            // action probably not needed, problem with configuration or ldap is down
+            return $this->renderSearchUserFormWithError('ldaperror', [], $request);
         } catch (LdapInvalidUserCredentialsException $e) {
-            return $this->renderSearchUserFormWithError('badcredentials', $request);
+            // user action needed, invalid password or login
+            return $this->renderSearchUserFormWithError('', ['badcredentials'], $request);
         } catch (LdapEntryFoundInvalidException $e) {
-            return $this->renderSearchUserFormWithError('smsnonumber', $request);
+            // user has no sms
+            //TODO hide form ?
+            return $this->renderSearchUserFormWithError('smsnonumber', [], $request);
         }
 
         $sms = $context['user_sms'];
@@ -311,14 +316,16 @@ class GetTokenBySmsVerificationController extends Controller
 
     /**
      * @param string  $result
+     * @param array   $problems
      * @param Request $request
      *
      * @return Response
      */
-    private function renderSearchUserFormWithError($result, Request $request)
+    private function renderSearchUserFormWithError($result, $problems, Request $request)
     {
         return $this->render('self-service/sms_verification_user_search_form.html.twig', [
             'result' => $result,
+            'problems' => $problems,
             'login' => $request->get('login'),
         ]);
     }

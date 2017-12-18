@@ -58,6 +58,7 @@ class GetTokenByEmailVerificationController extends Controller
         // render form empty
         return $this->render('self-service/email_verification_form.html.twig', [
             'result' => 'emptysendtokenform',
+            'problems' => [],
             'login' => $request->get('login'),
         ]);
     }
@@ -93,7 +94,7 @@ class GetTokenByEmailVerificationController extends Controller
         }
 
         if (count($missings)) {
-            return $this->renderFormWithError($missings[0], $request);
+            return $this->renderFormWithError('', $missings, $request);
         }
 
         $errors = [];
@@ -108,7 +109,7 @@ class GetTokenByEmailVerificationController extends Controller
         }
 
         if (count($errors)) {
-            return $this->renderFormWithError($errors[0], $request);
+            return $this->renderFormWithError('', $errors, $request);
         }
 
         // Check reCAPTCHA
@@ -118,8 +119,12 @@ class GetTokenByEmailVerificationController extends Controller
 
             $result = $recaptchaService->verify($request->request->get('g-recaptcha-response'), $login);
             if ('' !== $result) {
-                return $this->renderFormWithError($result, $request);
+                $errors[] = $result;
             }
+        }
+
+        if (count($errors)) {
+            return $this->renderFormWithError('', $errors, $request);
         }
 
         /** @var LdapClient $ldapClient */
@@ -129,11 +134,11 @@ class GetTokenByEmailVerificationController extends Controller
             $ldapClient->connect();
             $ldapClient->checkMail($login, $mail);
         } catch (LdapErrorException $e) {
-            return $this->renderFormWithError('ldaperror', $request);
+            return $this->renderFormWithError('ldaperror', [], $request);
         } catch (LdapInvalidUserCredentialsException $e) {
-            return $this->renderFormWithError('badcredentials', $request);
+            return $this->renderFormWithError('', ['badcredentials'], $request);
         } catch (LdapEntryFoundInvalidException $e) {
-            return $this->renderFormWithError('mailnomatch', $request);
+            return $this->renderFormWithError('', ['mailnomatch'], $request);
         }
 
 
@@ -161,7 +166,7 @@ class GetTokenByEmailVerificationController extends Controller
             $data
         );
         if (!$success) {
-            return $this->renderFormWithError('tokennotsent', $request);
+            return $this->renderFormWithError('tokennotsent', [], $request);
         }
 
         // render page success
@@ -170,14 +175,16 @@ class GetTokenByEmailVerificationController extends Controller
 
     /**
      * @param string  $result
+     * @param array   $problems
      * @param Request $request
      *
      * @return Response
      */
-    private function renderFormWithError($result, Request $request)
+    private function renderFormWithError($result, $problems, Request $request)
     {
         return $this->render('self-service/email_verification_form.html.twig', [
             'result' => $result,
+            'problems' => $problems,
             'login' => $request->get('login'),
         ]);
     }

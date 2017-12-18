@@ -94,7 +94,7 @@ class ResetPasswordByTokenController extends Controller
         $problems += $passwordChecker->evaluate($newpassword, '', $login);
 
         if (count($problems)) {
-            return $this->renderErrorPage($problems[0], $request, $login);
+            return $this->renderErrorPage('', $problems, $request, $login);
         }
 
         // Okay the form is submitted but is the CAPTCHA valid ?
@@ -103,8 +103,12 @@ class ResetPasswordByTokenController extends Controller
             $recaptchaService = $this->get('recaptcha_service');
             $result = $recaptchaService->verify($request->request->get('g-recaptcha-response'), $login);
             if ('' !== $result) {
-                return $this->renderErrorPage($result, $request, $login);
+                $problems[] = $result;
             }
+        }
+
+        if (count($problems)) {
+            return $this->renderErrorPage('', $problems, $request, $login);
         }
 
         // All good, we try
@@ -126,11 +130,16 @@ class ResetPasswordByTokenController extends Controller
             // Change password
             $ldapClient->changePassword($context['user_dn'], $newpassword, '', $context);
         } catch (LdapErrorException $e) {
-            return $this->renderErrorPage('ldaperror', $request, $login);
+            // action probably not needed, problem with configuration or ldap is down
+            return $this->renderErrorPage('ldaperror', [], $request, $login);
         } catch (LdapInvalidUserCredentialsException $e) {
-            return $this->renderErrorPage('badcredentials', $request, $login);
+            // wrong login... should not be possible
+            // unless the token got corrupted on this server or the user was deleted/moved on the ldap
+            // between the token creation and usage
+            return $this->renderErrorPage('badcredentials', [], $request, $login);
         } catch (LdapUpdateFailedException $e) {
-            return $this->renderErrorPage('passwordnotchanged', $request, $login);
+            // passwors was refused by server
+            return $this->renderErrorPage('', ['passwordnotchanged'], $request, $login);
         }
 
         // Delete token if all is ok
@@ -153,15 +162,17 @@ class ResetPasswordByTokenController extends Controller
 
     /**
      * @param string  $result
+     * @param array   $problems
      * @param Request $request
-     * @param string $login
+     * @param string  $login
      *
      * @return Response
      */
-    private function renderErrorPage($result, Request $request, $login)
+    private function renderErrorPage($result, $problems, Request $request, $login)
     {
         return $this->render('self-service/reset_password_by_token_form.html.twig', [
             'result' => $result,
+            'problems' => $problems,
             'source' => $request->get('source'),
             'token' => $request->get('token'),
             'login' => $login,

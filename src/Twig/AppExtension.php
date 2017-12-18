@@ -55,6 +55,7 @@ class AppExtension extends \Twig_Extension implements Twig_Extension_GlobalsInte
         return [
             new Twig_SimpleFilter('fa_class', [$this, 'getFaClass']),
             new Twig_SimpleFilter('criticality', [$this, 'getCriticality']),
+            new Twig_SimpleFilter('max_criticality', [$this, 'getMaxCriticality']),
             new Twig_SimpleFilter('trans', [$this, 'trans']),
         ];
     }
@@ -165,6 +166,24 @@ class AppExtension extends \Twig_Extension implements Twig_Extension_GlobalsInte
         }
 
         return 'success';
+    }
+
+    public function getMaxCriticality(array $msgs)
+    {
+        $maxCriticality = 'success';
+
+        foreach ($msgs as $msg) {
+            $criticality = $this->getCriticality($msg);
+            if ('danger' === $criticality) {
+                return 'danger';
+            }
+
+            if ('warning' === $criticality) {
+                $maxCriticality = 'warning';
+            }
+        }
+
+        return $maxCriticality;
     }
 
     /**

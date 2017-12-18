@@ -56,6 +56,7 @@ class ChangeSshKeyController extends Controller
         // Render empty form
         return $this->render('self-service/change_ssh_key_form.html.twig', [
             'result' => 'emptysshkeychangeform',
+            'problems' => [],
             'login' => $request->get('login'),
         ]);
     }
@@ -95,7 +96,7 @@ class ChangeSshKeyController extends Controller
         }
 
         if (count($missings) > 0) {
-            return $this->renderFormWithError($missings[0], $request);
+            return $this->renderFormWithError('', $missings, $request);
         }
 
         $errors = [];
@@ -110,7 +111,7 @@ class ChangeSshKeyController extends Controller
         }
 
         if (count($errors) > 0) {
-            return $this->renderFormWithError($errors[0], $request);
+            return $this->renderFormWithError('', $errors, $request);
         }
 
         // Check reCAPTCHA
@@ -120,8 +121,12 @@ class ChangeSshKeyController extends Controller
 
             $result = $recaptchaService->verify($request->request->get('g-recaptcha-response'), $login);
             if ('' !== $result) {
-                return $this->renderFormWithError($result, $request);
+                $errors[] = $result;
             }
+        }
+
+        if (count($errors) > 0) {
+            return $this->renderFormWithError('', $errors, $request);
         }
 
         /** @var LdapClient $ldapClient */
@@ -136,11 +141,14 @@ class ChangeSshKeyController extends Controller
             $ldapClient->checkOldPassword($password, $context);
             $ldapClient->changeSshKey($context['user_dn'], $sshkey);
         } catch (LdapErrorException $e) {
-            return $this->renderFormWithError('ldaperror', $request);
+            // action probably not needed, problem with configuration or ldap is down
+            return $this->renderFormWithError('ldaperror', [], $request);
         } catch (LdapInvalidUserCredentialsException $e) {
-            return $this->renderFormWithError('badcredentials', $request);
+            // action needed, password is wrong
+            return $this->renderFormWithError('', ['badcredentials'], $request);
         } catch (LdapUpdateFailedException $e) {
-            return $this->renderFormWithError('invalidkeyerror', $request);
+            // action needed, key was refused by server
+            return $this->renderFormWithError('', ['invalidkeyerror'], $request);
         }
 
         /** @var EventDispatcher $eventDispatcher */
@@ -158,15 +166,17 @@ class ChangeSshKeyController extends Controller
     }
 
     /**
-     * @param string  $error
+     * @param string  $result
+     * @param array   $problems
      * @param Request $request
      *
      * @return Response
      */
-    private function renderFormWithError($error, Request $request)
+    private function renderFormWithError($result, $problems, Request $request)
     {
         return $this->render('self-service/change_ssh_key_form.html.twig', [
-            'result' => $error,
+            'result' => $result,
+            'problems' => $problems,
             'login' => $request->get('login'),
         ]);
     }

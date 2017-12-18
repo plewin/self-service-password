@@ -53,6 +53,7 @@ class ChangeSecurityQuestionsController extends Controller
         // render form empty
         return $this->render('self-service/change_security_question_form.html.twig', [
             'result' => 'emptysetquestionsform',
+            'problems' => [],
             'login' => $request->get('login'),
             'questions' => $this->getParameter('questions'),
         ]);
@@ -96,7 +97,7 @@ class ChangeSecurityQuestionsController extends Controller
             $missings[] = 'answerrequired';
         }
         if (count($missings)) {
-            return $this->renderFormWithError($missings[0], $request);
+            return $this->renderFormWithError('', $missings, $request);
         }
 
         $errors = [];
@@ -111,7 +112,7 @@ class ChangeSecurityQuestionsController extends Controller
         }
 
         if (count($errors)) {
-            return $this->renderFormWithError($errors[0], $request);
+            return $this->renderFormWithError('', $errors, $request);
         }
 
         // Check reCAPTCHA
@@ -121,8 +122,12 @@ class ChangeSecurityQuestionsController extends Controller
 
             $result = $recaptchaService->verify($request->request->get('g-recaptcha-response'), $login);
             if ('' !== $result) {
-                return $this->renderFormWithError($result, $request);
+                $errors[] = $result;
             }
+        }
+
+        if (count($errors)) {
+            return $this->renderFormWithError('', $errors, $request);
         }
 
         /** @var LdapClient $ldapClient */
@@ -136,11 +141,14 @@ class ChangeSecurityQuestionsController extends Controller
             // Register answer
             $ldapClient->changeQuestion($context['user_dn'], $question, $answer);
         } catch (LdapErrorException $e) {
-            return $this->renderFormWithError('ldaperror', $request);
+            // action probably not needed, problem with configuration or ldap is down
+            return $this->renderFormWithError('ldaperror', [], $request);
         } catch (LdapInvalidUserCredentialsException $e) {
-            return $this->renderFormWithError('badcredentials', $request);
+            // action needed, password is wrong
+            return $this->renderFormWithError('', ['badcredentials'], $request);
         } catch (LdapUpdateFailedException $e) {
-            return $this->renderFormWithError('answermoderror', $request);
+            // action needed ?
+            return $this->renderFormWithError('', ['answermoderror'], $request);
         }
 
         // render page success
@@ -149,14 +157,16 @@ class ChangeSecurityQuestionsController extends Controller
 
     /**
      * @param string  $result
+     * @param array   $problems
      * @param Request $request
      *
      * @return Response
      */
-    private function renderFormWithError($result, Request $request)
+    private function renderFormWithError($result, $problems, Request $request)
     {
         return $this->render('self-service/change_security_question_form.html.twig', [
             'result' => $result,
+            'problems' => $problems,
             'login' => $request->get('login'),
             'questions' => $this->getParameter('questions'),
         ]);

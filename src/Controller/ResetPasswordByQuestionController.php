@@ -56,6 +56,7 @@ class ResetPasswordByQuestionController extends Controller
         // Render empty form
         return $this->render('self-service/reset_password_by_question_form.html.twig', [
             'result' => 'emptyresetbyquestionsform',
+            'problems' => [],
             'login' => $request->get('login'),
             'questions' => $this->getParameter('questions'),
         ]);
@@ -106,7 +107,7 @@ class ResetPasswordByQuestionController extends Controller
         }
 
         if (count($missings) > 0) {
-            return $this->renderFormWithError($missings[0], $request);
+            return $this->renderFormWithError('', $missings, $request);
         }
 
         $errors = [];
@@ -132,7 +133,7 @@ class ResetPasswordByQuestionController extends Controller
         $errors += $passwordChecker->evaluate($newpassword, '', $login);
 
         if (count($errors) > 0) {
-            return $this->renderFormWithError($errors[0], $request);
+            return $this->renderFormWithError('', $errors, $request);
         }
 
         // Check reCAPTCHA
@@ -141,8 +142,12 @@ class ResetPasswordByQuestionController extends Controller
             $recaptchaService = $this->get('recaptcha_service');
             $result = $recaptchaService->verify($request->request->get('g-recaptcha-response'), $login);
             if ('' !== $result) {
-                return $this->renderFormWithError($result, $request);
+                $errors[] = $result;
             }
+        }
+
+        if (count($errors) > 0) {
+            return $this->renderFormWithError('', $errors, $request);
         }
 
         /** @var LdapClient $ldapClient */
@@ -161,16 +166,20 @@ class ResetPasswordByQuestionController extends Controller
             // Check question/answer
             $match = $ldapClient->checkQuestionAnswer($login, $question, $answer, $context);
             if (!$match) {
-                return $this->renderFormWithError('answernomatch', $request);
+                // incorrect answer
+                return $this->renderFormWithError('', ['answernomatch'], $request);
             }
 
             $ldapClient->changePassword($context['user_dn'], $newpassword, '', $context);
         } catch (LdapErrorException $e) {
-            return $this->renderFormWithError('ldaperror', $request);
+            // action probably not needed, problem with configuration or ldap is down
+            return $this->renderFormWithError('ldaperror', [], $request);
         } catch (LdapUpdateFailedException $e) {
-            return $this->renderFormWithError('passworderror', $request);
+            // password was rejected by server
+            return $this->renderFormWithError('', ['passworderror'], $request);
         } catch (LdapInvalidUserCredentialsException $e) {
-            return $this->renderFormWithError('badcredentials', $request);
+            // wrong login
+            return $this->renderFormWithError('', ['badcredentials'], $request);
         }
 
         /** @var EventDispatcher $eventDispatcher */
@@ -190,14 +199,16 @@ class ResetPasswordByQuestionController extends Controller
 
     /**
      * @param string  $result
+     * @param array   $problems
      * @param Request $request
      *
      * @return Response
      */
-    private function renderFormWithError($result, Request $request)
+    private function renderFormWithError($result, $problems, Request $request)
     {
         return $this->render('self-service/reset_password_by_question_form.html.twig', [
             'result' => $result,
+            'problems' => $problems,
             'login' => $request->get('login'),
             'questions' => $this->getParameter('questions'),
         ]);

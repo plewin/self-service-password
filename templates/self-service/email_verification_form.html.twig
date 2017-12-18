@@ -11,6 +11,8 @@
         </div>
     {% endif %}
 
+    {{ forms.show_problems(problems) }}
+
     <div class="alert alert-info">
         <form action="#" method="post" class="form-horizontal">
             {{ forms.row_input_text('login', 'login', 'user', 'login', login) }}

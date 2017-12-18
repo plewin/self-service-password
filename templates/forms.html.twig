@@ -1,7 +1,19 @@
 {% macro show_result(result) %}
+    {% if result %}
     <div class="result alert alert-{{ result|criticality }}">
         <p><i class="fa fa-fw {{ result|fa_class }}" aria-hidden="true"></i> {{ result|trans }}</p>
     </div>
+    {% endif %}
+{% endmacro %}
+
+{% macro show_problems(problems) %}
+    {% if problems %}
+        <div class="result alert alert-{{ problems|max_criticality }}">
+            {% for problem in problems %}
+                <p><i class="fa fa-fw {{ problem|fa_class }}" aria-hidden="true"></i> {{ problem|trans }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
 {% endmacro %}
 
 {% macro row_input_text(id, label, icon, placeholder, default_value, disabled) %}
