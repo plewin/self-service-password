@@ -512,8 +512,9 @@ class LdapClient implements LoggerAwareInterface
      */
     private function getUserEntry($login)
     {
+        $escapedLogin = ldap_escape($login, null, LDAP_ESCAPE_FILTER);
         // Search for user
-        $refinedLdapFilter = str_replace("{login}", $login, $this->ldapFilter);
+        $refinedLdapFilter = str_replace('{login}', $escapedLogin, $this->ldapFilter);
         $search = ldap_search($this->ldap, $this->ldapBase, $refinedLdapFilter);
         if (false === $search) {
             $this->throwLdapError('Search error');
