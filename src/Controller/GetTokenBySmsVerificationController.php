@@ -131,7 +131,8 @@ class GetTokenBySmsVerificationController extends Controller
             }
         }
 
-        if ($sessiontoken !== $receivedSmsCode) {
+
+        if (!hash_equals($sessiontoken, $receivedSmsCode)) {
             if ($attempts < $this->getParameter('max_attempts')) {
                 $smstoken['attempts'] += 1;
                 $session->set('smstoken', $smstoken);
@@ -144,6 +145,7 @@ class GetTokenBySmsVerificationController extends Controller
             // TODO more precise log
             $logger->warning("SMS token $receivedSmsCode not valid");
             $session->remove('smstoken');
+
             return $this->render('self-service/sms_verification_sms_code_failure.html.twig', [
                 //TODO precise error to user
                 'result' => 'tokennotvalid',
