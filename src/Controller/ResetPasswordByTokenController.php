@@ -39,6 +39,8 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class ResetPasswordByTokenController extends Controller
 {
+    use CaptchaTrait;
+
     /**
      * @param Request $request
      *
@@ -87,6 +89,10 @@ class ResetPasswordByTokenController extends Controller
             $problems[] = 'nomatch';
         }
 
+        if ($this->isCaptchaEnabled() and !$this->isCaptchaSubmitted($request)) {
+            $missings[] = 'captcharequired';
+        }
+
         /** @var PasswordStrengthChecker $passwordChecker */
         $passwordChecker = $this->get('password_strength_checker');
 
@@ -98,17 +104,8 @@ class ResetPasswordByTokenController extends Controller
         }
 
         // Okay the form is submitted but is the CAPTCHA valid ?
-        if ($this->getParameter('enable_recaptcha')) {
-            /** @var RecaptchaService $recaptchaService */
-            $recaptchaService = $this->get('recaptcha_service');
-            $result = $recaptchaService->verify($request->request->get('g-recaptcha-response'), $login);
-            if ('' !== $result) {
-                $problems[] = $result;
-            }
-        }
-
-        if (count($problems)) {
-            return $this->renderErrorPage('', $problems, $request, $login);
+        if ($this->isCaptchaEnabled() and !$this->verifyCaptcha($request, $login)) {
+            return $this->renderErrorPage('', ['badcaptcha'], $request, $login);
         }
 
         // All good, we try
@@ -176,6 +173,6 @@ class ResetPasswordByTokenController extends Controller
             'source' => $request->get('source'),
             'token' => $request->get('token'),
             'login' => $login,
-        ]);
+        ] + $this->getCaptchaTemplateExtraVars($request));
     }
 }

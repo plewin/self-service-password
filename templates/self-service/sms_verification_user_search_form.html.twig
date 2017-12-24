@@ -19,8 +19,12 @@
     <div class="alert alert-info">
         <form action="#" method="post" class="form-horizontal">
             {{ forms.row_input_text('login', 'login', 'user', 'login', login) }}
-            {% if enable_recaptcha %}
-                {{ forms.row_recaptcha(recaptcha_publickey, recaptcha_theme, recaptcha_type, recaptcha_size, lang) }}
+            {% if enable_captcha %}
+                {% if captcha_type == "recaptcha" %}
+                    {{ forms.row_recaptcha(recaptcha_publickey, recaptcha_theme, recaptcha_type, recaptcha_size, lang) }}
+                {% elseif captcha_type == "gregwar" %}
+                    {{ forms.row_gregwarcaptcha(captcha_image) }}
+                {% endif %}
             {% endif %}
             {{ forms.row_button_submit('getuser', 'search') }}
         </form>

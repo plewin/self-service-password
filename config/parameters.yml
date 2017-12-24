@@ -210,7 +210,11 @@ parameters:
 
     ## CAPTCHA
     # Use Google reCAPTCHA (http://www.google.com/recaptcha)
-    enable_recaptcha: false
+    enable_captcha: false
+    # Captcha type :
+    # recaptcha (from google, require account & internet from ssp server and end users),
+    # gregwar (offline, requires php-gd2)
+    captcha_type: "recaptcha"
     # Go on the site to get public and private key
     recaptcha_publickey: "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
     recaptcha_privatekey: "6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe"

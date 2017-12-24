@@ -25,7 +25,6 @@ use App\Exception\LdapErrorException;
 use App\Exception\LdapInvalidUserCredentialsException;
 use App\Service\LdapClient;
 use App\Service\MailNotificationService;
-use App\Service\RecaptchaService;
 use App\Service\TokenManagerService;
 use App\Service\UsernameValidityChecker;
 use Psr\Log\LoggerInterface;
@@ -40,6 +39,8 @@ use Symfony\Component\Translation\TranslatorInterface;
  */
 class GetTokenByEmailVerificationController extends Controller
 {
+    use CaptchaTrait;
+
     /**
      * @param Request $request
      *
@@ -60,7 +61,7 @@ class GetTokenByEmailVerificationController extends Controller
             'result' => 'emptysendtokenform',
             'problems' => [],
             'login' => $request->get('login'),
-        ]);
+        ] + $this->getCaptchaTemplateExtraVars($request));
     }
 
     /**
@@ -93,6 +94,10 @@ class GetTokenByEmailVerificationController extends Controller
             $missings[] = 'mailrequired';
         }
 
+        if ($this->isCaptchaEnabled() and !$this->isCaptchaSubmitted($request)) {
+            $missings[] = 'captcharequired';
+        }
+
         if (count($missings)) {
             return $this->renderFormWithError('', $missings, $request);
         }
@@ -112,19 +117,9 @@ class GetTokenByEmailVerificationController extends Controller
             return $this->renderFormWithError('', $errors, $request);
         }
 
-        // Check reCAPTCHA
-        if ($this->getParameter('enable_recaptcha')) {
-            /** @var RecaptchaService $recaptchaService */
-            $recaptchaService = $this->get('recaptcha_service');
-
-            $result = $recaptchaService->verify($request->request->get('g-recaptcha-response'), $login);
-            if ('' !== $result) {
-                $errors[] = $result;
-            }
-        }
-
-        if (count($errors)) {
-            return $this->renderFormWithError('', $errors, $request);
+        // Check CAPTCHA
+        if ($this->isCaptchaEnabled() and !$this->verifyCaptcha($request, $login)) {
+            return $this->renderFormWithError('', ['badcaptcha'], $request);
         }
 
         /** @var LdapClient $ldapClient */
@@ -186,6 +181,6 @@ class GetTokenByEmailVerificationController extends Controller
             'result' => $result,
             'problems' => $problems,
             'login' => $request->get('login'),
-        ]);
+        ] + $this->getCaptchaTemplateExtraVars($request));
     }
 }

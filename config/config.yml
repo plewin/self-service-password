@@ -45,7 +45,8 @@ twig:
     paths:
         "%kernel.root_dir%/../templates": __main__
     globals:
-        enable_recaptcha: '%enable_recaptcha%'
+        enable_captcha: '%enable_captcha%'
+        captcha_type: '%captcha_type%'
         recaptcha_publickey: '%recaptcha_publickey%'
         recaptcha_theme: '%recaptcha_theme%'
         recaptcha_type: '%recaptcha_type%'

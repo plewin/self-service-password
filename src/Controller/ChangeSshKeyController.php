@@ -25,7 +25,6 @@ use App\Exception\LdapErrorException;
 use App\Exception\LdapInvalidUserCredentialsException;
 use App\Exception\LdapUpdateFailedException;
 use App\Service\LdapClient;
-use App\Service\RecaptchaService;
 use App\Service\UsernameValidityChecker;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -38,6 +37,8 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class ChangeSshKeyController extends Controller
 {
+    use CaptchaTrait;
+
     /**
      * @param Request $request
      *
@@ -58,7 +59,7 @@ class ChangeSshKeyController extends Controller
             'result' => 'emptysshkeychangeform',
             'problems' => [],
             'login' => $request->get('login'),
-        ]);
+        ] + $this->getCaptchaTemplateExtraVars($request));
     }
 
     /**
@@ -94,6 +95,9 @@ class ChangeSshKeyController extends Controller
         if (!$sshkey) {
             $missings[] = 'sshkeyrequired';
         }
+        if ($this->isCaptchaEnabled() && !$this->isCaptchaSubmitted($request)) {
+            $missings[] = 'captcharequired';
+        }
 
         if (count($missings) > 0) {
             return $this->renderFormWithError('', $missings, $request);
@@ -114,19 +118,9 @@ class ChangeSshKeyController extends Controller
             return $this->renderFormWithError('', $errors, $request);
         }
 
-        // Check reCAPTCHA
-        if ($this->getParameter('enable_recaptcha')) {
-            /** @var RecaptchaService $recaptchaService */
-            $recaptchaService = $this->get('recaptcha_service');
-
-            $result = $recaptchaService->verify($request->request->get('g-recaptcha-response'), $login);
-            if ('' !== $result) {
-                $errors[] = $result;
-            }
-        }
-
-        if (count($errors) > 0) {
-            return $this->renderFormWithError('', $errors, $request);
+        // Check CAPTCHA
+        if ($this->isCaptchaEnabled() and !$this->verifyCaptcha($request, $login)) {
+            return $this->renderFormWithError('', ['badcaptcha'], $request);
         }
 
         /** @var LdapClient $ldapClient */
@@ -178,6 +172,6 @@ class ChangeSshKeyController extends Controller
             'result' => $result,
             'problems' => $problems,
             'login' => $request->get('login'),
-        ]);
+        ] + $this->getCaptchaTemplateExtraVars($request));
     }
 }

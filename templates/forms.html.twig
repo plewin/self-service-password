@@ -99,6 +99,21 @@
     </div>
 {% endmacro %}
 
+
+{% macro row_gregwarcaptcha(captcha_image) %}
+    <div class="form-group">
+        <label class="col-sm-4 control-label">{{ 'Captcha'|trans }}</label>
+        <div class="col-sm-8">
+            <img src="{{ captcha_image }}" />
+
+            <div class="input-group">
+                <span class="input-group-addon"><i class="fa fa-fw fa-font"></i></span>
+                <input name="captcha" id="captcha" class="form-control" placeholder="{{ 'Captcha'|trans }}" />
+            </div>
+        </div>
+    </div>
+{% endmacro %}
+
 {% macro row_recaptcha(publickey, theme, type, size, lang) %}
     <div class="form-group">
         <div class="col-sm-offset-4 col-sm-8">

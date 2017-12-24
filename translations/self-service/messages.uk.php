@@ -85,7 +85,7 @@ $messages['tokennotvalid'] = "Жетон недійсний";
 $messages['resetbytokenhelp'] = "Надісланий в електронному листі жетон дозволяє скинути пароль. Для отримання нового жетона, <a href=\"?action=sendtoken\">клацніть тут</a>.";
 $messages['changemessage'] = "Шановний {login},\n\nВаш пароль змінено.\n\nЯкщо Ви не змінювали пароль, негайно зверніться до системного адміністратора.";
 $messages['changesubject'] = "Ваш пароль змінено";
-$messages['badcaptcha'] = "reCAPTCHA був введений неправильно. Спробуйте ще раз.";
+$messages['badcaptcha'] = "CAPTCHA був введений неправильно. Спробуйте ще раз.";
 $messages['notcomplex'] = "Ваш пароль містить недостатню кількість символів";
 $messages['policycomplex'] = "Мінімальна кількість символов:";
 $messages['smsresetmessage'] = "Ваш жетон скидання пароля:";

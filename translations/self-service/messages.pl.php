@@ -88,7 +88,7 @@ $messages['resetbytokenhelp'] = "Wysłany na adres email Token pozwala na zmian�
 $messages['resetbysmshelp'] = "The token sent by sms allows you to reset your password. To get a new token, <a href=\"?action=sendsms\">click here</a>.";
 $messages['changemessage'] = "Dzień dobry {login},\n\nTwoje hasło zostało zmienione.\n\nJeżeli to nie Ty zmieniałeś hasło, skontaktuj się natychmiast z administratorem.";
 $messages['changesubject'] = "Twoje hasło zostało zmienione";
-$messages['badcaptcha'] = "Wprowadzono błędny kod z obrazka reCAPTCHA. Spróbuj ponownie.";
+$messages['badcaptcha'] = "Wprowadzono błędny kod z obrazka CAPTCHA. Spróbuj ponownie.";
 $messages['notcomplex'] = "Twoje hasło nie posiada wystarczającej liczby różnych rodzajów znaków";
 $messages['policycomplex'] = "Hasło musi się składać z (minimalna liczba) następujących rodzajów znaków:";
 $messages['sms'] = "SMS number";

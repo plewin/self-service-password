@@ -143,6 +143,7 @@ class AppExtension extends \Twig_Extension implements Twig_Extension_GlobalsInte
             'smsnotsent',
             'sameaslogin',
             'sshkeyerror',
+            'badcaptcha',
         ];
 
         if (in_array($msg, $dangerList)) {
@@ -159,6 +160,7 @@ class AppExtension extends \Twig_Extension implements Twig_Extension_GlobalsInte
             'passwordrequired',
             'mailrequired',
             'tokenrequired',
+            'captcharequired',
         ];
 
         if (in_array($msg, $warningList)) {

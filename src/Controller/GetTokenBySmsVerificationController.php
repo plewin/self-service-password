@@ -25,7 +25,6 @@ use App\Exception\LdapErrorException;
 use App\Exception\LdapInvalidUserCredentialsException;
 use App\Service\EncryptionService;
 use App\Service\LdapClient;
-use App\Service\RecaptchaService;
 use App\Service\SmsNotificationService;
 use App\Service\TokenManagerService;
 use App\Service\UsernameValidityChecker;
@@ -43,6 +42,8 @@ use Symfony\Component\Translation\TranslatorInterface;
  */
 class GetTokenBySmsVerificationController extends Controller
 {
+    use CaptchaTrait;
+
     /**
      * @param Request $request
      *
@@ -78,7 +79,7 @@ class GetTokenBySmsVerificationController extends Controller
             'result' => 'emptysendsmsform',
             'problems' => [],
             'login' => $request->get('login'),
-        ]);
+        ] + $this->getCaptchaTemplateExtraVars($request));
     }
 
     /**
@@ -260,15 +261,9 @@ class GetTokenBySmsVerificationController extends Controller
             return $this->renderSearchUserFormWithError('', [$result], $request);
         }
 
-        // Check reCAPTCHA
-        if ($this->getParameter('enable_recaptcha')) {
-            /** @var RecaptchaService $recaptchaService */
-            $recaptchaService = $this->get('recaptcha_service');
-
-            $result = $recaptchaService->verify($request->request->get('g-recaptcha-response'), $login);
-            if ('' !== $result) {
-                return $this->renderSearchUserFormWithError('', [$result], $request);
-            }
+        // Check CAPTCHA
+        if ($this->isCaptchaEnabled() and !$this->verifyCaptcha($request, $login)) {
+            return $this->renderSearchUserFormWithError('', ['badcaptcha'], $request);
         }
 
         // Check sms
@@ -313,7 +308,7 @@ class GetTokenBySmsVerificationController extends Controller
             'login' => $login,
             'encrypted_sms_login' => $encryptedSmsLogin,
             'sms' => $this->getParameter('sms_partially_hide_number') ? (substr_replace($sms, '****', 4, 4)) : $sms,
-        ]);
+        ] + $this->getCaptchaTemplateExtraVars($request));
     }
 
     /**
@@ -329,7 +324,7 @@ class GetTokenBySmsVerificationController extends Controller
             'result' => $result,
             'problems' => $problems,
             'login' => $request->get('login'),
-        ]);
+        ] + $this->getCaptchaTemplateExtraVars($request));
     }
 
     /**

@@ -19,8 +19,12 @@
             {{ forms.row_input_password('password', 'password', 'lock', 'password') }}
             {{ forms.row_input_select('question', 'question', 'question', questions) }}
             {{ forms.row_input_text('answer', 'answer', 'pencil', 'answer') }}
-            {% if enable_recaptcha %}
-                {{ forms.row_recaptcha(recaptcha_publickey, recaptcha_theme, recaptcha_type, recaptcha_size, lang) }}
+            {% if enable_captcha %}
+                {% if captcha_type == "recaptcha" %}
+                    {{ forms.row_recaptcha(recaptcha_publickey, recaptcha_theme, recaptcha_type, recaptcha_size, lang) }}
+                {% elseif captcha_type == "gregwar" %}
+                    {{ forms.row_gregwarcaptcha(captcha_image) }}
+                {% endif %}
             {% endif %}
             {{ forms.row_button_submit() }}
         </form>

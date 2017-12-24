@@ -24,7 +24,6 @@ use App\Exception\LdapErrorException;
 use App\Exception\LdapInvalidUserCredentialsException;
 use App\Exception\LdapUpdateFailedException;
 use App\Service\LdapClient;
-use App\Service\RecaptchaService;
 use App\Service\UsernameValidityChecker;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -35,6 +34,8 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class ChangeSecurityQuestionsController extends Controller
 {
+    use CaptchaTrait;
+
     /**
      * @param Request $request
      *
@@ -56,7 +57,7 @@ class ChangeSecurityQuestionsController extends Controller
             'problems' => [],
             'login' => $request->get('login'),
             'questions' => $this->getParameter('questions'),
-        ]);
+        ] + $this->getCaptchaTemplateExtraVars($request));
     }
 
     /**
@@ -96,6 +97,10 @@ class ChangeSecurityQuestionsController extends Controller
         if (empty($answer)) {
             $missings[] = 'answerrequired';
         }
+        if ($this->isCaptchaEnabled() and !$this->isCaptchaSubmitted($request)) {
+            $missings[] = 'captcharequired';
+        }
+
         if (count($missings)) {
             return $this->renderFormWithError('', $missings, $request);
         }
@@ -115,19 +120,9 @@ class ChangeSecurityQuestionsController extends Controller
             return $this->renderFormWithError('', $errors, $request);
         }
 
-        // Check reCAPTCHA
-        if ($this->getParameter('enable_recaptcha')) {
-            /** @var RecaptchaService $recaptchaService */
-            $recaptchaService = $this->get('recaptcha_service');
-
-            $result = $recaptchaService->verify($request->request->get('g-recaptcha-response'), $login);
-            if ('' !== $result) {
-                $errors[] = $result;
-            }
-        }
-
-        if (count($errors)) {
-            return $this->renderFormWithError('', $errors, $request);
+        // Check CAPTCHA
+        if ($this->isCaptchaEnabled() and !$this->verifyCaptcha($request, $login)) {
+            return $this->renderFormWithError('', ['badcaptcha'], $request);
         }
 
         /** @var LdapClient $ldapClient */
@@ -169,6 +164,6 @@ class ChangeSecurityQuestionsController extends Controller
             'problems' => $problems,
             'login' => $request->get('login'),
             'questions' => $this->getParameter('questions'),
-        ]);
+        ] + $this->getCaptchaTemplateExtraVars($request));
     }
 }
