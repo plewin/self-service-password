@@ -69,7 +69,7 @@ class ChangeSshKeyController extends Controller
      */
     private function isFormSubmitted(Request $request)
     {
-        return $request->get('login')
+        return ($request->request->has('login') || $request->query->has('login'))
             && $request->request->has('password')
             && $request->request->has('sshkey');
     }
@@ -130,8 +130,7 @@ class ChangeSshKeyController extends Controller
             $ldapClient->connect();
             // we want user's email address if we have to notify
             $wanted = $this->getParameter('notify_user_on_sshkey_change') ? ['dn', 'mail'] : ['dn'];
-            $context = [];
-            $ldapClient->fetchUserEntryContext($login, $wanted, $context);
+            $context = $ldapClient->fetchUserEntryContext($login, $wanted);
             $ldapClient->checkOldPassword($password, $context);
             $ldapClient->changeSshKey($context['user_dn'], $sshkey);
         } catch (LdapErrorException $e) {
@@ -141,7 +140,8 @@ class ChangeSshKeyController extends Controller
             // action needed, password is wrong
             return $this->renderFormWithError('', ['badcredentials'], $request);
         } catch (LdapUpdateFailedException $e) {
-            // action needed, key was refused by server
+            // action needed ? key was refused by server.
+            // server misconfigured or key does not respect a policy ?
             return $this->renderFormWithError('', ['invalidkeyerror'], $request);
         }
 

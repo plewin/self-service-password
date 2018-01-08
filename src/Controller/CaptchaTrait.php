@@ -44,8 +44,20 @@ trait CaptchaTrait
      */
     protected function isCaptchaSubmitted(Request $request)
     {
-        $captcha = $request->request->get('captcha', '');
-        return !empty($captcha);
+        $submitted = false;
+
+        switch ($this->getParameter('captcha_type')) {
+            case 'recaptcha':
+                $captcha = $request->request->get('g-recaptcha-response', '');
+                $submitted = !empty($captcha);
+                break;
+            case 'gregwar':
+                $captcha = $request->request->get('captcha', '');
+                $submitted = !empty($captcha);
+                break;
+        }
+
+        return $submitted;
     }
 
     /**
@@ -56,27 +68,29 @@ trait CaptchaTrait
      */
     protected function verifyCaptcha(Request $request, $login)
     {
+        $isCaptchaValid = false;
         switch ($this->getParameter('captcha_type')) {
             case 'recaptcha':
+                /** @var RecaptchaService $recaptchaService */
                 $recaptchaService = $this->get('recaptcha_service');
 
-                $result = $recaptchaService->verify($request->request->get('g-recaptcha-response'), $login);
-                if ('' !== $result) {
-                    return false;
+                $result = $recaptchaService->verify($request, $login);
+                if ('' === $result) {
+                    $isCaptchaValid = true;
                 }
                 break;
             case 'gregwar':
-                /** @var RecaptchaService $recaptchaService */
                 $session = $request->getSession();
                 $expected = $session->get('captcha');
+                //TODO handle null
 
-                if (!hash_equals($expected, $request->request->get('captcha'))) {
-                    return false;
+                if (hash_equals($expected, $request->request->get('captcha'))) {
+                    $isCaptchaValid = true;
                 }
                 break;
         }
 
-        return true;
+        return $isCaptchaValid;
     }
 
     /**

@@ -22,6 +22,7 @@ namespace App\Service;
 
 use App\Exception\LdapEntryFoundInvalidException;
 use App\Exception\LdapInvalidUserCredentialsException;
+use App\Exception\LdapUpdateFailedException;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 
@@ -59,22 +60,45 @@ class MockLdapClient implements LoggerAwareInterface
                     'birthday' => 'goodbirthday2',
                 ],
             ],
+            'uid=user3,ou=People,dc=example,dc=com' => [
+                'givenName' => 'User3GivenName',
+                'sn' => 'User3SN',
+                // use 3 has no mobile
+                'displayName' => 'User3 DisplayName',
+                'userPassword' => 'password3',
+                'mail' => 'user3@example.com',
+                'questions' => [
+                    'birthday' => 'goodbirthday3',
+                ],
+            ],
+            'uid=user10,ou=People,dc=example,dc=com' => [
+                'givenName' => 'User10GivenName',
+                'sn' => 'User10SN',
+                'displayName' => 'User10 DisplayName',
+                'userPassword' => 'password10',
+                'mail' => 'user10@example.com',
+                'questions' => [
+                    'birthday' => 'goodbirthday10',
+                ],
+            ],
         ];
     }
 
     public function connect()
     {
         // fake connect
-        return;
+        return true;
     }
 
     /**
      * @param $login
      * @param $wanted
-     * @param $context
+     *
      * @throws LdapInvalidUserCredentialsException
+     *
+     * @return array Modified context
      */
-    public function fetchUserEntryContext($login, $wanted, &$context)
+    public function fetchUserEntryContext($login, $wanted)
     {
         $dn = 'uid=' . $login . ',ou=People,dc=example,dc=com';
 
@@ -83,8 +107,15 @@ class MockLdapClient implements LoggerAwareInterface
         }
 
         $context['user_dn'] = $dn;
-        $context['user_sms'] = $this->mockData[$dn]['mobile'];
+        $context['user_sms'] = isset($this->mockData[$dn]['mobile']) ? $this->mockData[$dn]['mobile'] : null;
         $context['user_displayname'] = $this->mockData[$dn]['displayName'];
+        if (isset($this->mockData[$dn]['mail'])) {
+            $context['user_mail'] = $this->mockData[$dn]['mail'];
+        } else {
+            $context['user_mail'] = null;
+        }
+
+        return $context;
     }
 
     /**
@@ -123,15 +154,24 @@ class MockLdapClient implements LoggerAwareInterface
      * @param string $mail
      *
      * @throws LdapEntryFoundInvalidException
+     * @throws LdapInvalidUserCredentialsException
+     *
+     * @return true
      */
     public function checkMail($login, $mail)
     {
         $dn = 'uid=' . $login . ',ou=People,dc=example,dc=com';
+        if (!isset($this->mockData[$dn])) {
+            throw new LdapInvalidUserCredentialsException();
+        }
+
         $validMail = $this->mockData[$dn]['mail'];
 
         if ($mail !== $validMail) {
             throw new LdapEntryFoundInvalidException();
         }
+
+        return true;
     }
 
     /**
@@ -149,10 +189,15 @@ class MockLdapClient implements LoggerAwareInterface
      * @param string $newpassword
      * @param string $oldpassword
      * @param array  $context
+     *
+     * @throws LdapUpdateFailedException
      */
     public function changePassword($entryDn, $newpassword, $oldpassword, $context)
     {
-
+        if ($entryDn === 'uid=user10,ou=People,dc=example,dc=com') {
+            // poor guy has password change forbidden in password policy
+            throw new LdapUpdateFailedException();
+        }
     }
 
     /**

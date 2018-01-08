@@ -71,8 +71,8 @@ class GetTokenByEmailVerificationController extends Controller
      */
     private function isFormSubmitted(Request $request)
     {
-        return $request->get('login')
-            && ($this->getParameter('mail_address_use_ldap') || $request->request->get('mail'));
+        return ($request->request->has('login') || $request->query->has('login'))
+            && ($this->getParameter('mail_address_use_ldap') || $request->request->has('mail'));
     }
 
     /**
@@ -83,7 +83,7 @@ class GetTokenByEmailVerificationController extends Controller
     private function processFormData(Request $request)
     {
         $login = $request->get('login');
-        $mail = $request->request->get("mail");
+        $mail = $request->request->get('mail', '');
 
         $missings = [];
 
@@ -127,7 +127,23 @@ class GetTokenByEmailVerificationController extends Controller
 
         try {
             $ldapClient->connect();
-            $ldapClient->checkMail($login, $mail);
+
+            if ($this->getParameter('mail_address_use_ldap')) {
+                $wanted = ['mail'];
+                $context = $ldapClient->fetchUserEntryContext($login, $wanted);
+
+                if (null === $context['user_mail']) {
+                    /** @var LoggerInterface $logger */
+                    $logger = $this->get('logger');
+                    $logger->warning("Mail not found for user $login");
+                    throw new LdapEntryFoundInvalidException();
+                }
+
+                $mail = $context['user_mail'];
+            } else {
+                // throw exception if mail does not match
+                $ldapClient->checkMail($login, $mail);
+            }
         } catch (LdapErrorException $e) {
             return $this->renderFormWithError('ldaperror', [], $request);
         } catch (LdapInvalidUserCredentialsException $e) {

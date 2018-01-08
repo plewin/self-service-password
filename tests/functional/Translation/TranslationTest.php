@@ -13,7 +13,7 @@ class TranslationTest extends FunctionalTestCase
     {
         $client = $this->createClient();
 
-        $crawler = $client->request(
+        $client->request(
             'GET',
             '/change-password',
             [],
@@ -24,7 +24,7 @@ class TranslationTest extends FunctionalTestCase
         $this->assertNotContains('Gestion du mot de passe', $response);
 
         // request from French (Switzerland) browser
-        $crawler = $client->request(
+        $client->request(
             'GET',
             '/change-password',
             [],

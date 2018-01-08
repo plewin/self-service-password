@@ -24,6 +24,7 @@ use App\Exception\LdapEntryFoundInvalidException;
 use App\Exception\LdapErrorException;
 use App\Exception\LdapInvalidUserCredentialsException;
 use App\Exception\LdapUpdateFailedException;
+use App\Ldap\ErrorHandler;
 use App\Utils\PasswordEncoder;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
@@ -142,37 +143,52 @@ class LdapClient implements LoggerAwareInterface
 
     /**
      * @throws LdapErrorException
+     *
+     * @return true on success
      */
     public function connect()
     {
         //Connect to LDAP
         $this->ldap = ldap_connect($this->ldapUrl);
+
+        ErrorHandler::start(E_WARNING);
         ldap_set_option($this->ldap, LDAP_OPT_PROTOCOL_VERSION, 3);
+        // TODO rigor
         ldap_set_option($this->ldap, LDAP_OPT_REFERRALS, 0);
         if ($this->ldapUseTls && !ldap_start_tls($this->ldap)) {
+            ErrorHandler::stop();
+
             $this->logger->alert("LDAP - Unable to use StartTLS");
             throw new LdapErrorException();
         }
+        ErrorHandler::stop();
 
         // Bind
+        ErrorHandler::start(E_WARNING);
         $success = ldap_bind($this->ldap, $this->ldapBindDn, $this->ldapBindPw);
+        ErrorHandler::stop();
         if (false === $success) {
             $errno = ldap_errno($this->ldap);
             $this->logger->alert("LDAP - Bind error $errno (".ldap_error($this->ldap).")");
             throw new LdapErrorException();
         }
+
+        return true;
     }
 
     /**
      * @param string $login
      * @param array  $wanted
-     * @param array  $context
      *
      * @throws LdapErrorException
      * @throws LdapInvalidUserCredentialsException
+     *
+     * @return array Modified context
      */
-    public function fetchUserEntryContext($login, $wanted, &$context)
+    public function fetchUserEntryContext($login, $wanted)
     {
+        $context = [];
+
         $entry = $this->getUserEntry($login);
 
         if (in_array('dn', $wanted)) {
@@ -193,6 +209,8 @@ class LdapClient implements LoggerAwareInterface
         if (in_array('questions', $wanted)) {
             $this->updateContextQuestions($entry, $context);
         }
+
+        return $context;
     }
 
     /**
@@ -222,13 +240,13 @@ class LdapClient implements LoggerAwareInterface
      */
     public function checkQuestionAnswer($login, $question, $answer, &$context)
     {
-        $match = 0;
+        $match = false;
 
         // Match with user submitted values
         foreach ($context['user_answers'] as $questionValue) {
             $answer = preg_quote("$answer", "/");
             if (preg_match("/^\{$question\}$answer$/i", $questionValue)) {
-                $match = 1;
+                $match = true;
             }
         }
 
@@ -248,36 +266,41 @@ class LdapClient implements LoggerAwareInterface
      * @throws LdapEntryFoundInvalidException
      * @throws LdapErrorException
      * @throws LdapInvalidUserCredentialsException
+     *
+     * @return true Always true, on error, exceptions
      */
     public function checkMail($login, $mail)
     {
         $fetchMailFromLdap = $this->mailAddressUseLdap;
 
-        $context = [];
         $wanted = ['mail'];
-        $this->fetchUserEntryContext($login, $wanted, $context);
+        $context = $this->fetchUserEntryContext($login, $wanted);
 
         if (null === $context['user_mail']) {
             $this->logger->warning("Mail not found for user $login");
             throw new LdapEntryFoundInvalidException();
         }
 
-        $match = 0;
+        $match = false;
 
         if ($fetchMailFromLdap) {
             // Match with user submitted values
             foreach ($context['user_mails'] as $mailValue) {
                 if (strcasecmp($mail, $mailValue) === 0) {
-                    $match = 1;
+                    $match = true;
                     break;
                 }
             }
+        } else {
+            $match = hash_equals($context['user_mail'], $mail);
         }
 
         if (!$match) {
             $this->logger->notice("Mail $mail does not match for user $login");
             throw new LdapEntryFoundInvalidException();
         }
+
+        return true;
     }
 
     /**
@@ -335,7 +358,7 @@ class LdapClient implements LoggerAwareInterface
      *
      * @throws LdapUpdateFailedException
      */
-    public function changePassword($entryDn, $newpassword, $oldpassword, $context)
+    public function changePassword($entryDn, $newpassword, $oldpassword, $context = [])
     {
         // Rebind as Manager if needed
         // TODO detect if needed ?
@@ -515,7 +538,9 @@ class LdapClient implements LoggerAwareInterface
         $escapedLogin = ldap_escape($login, null, LDAP_ESCAPE_FILTER);
         // Search for user
         $refinedLdapFilter = str_replace('{login}', $escapedLogin, $this->ldapFilter);
+        ErrorHandler::start(E_WARNING);
         $search = ldap_search($this->ldap, $this->ldapBase, $refinedLdapFilter);
+        ErrorHandler::stop();
         if (false === $search) {
             $this->throwLdapError('Search error');
         }
@@ -546,7 +571,8 @@ class LdapClient implements LoggerAwareInterface
     private function updateContextDisplayName($entry, &$context)
     {
         $displayname = ldap_get_values($this->ldap, $entry, $this->fullnameAttribute);
-        $context['user_displayname'] = $displayname;
+        //TODO rigor
+        $context['user_displayname'] = $displayname[0];
     }
 
     /**
@@ -555,7 +581,10 @@ class LdapClient implements LoggerAwareInterface
      */
     private function updateContextMail($entry, &$context)
     {
+        ErrorHandler::start(E_WARNING);
         $mailValues = ldap_get_values($this->ldap, $entry, $this->mailAttribute);
+        ErrorHandler::stop();
+        //TODO rigor
 
         $mails = [];
         $mail = null;
@@ -618,9 +647,13 @@ class LdapClient implements LoggerAwareInterface
         $ocValues = ldap_get_values($this->ldap, $entry, 'objectClass');
         if (!in_array('sambaSamAccount', $ocValues) and !in_array('sambaSAMAccount', $ocValues)) {
             $context['user_is_samba_account'] = false;
+        } else {
+            $context['user_is_samba_account'] = true;
         }
         if (!in_array('shadowAccount', $ocValues)) {
             $context['user_is_shadow_account'] = false;
+        } else {
+            $context['user_is_shadow_account'] = true;
         }
     }
 
@@ -637,7 +670,7 @@ class LdapClient implements LoggerAwareInterface
         $context['user_answers'] = [];
 
         foreach ($questionValues as $questionValue) {
-            $context['user_answers'] = $questionValue;
+            $context['user_answers'][] = $questionValue;
         }
     }
 
@@ -650,7 +683,7 @@ class LdapClient implements LoggerAwareInterface
     private function verifyPasswordWithBind($dn, $password)
     {
         // Bind with old password
-        $success = ldap_bind($this->ldap, $dn, $password);
+        $success = @ldap_bind($this->ldap, $dn, $password);
         if (false === $success) {
             $errno = ldap_errno($this->ldap);
             if ((49 === $errno) && $this->adMode) {
@@ -679,5 +712,10 @@ class LdapClient implements LoggerAwareInterface
     private function rebindAsManager()
     {
         ldap_bind($this->ldap, $this->ldapBindDn, $this->ldapBindPw);
+    }
+
+    public function getConnection()
+    {
+        return $this->ldap;
     }
 }

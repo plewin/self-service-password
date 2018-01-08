@@ -4,7 +4,8 @@ namespace App\Tests\Unit\Utils;
 
 use App\Utils\PasswordEncoder;
 
-class PasswordEncoderTest extends \PHPUnit_Framework_TestCase {
+class PasswordEncoderTest extends \PHPUnit_Framework_TestCase
+{
     public function testHash()
     {
         $hash_options = [];
@@ -44,7 +45,26 @@ class PasswordEncoderTest extends \PHPUnit_Framework_TestCase {
         }
     }
 
-    private function assertPassword($hashedPassword, $scheme) {
+    public function testAdFomat()
+    {
+        $hash_options = [];
+        $hash_options['crypt_salt_prefix'] = "$6$";
+        $hash_options['crypt_salt_length'] = "6";
+
+        $passwordEncoder = new PasswordEncoder($hash_options);
+
+        $list = [
+            'password' => iconv('UTF-8', 'UTF-16LE', '"password"'),
+            '&é"\'' => iconv('UTF-8', 'UTF-16LE', '"&é"\'"'),
+        ];
+
+        foreach ($list as $password => $expected) {
+            $this->assertSame($expected, $passwordEncoder->format('AD', $password));
+        }
+    }
+
+    private function assertPassword($hashedPassword, $scheme)
+    {
         $this->assertStringStartsWith('{' . strtoupper($scheme) . '}', $hashedPassword);
         $this->assertNotFalse(base64_decode(substr($hashedPassword, strlen($scheme)+2)));
     }

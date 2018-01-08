@@ -8,7 +8,7 @@
     <meta name="author" content="LDAP Tool Box" />
     <link href="{{ asset('images/favicon.ico') }}" rel="icon" type="image/x-icon" />
     <link href="{{ asset('images/favicon.ico') }}" rel="shortcut icon" />
-    <link href="{{ app.request.baseUrl }}" />
+    <base href="{{ app.request.baseUrl }}" />
     {% block stylesheets %}
         <link rel="stylesheet" type="text/css" href="{{ asset('build/app.css') }}" />
         {% if background_image is not empty %}

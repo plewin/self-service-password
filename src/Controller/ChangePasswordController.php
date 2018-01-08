@@ -72,7 +72,7 @@ class ChangePasswordController extends Controller
      */
     private function isFormSubmitted(Request $request)
     {
-        return $request->get('login')
+        return ($request->request->has('login') || $request->query->has('login'))
             && $request->request->has('newpassword')
             && $request->request->has('oldpassword')
             && $request->request->has('confirmpassword');
@@ -95,10 +95,10 @@ class ChangePasswordController extends Controller
             $missings[] = 'loginrequired';
         }
         if (!$oldpassword) {
-            $missings[] = 'newpasswordrequired';
+            $missings[] = 'oldpasswordrequired';
         }
         if (!$newpassword) {
-            $missings[] = 'oldpasswordrequired';
+            $missings[] = 'newpasswordrequired';
         }
         if (!$confirmpassword) {
             $missings[] = 'confirmpasswordrequired';
@@ -150,8 +150,7 @@ class ChangePasswordController extends Controller
             $ldapClient->connect();
             // we want user's email address if we have to notify
             $wanted = $this->getParameter('notify_user_on_password_change') ? ['dn', 'samba', 'shadow', 'mail'] : ['dn', 'samba', 'shadow'];
-            $context = [];
-            $ldapClient->fetchUserEntryContext($login, $wanted, $context);
+            $context = $ldapClient->fetchUserEntryContext($login, $wanted);
             $ldapClient->checkOldPassword($oldpassword, $context);
             $ldapClient->changePassword($context['user_dn'], $newpassword, $oldpassword, $context);
         } catch (LdapErrorException $e) {

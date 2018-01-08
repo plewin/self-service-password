@@ -21,8 +21,10 @@
 
 /* @function boolean send_sms_by_api(string $mobile, string $message)
  * Send SMS trough an API
- * @param mobile mobile number
- * @param message text to send
+ *
+ * @param string $mobile mobile number
+ * @param string $message text to send
+ *
  * @return 1 if message sent, 0 if not
  */
 function send_sms_by_api($mobile, $message) {

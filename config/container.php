@@ -171,7 +171,6 @@ $container->register('twig.controller.exception', '\App\Controller\ExceptionCont
 $container
     ->register('app.twig_extension', '\App\Twig\AppExtension')
     ->addArgument('%pwd_show_policy%')
-    ->addArgument(new Reference('translator'))
     ->setPublic(false)
     ->addTag('twig.extension');
 

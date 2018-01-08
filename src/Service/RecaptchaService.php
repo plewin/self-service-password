@@ -23,6 +23,7 @@ namespace App\Service;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use ReCaptcha\ReCaptcha;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Class RecaptchaService
@@ -55,15 +56,15 @@ class RecaptchaService implements LoggerAwareInterface
     /**
      * Check if $response verifies the reCAPTCHA by asking the recaptcha server, logs if errors
      *
-     * @param string $response response provided by user
-     * @param string $login    for logging purposes only
+     * @param Request $request request provided by user with "g-recaptcha-response"
+     * @param string  $login   for logging purposes only
      *
      * @return string empty string if the response is verified successfully, else string 'badcaptcha'
      */
-    public function verify($response, $login)
+    public function verify(Request $request, $login)
     {
         $recaptcha = new ReCaptcha($this->privatekey, is_null($this->requestMethod) ? null : new $this->requestMethod());
-        $resp = $recaptcha->verify($response, $_SERVER['REMOTE_ADDR']);
+        $resp = $recaptcha->verify($request->request->get('g-recaptcha-response'), $request->getClientIp());
 
         if (!$resp->isSuccess()) {
             $this->logger->notice("Bad reCAPTCHA attempt with user $login");

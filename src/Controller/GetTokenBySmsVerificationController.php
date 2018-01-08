@@ -273,8 +273,8 @@ class GetTokenBySmsVerificationController extends Controller
         try {
             $ldapClient->connect();
             $wanted = ['dn', 'sms', 'displayname'];
-            $context = [];
-            $ldapClient->fetchUserEntryContext($login, $wanted, $context);
+
+            $context = $ldapClient->fetchUserEntryContext($login, $wanted);
 
             if (!$context['user_sms']) {
                 /** @var LoggerInterface $logger */
@@ -286,7 +286,7 @@ class GetTokenBySmsVerificationController extends Controller
             // action probably not needed, problem with configuration or ldap is down
             return $this->renderSearchUserFormWithError('ldaperror', [], $request);
         } catch (LdapInvalidUserCredentialsException $e) {
-            // user action needed, invalid password or login
+            // user action needed, invalid login
             return $this->renderSearchUserFormWithError('', ['badcredentials'], $request);
         } catch (LdapEntryFoundInvalidException $e) {
             // user has no sms

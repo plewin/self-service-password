@@ -53,7 +53,7 @@ class NotificationSubscriber implements EventSubscriberInterface
      * @param boolean                 $notifyOnPasswordChanged
      * @param boolean                 $notifyOnSshKeyChanged
      */
-    public function __construct($mailNotificationService, $translator, $signature, $notifyOnPasswordChanged, $notifyOnSshKeyChanged)
+    public function __construct($mailNotificationService, TranslatorInterface $translator, $signature, $notifyOnPasswordChanged, $notifyOnSshKeyChanged)
     {
         $this->mailNotificationService = $mailNotificationService;
         $this->translator = $translator;
@@ -106,8 +106,8 @@ class NotificationSubscriber implements EventSubscriberInterface
 
         if ($context['user_mail']) {
             $data = [
-                'login' => $event['login'],
-                'mail' => $context['user_mail'],
+                'login'  => $event['login'],
+                'mail'   => $context['user_mail'],
                 'sshkey' => $event['ssh_key'],
             ];
             $subject = $this->translator->trans('changesshkeysubject');

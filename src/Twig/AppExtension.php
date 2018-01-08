@@ -30,21 +30,17 @@ use Twig_SimpleFunction;
  */
 class AppExtension extends \Twig_Extension implements Twig_Extension_GlobalsInterface
 {
+    /** @var string */
     private $pwd_show_policy;
-
-    /** @var TranslatorInterface */
-    private $translator;
 
     /**
      * AppExtension constructor.
      *
-     * @param $pwd_show_policy
-     * @param $translator
+     * @param string $pwd_show_policy
      */
-    public function __construct($pwd_show_policy, $translator)
+    public function __construct($pwd_show_policy)
     {
         $this->pwd_show_policy = $pwd_show_policy;
-        $this->translator = $translator;
     }
 
     /**
@@ -56,7 +52,6 @@ class AppExtension extends \Twig_Extension implements Twig_Extension_GlobalsInte
             new Twig_SimpleFilter('fa_class', [$this, 'getFaClass']),
             new Twig_SimpleFilter('criticality', [$this, 'getCriticality']),
             new Twig_SimpleFilter('max_criticality', [$this, 'getMaxCriticality']),
-            new Twig_SimpleFilter('trans', [$this, 'trans']),
         ];
     }
 
@@ -161,6 +156,7 @@ class AppExtension extends \Twig_Extension implements Twig_Extension_GlobalsInte
             'mailrequired',
             'tokenrequired',
             'captcharequired',
+            'sshkeyrequired',
         ];
 
         if (in_array($msg, $warningList)) {
@@ -186,16 +182,6 @@ class AppExtension extends \Twig_Extension implements Twig_Extension_GlobalsInte
         }
 
         return $maxCriticality;
-    }
-
-    /**
-     * @param string $id
-     *
-     * @return string
-     */
-    public function trans($id)
-    {
-        return $this->translator->trans($id);
     }
 
     /**

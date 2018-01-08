@@ -70,7 +70,7 @@ class ResetPasswordByQuestionController extends Controller
      */
     private function isFormSubmitted(Request $request)
     {
-        return $request->get('login')
+        return ($request->request->has('login') || $request->query->has('login'))
             && $request->request->has('question')
             && $request->request->has('answer')
             && $request->request->has('newpassword')
@@ -95,6 +95,7 @@ class ResetPasswordByQuestionController extends Controller
             $missings[] = 'loginrequired';
         }
         if (!$question) {
+            // should never happen, $question is a select input, request is tampered
             $missings[] = 'questionrequired';
         }
         if (!$answer) {
@@ -107,10 +108,8 @@ class ResetPasswordByQuestionController extends Controller
             $missings[] = 'confirmpasswordrequired';
         }
 
-        if ($this->isCaptchaEnabled()) {
-            if (!$this->isCaptchaSubmitted($request)) {
-                $missings[] = 'captcharequired';
-            }
+        if ($this->isCaptchaEnabled() && !$this->isCaptchaSubmitted($request)) {
+            $missings[] = 'captcharequired';
         }
 
         if (count($missings) > 0) {
@@ -158,8 +157,7 @@ class ResetPasswordByQuestionController extends Controller
             if ($this->getParameter('notify_user_on_password_change')) {
                 $wanted[] = 'mail';
             }
-            $context = [];
-            $ldapClient->fetchUserEntryContext($login, $wanted, $context);
+            $context = $ldapClient->fetchUserEntryContext($login, $wanted);
 
             // Check question/answer
             $match = $ldapClient->checkQuestionAnswer($login, $question, $answer, $context);

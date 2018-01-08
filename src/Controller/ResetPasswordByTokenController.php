@@ -122,8 +122,7 @@ class ResetPasswordByTokenController extends Controller
             if ($notify) {
                 $wantedContext[] = 'mail';
             }
-            $context = [];
-            $ldapClient->fetchUserEntryContext($login, $wantedContext, $context);
+            $context = $ldapClient->fetchUserEntryContext($login, $wantedContext);
             // Change password
             $ldapClient->changePassword($context['user_dn'], $newpassword, '', $context);
         } catch (LdapErrorException $e) {
@@ -136,7 +135,7 @@ class ResetPasswordByTokenController extends Controller
             return $this->renderErrorPage('badcredentials', [], $request, $login);
         } catch (LdapUpdateFailedException $e) {
             // passwors was refused by server
-            return $this->renderErrorPage('', ['passwordnotchanged'], $request, $login);
+            return $this->renderErrorPage('', ['passworderror'], $request, $login);
         }
 
         // Delete token if all is ok

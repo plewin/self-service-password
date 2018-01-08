@@ -92,6 +92,7 @@ class ChangeSecurityQuestionsController extends Controller
             $missings[] = 'passwordrequired';
         }
         if (empty($question)) {
+            // Question cannot be empty, it is a select. Request has been tampered.
             $missings[] = 'questionrequired';
         }
         if (empty($answer)) {
@@ -130,8 +131,7 @@ class ChangeSecurityQuestionsController extends Controller
 
         try {
             $ldapClient->connect();
-            $context = [];
-            $ldapClient->fetchUserEntryContext($login, ['dn'], $context);
+            $context = $ldapClient->fetchUserEntryContext($login, ['dn']);
             $ldapClient->checkOldPassword($password, $context);
             // Register answer
             $ldapClient->changeQuestion($context['user_dn'], $question, $answer);
