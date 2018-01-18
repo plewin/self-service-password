@@ -57,7 +57,7 @@ class GregwarCaptchaTest extends CaptchaTestCase
             [],
             [
                 'login' => 'user1',
-                'oldpassword' => 'oldpassword',
+                'oldpassword' => 'password1',
                 'newpassword' => 'newpassword',
                 'confirmpassword' => 'confirmpassword',
             ]
@@ -121,7 +121,7 @@ class GregwarCaptchaTest extends CaptchaTestCase
             [],
             [
                 'login' => 'user1',
-                'oldpassword' => 'oldpassword',
+                'oldpassword' => 'password1',
                 'newpassword' => 'newpassword',
                 'confirmpassword' => 'newpassword',
                 'captcha' => 'plop42',
@@ -172,7 +172,7 @@ class GregwarCaptchaTest extends CaptchaTestCase
             [],
             [
                 'login' => 'user1',
-                'oldpassword' => 'oldpassword',
+                'oldpassword' => 'password1',
                 'newpassword' => 'newpassword',
                 'confirmpassword' => 'newpassword',
                 // cheat, get the captcha phrase from the session

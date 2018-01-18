@@ -14,6 +14,13 @@ use Psr\Log\NullLogger;
 
 class LdapClientTest extends LdapIntegrationTestCase
 {
+    protected function setUp()
+    {
+        if (getenv('TRAVIS') == 'true') {
+            $this->markTestSkipped('Cannot test Apache Directory Server integration on Travis');
+        }
+    }
+
     /**
      * Test that we can connect to Apache Directory Server
      */

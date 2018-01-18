@@ -2,7 +2,9 @@
 
 namespace App\Tests\Functional\Captcha;
 
+use App\Service\MockLdapClient;
 use App\Tests\Functional\FunctionalTestCase;
+use Psr\Log\NullLogger;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -69,7 +71,7 @@ abstract class CaptchaTestCase extends FunctionalTestCase
         $passwordChecker
             ->expects($this->once())
             ->method('evaluate')
-            ->with($this->equalTo('newpassword'), $this->equalTo('oldpassword'), $this->equalTo('user1'))
+            ->with($this->equalTo('newpassword'), $this->equalTo('password1'), $this->equalTo('user1'))
             ->willReturn([])
         ;
 
@@ -116,11 +118,8 @@ abstract class CaptchaTestCase extends FunctionalTestCase
 
     protected function createMockLdapClient()
     {
-        $ldapClient = $this
-            ->getMockBuilder('App\\Service\\LdapCLient')
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
+        $ldapClient = new MockLdapClient();
+        $ldapClient->setLogger(new NullLogger());
 
         return $ldapClient;
     }

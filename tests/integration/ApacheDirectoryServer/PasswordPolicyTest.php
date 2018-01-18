@@ -13,6 +13,13 @@ use Psr\Log\NullLogger;
 
 class PasswordPolicyTest extends LdapIntegrationTestCase
 {
+    protected function setUp()
+    {
+        if (getenv('TRAVIS') == 'true') {
+            $this->markTestSkipped('Cannot test Apache Directory Server integration on Travis');
+        }
+    }
+
     public function testUserCannotChangeOwnPassword()
     {
         $userDn = 'uid=user10,ou=People,dc=example,dc=com';

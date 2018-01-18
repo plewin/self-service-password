@@ -55,7 +55,7 @@ class RecaptchaTest extends CaptchaTestCase
             [],
             [
                 'login' => 'user1',
-                'oldpassword' => 'oldpassword',
+                'oldpassword' => 'password1',
                 'newpassword' => 'newpassword',
                 'confirmpassword' => 'confirmpassword',
             ]
@@ -95,7 +95,7 @@ class RecaptchaTest extends CaptchaTestCase
             [],
             [
                 'login' => 'user1',
-                'oldpassword' => 'oldpassword',
+                'oldpassword' => 'password1',
                 'newpassword' => 'newpassword',
                 'confirmpassword' => 'newpassword',
                 'g-recaptcha-response' => 'plop42',
@@ -138,7 +138,7 @@ class RecaptchaTest extends CaptchaTestCase
             [],
             [
                 'login' => 'user1',
-                'oldpassword' => 'oldpassword',
+                'oldpassword' => 'password1',
                 'newpassword' => 'newpassword',
                 'confirmpassword' => 'newpassword',
                 'g-recaptcha-response' => 'plop42',
