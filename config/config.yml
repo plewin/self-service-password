@@ -68,3 +68,4 @@ twig:
         enable_password_change_help_reset: '%enable_password_change_help_reset%'
         is_debug: '%kernel.debug%'
         environment: '%kernel.environment%'
+        enable_password_toggle_visibility: '%enable_password_toggle_visibility%'

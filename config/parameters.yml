@@ -230,3 +230,6 @@ parameters:
     enable_posthook: false
     # Launch a posthook script after successful password change
     posthook: '/usr/share/self-service-password/posthook.sh'
+
+
+    enable_password_toggle_visibility: false

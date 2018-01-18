@@ -58,7 +58,10 @@
         <div class="col-sm-8">
             <div class="input-group">
                 <span class="input-group-addon"><i class="fa fa-fw fa-{{ icon }}"></i></span>
-                <input type="password" name="{{ id }}" id="{{ id }}" value="" class="form-control" placeholder="{{ placeholder|trans }}" />
+                <input type="password" name="{{ id }}" id="{{ id }}" value="" class="form-control password" placeholder="{{ placeholder|trans }}" />
+                {% if enable_password_toggle_visibility %}
+                    <i class="glyphicon glyphicon-eye-open form-control-feedback"></i>
+                {% endif %}
             </div>
         </div>
     </div>
