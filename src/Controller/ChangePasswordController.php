@@ -24,7 +24,7 @@ use App\Events;
 use App\Exception\LdapErrorException;
 use App\Exception\LdapInvalidUserCredentialsException;
 use App\Exception\LdapUpdateFailedException;
-use App\Service\LdapClient;
+use App\Ldap\ClientInterface;
 use App\Service\PasswordStrengthChecker;
 use App\Service\UsernameValidityChecker;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -143,7 +143,7 @@ class ChangePasswordController extends Controller
             return $this->renderFormWithError('', ['badcaptcha'], $request);
         }
 
-        /** @var LdapClient $ldapClient */
+        /** @var ClientInterface $ldapClient */
         $ldapClient = $this->get('ldap_client');
 
         try {

@@ -18,21 +18,19 @@
  * GPL License: http://www.gnu.org/licenses/gpl.txt
  */
 
-namespace App\Service;
+namespace App\Ldap;
 
 use App\Exception\LdapEntryFoundInvalidException;
 use App\Exception\LdapErrorException;
 use App\Exception\LdapInvalidUserCredentialsException;
 use App\Exception\LdapUpdateFailedException;
-use App\Ldap\ErrorHandler;
 use App\Utils\PasswordEncoder;
-use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 
 /**
- * Class LdapClient
+ * Class Client
  */
-class LdapClient implements LoggerAwareInterface
+class Client implements ClientInterface
 {
     use LoggerAwareTrait;
 
@@ -68,7 +66,7 @@ class LdapClient implements LoggerAwareInterface
     private $mailAddressUseLdap;
 
     /**
-     * LdapClient constructor.
+     * Client constructor.
      *
      * @param PasswordEncoder $passwordEncoder
      * @param $ldapUrl
@@ -142,9 +140,7 @@ class LdapClient implements LoggerAwareInterface
     }
 
     /**
-     * @throws LdapErrorException
-     *
-     * @return true on success
+     * @inheritdoc
      */
     public function connect()
     {
@@ -177,13 +173,7 @@ class LdapClient implements LoggerAwareInterface
     }
 
     /**
-     * @param string $login
-     * @param array  $wanted
-     *
-     * @throws LdapErrorException
-     * @throws LdapInvalidUserCredentialsException
-     *
-     * @return array Modified context
+     * @inheritdoc
      */
     public function fetchUserEntryContext($login, $wanted)
     {
@@ -214,10 +204,7 @@ class LdapClient implements LoggerAwareInterface
     }
 
     /**
-     * @param string $oldpassword
-     * @param array  $context
-     *
-     * @throws LdapInvalidUserCredentialsException
+     * @inheritdoc
      */
     public function checkOldPassword($oldpassword, &$context)
     {
@@ -229,14 +216,8 @@ class LdapClient implements LoggerAwareInterface
         }
     }
 
-    // TODO move out ?
     /**
-     * @param string $login
-     * @param string $question
-     * @param string $answer
-     * @param array  $context
-     *
-     * @return bool
+     * @inheritdoc
      */
     public function checkQuestionAnswer($login, $question, $answer, &$context)
     {
@@ -260,14 +241,7 @@ class LdapClient implements LoggerAwareInterface
     }
 
     /**
-     * @param string $login
-     * @param string $mail
-     *
-     * @throws LdapEntryFoundInvalidException
-     * @throws LdapErrorException
-     * @throws LdapInvalidUserCredentialsException
-     *
-     * @return true Always true, on error, exceptions
+     * @inheritdoc
      */
     public function checkMail($login, $mail)
     {
@@ -304,12 +278,7 @@ class LdapClient implements LoggerAwareInterface
     }
 
     /**
-     * @param string $userdn
-     * @param string $question
-     * @param string $answer
-     *
-     * @throws LdapErrorException
-     * @throws LdapUpdateFailedException
+     * @inheritdoc
      */
     public function changeQuestion($userdn, $question, $answer)
     {
@@ -351,12 +320,7 @@ class LdapClient implements LoggerAwareInterface
     }
 
     /**
-     * @param string $entryDn
-     * @param string $newpassword
-     * @param string $oldpassword
-     * @param array  $context
-     *
-     * @throws LdapUpdateFailedException
+     * @inheritdoc
      */
     public function changePassword($entryDn, $newpassword, $oldpassword, $context = [])
     {
@@ -486,12 +450,7 @@ class LdapClient implements LoggerAwareInterface
     }
 
     /**
-     * Change sshPublicKey attribute
-     *
-     * @param string $entryDn
-     * @param string $sshkey
-     *
-     * @throws LdapUpdateFailedException
+     * @inheritdoc
      */
     public function changeSshKey($entryDn, $sshkey)
     {
@@ -714,6 +673,9 @@ class LdapClient implements LoggerAwareInterface
         ldap_bind($this->ldap, $this->ldapBindDn, $this->ldapBindPw);
     }
 
+    /**
+     * @inheritdoc
+     */
     public function getConnection()
     {
         return $this->ldap;

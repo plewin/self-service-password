@@ -2,7 +2,7 @@ imports:
     - { resource: config_dev.yml }
 
 parameters:
-    ldap_client.class: App\Service\MockLdapClient
+    ldap_client.class: App\Ldap\MockClient
 
 framework:
     test: ~

@@ -2,7 +2,8 @@
 
 namespace App\Tests\Integration\ApacheDirectoryServer;
 
-use App\Service\LdapClient;
+use App\Ldap\Client;
+use App\Ldap\ClientInterface;
 use App\Tests\Integration\LdapIntegrationTestCase;
 use App\Utils\PasswordEncoder;
 use App\Utils\PasswordVerifier;
@@ -349,7 +350,7 @@ class LdapClientTest extends LdapIntegrationTestCase
         $this->assertDirectoryObjectAttributeValueSame($client, $accountDn, $attribute, $sshKey2);
     }
 
-    private function assertDirectoryAccountPasswordSame(LdapClient $client, $dn, $expected)
+    private function assertDirectoryAccountPasswordSame(ClientInterface $client, $dn, $expected)
     {
         $attribute = 'userPassword';
         $connection = $client->getConnection();
@@ -360,6 +361,10 @@ class LdapClientTest extends LdapIntegrationTestCase
         $this->assertTrue($passwordVerifier->verify($expected, $values[0]), "Password in directory {$values[0]} was not $expected");
     }
 
+    /**
+     * @param array $options
+     * @return Client
+     */
     private function createLdapClient($options = [])
     {
         $passwordEncoder = new PasswordEncoder([]);
@@ -388,7 +393,7 @@ class LdapClientTest extends LdapIntegrationTestCase
         ];
         $mailAddressUseLdap = false;
 
-        $ldapClient = new LdapClient(
+        $ldapClient = new Client(
             $passwordEncoder,
             $ldapUrl,
             $ldapUseTls,

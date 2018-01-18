@@ -2,7 +2,7 @@
 
 namespace App\Tests\Integration\ApacheDirectoryServer;
 
-use App\Service\LdapClient;
+use App\Ldap\Client;
 use App\Tests\Integration\LdapIntegrationTestCase;
 use App\Utils\PasswordEncoder;
 use Psr\Log\NullLogger;
@@ -67,7 +67,7 @@ class PasswordPolicyTest extends LdapIntegrationTestCase
         ];
         $mailAddressUseLdap = false;
 
-        $ldapClient = new LdapClient(
+        $ldapClient = new Client(
             $passwordEncoder,
             $ldapUrl,
             $ldapUseTls,

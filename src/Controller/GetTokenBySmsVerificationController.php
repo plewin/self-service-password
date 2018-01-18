@@ -24,7 +24,7 @@ use App\Exception\LdapEntryFoundInvalidException;
 use App\Exception\LdapErrorException;
 use App\Exception\LdapInvalidUserCredentialsException;
 use App\Service\EncryptionService;
-use App\Service\LdapClient;
+use App\Ldap\ClientInterface;
 use App\Service\SmsNotificationService;
 use App\Service\TokenManagerService;
 use App\Service\UsernameValidityChecker;
@@ -267,7 +267,7 @@ class GetTokenBySmsVerificationController extends Controller
         }
 
         // Check sms
-        /** @var LdapClient $ldapClient */
+        /** @var ClientInterface $ldapClient */
         $ldapClient = $this->get('ldap_client');
 
         try {

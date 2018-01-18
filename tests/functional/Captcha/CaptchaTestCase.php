@@ -2,7 +2,7 @@
 
 namespace App\Tests\Functional\Captcha;
 
-use App\Service\MockLdapClient;
+use App\Ldap\MockClient;
 use App\Tests\Functional\FunctionalTestCase;
 use Psr\Log\NullLogger;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -118,7 +118,7 @@ abstract class CaptchaTestCase extends FunctionalTestCase
 
     protected function createMockLdapClient()
     {
-        $ldapClient = new MockLdapClient();
+        $ldapClient = new MockClient();
         $ldapClient->setLogger(new NullLogger());
 
         return $ldapClient;

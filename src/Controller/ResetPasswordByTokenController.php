@@ -24,9 +24,8 @@ use App\Exception\LdapErrorException;
 use App\Exception\LdapInvalidUserCredentialsException;
 use App\Exception\LdapUpdateFailedException;
 use App\Exception\TokenException;
-use App\Service\LdapClient;
+use App\Ldap\ClientInterface;
 use App\Service\PasswordStrengthChecker;
-use App\Service\RecaptchaService;
 use App\Service\TokenManagerService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -112,7 +111,7 @@ class ResetPasswordByTokenController extends Controller
 
         $notify = $this->getParameter('notify_user_on_password_change');
 
-        /** @var LdapClient $ldapClient */
+        /** @var ClientInterface $ldapClient */
         $ldapClient = $this->get('ldap_client');
 
         try {

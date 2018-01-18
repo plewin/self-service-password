@@ -18,18 +18,17 @@
  * GPL License: http://www.gnu.org/licenses/gpl.txt
  */
 
-namespace App\Service;
+namespace App\Ldap;
 
 use App\Exception\LdapEntryFoundInvalidException;
 use App\Exception\LdapInvalidUserCredentialsException;
 use App\Exception\LdapUpdateFailedException;
-use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 
 /**
- * Class LdapClient
+ * Class MockClient
  */
-class MockLdapClient implements LoggerAwareInterface
+class MockClient implements ClientInterface
 {
     use LoggerAwareTrait;
 
@@ -84,6 +83,9 @@ class MockLdapClient implements LoggerAwareInterface
         ];
     }
 
+    /**
+     * @inheritdoc
+     */
     public function connect()
     {
         // fake connect
@@ -91,12 +93,7 @@ class MockLdapClient implements LoggerAwareInterface
     }
 
     /**
-     * @param $login
-     * @param $wanted
-     *
-     * @throws LdapInvalidUserCredentialsException
-     *
-     * @return array Modified context
+     * @inheritdoc
      */
     public function fetchUserEntryContext($login, $wanted)
     {
@@ -119,10 +116,7 @@ class MockLdapClient implements LoggerAwareInterface
     }
 
     /**
-     * @param string $oldpassword
-     * @param array $context
-     *
-     * @throws LdapInvalidUserCredentialsException
+     * @inheritdoc
      */
     public function checkOldPassword($oldpassword, &$context)
     {
@@ -133,14 +127,8 @@ class MockLdapClient implements LoggerAwareInterface
         }
     }
 
-    // TODO move out ?
     /**
-     * @param string $login
-     * @param string $question
-     * @param string $answer
-     * @param array  $context
-     *
-     * @return bool
+     * @inheritdoc
      */
     public function checkQuestionAnswer($login, $question, $answer, &$context)
     {
@@ -150,13 +138,7 @@ class MockLdapClient implements LoggerAwareInterface
     }
 
     /**
-     * @param string $login
-     * @param string $mail
-     *
-     * @throws LdapEntryFoundInvalidException
-     * @throws LdapInvalidUserCredentialsException
-     *
-     * @return true
+     * @inheritdoc
      */
     public function checkMail($login, $mail)
     {
@@ -175,9 +157,7 @@ class MockLdapClient implements LoggerAwareInterface
     }
 
     /**
-     * @param string $userdn
-     * @param string $question
-     * @param string $answer
+     * @inheritdoc
      */
     public function changeQuestion($userdn, $question, $answer)
     {
@@ -185,14 +165,9 @@ class MockLdapClient implements LoggerAwareInterface
     }
 
     /**
-     * @param string $entryDn
-     * @param string $newpassword
-     * @param string $oldpassword
-     * @param array  $context
-     *
-     * @throws LdapUpdateFailedException
+     * @inheritdoc
      */
-    public function changePassword($entryDn, $newpassword, $oldpassword, $context)
+    public function changePassword($entryDn, $newpassword, $oldpassword, $context = [])
     {
         if ($entryDn === 'uid=user10,ou=People,dc=example,dc=com') {
             // poor guy has password change forbidden in password policy
@@ -201,13 +176,19 @@ class MockLdapClient implements LoggerAwareInterface
     }
 
     /**
-     * Change sshPublicKey attribute
-     *
-     * @param string $entryDn
-     * @param string $sshkey
+     * @inheritdoc
      */
     public function changeSshKey($entryDn, $sshkey)
     {
 
+    }
+
+
+    /**
+     * @inheritdoc
+     */
+    public function getConnection()
+    {
+        return null;
     }
 }
