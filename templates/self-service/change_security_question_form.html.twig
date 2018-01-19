@@ -15,8 +15,8 @@
 
     <div class="alert alert-info">
         <form action="#" method="post" class="form-horizontal">
-            {{ forms.row_input_text('login', 'login', 'user', 'login', login) }}
-            {{ forms.row_input_password('password', 'password', 'lock', 'password') }}
+            {{ forms.row_input_text('login', 'login', 'user', 'login', login, false, 'username') }}
+            {{ forms.row_input_password('password', 'password', 'lock', 'password', '', 'current') }}
             {{ forms.row_input_select('question', 'question', 'question', questions) }}
             {{ forms.row_input_text('answer', 'answer', 'pencil', 'answer') }}
             {% if enable_captcha %}

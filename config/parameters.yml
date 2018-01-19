@@ -233,3 +233,5 @@ parameters:
 
 
     enable_password_toggle_visibility: false
+
+    enable_form_autocomplete: true

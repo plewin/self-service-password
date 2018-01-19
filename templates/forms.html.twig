@@ -16,13 +16,24 @@
     {% endif %}
 {% endmacro %}
 
-{% macro row_input_text(id, label, icon, placeholder, default_value, disabled) %}
+{% macro row_input_text(id, label, icon, placeholder, default_value, disabled, autocomplete) %}
     <div class="form-group">
         <label for="{{ id }}" class="col-sm-4 control-label">{{ label|trans }}</label>
         <div class="col-sm-8">
             <div class="input-group">
                 <span class="input-group-addon"><i class="fa fa-fw fa-{{ icon }}"></i></span>
-                <input {% if disabled|default(false) %}disabled{% endif %} name="{{ id }}" id="{{ id }}" value="{{ default_value|default('') }}" class="form-control" placeholder="{{ placeholder|trans }}" />
+                <input id="{{ id }}"
+                       name="{{ id }}"
+                       {% if disabled|default(false) %}disabled{% endif %}
+                       value="{{ default_value|default('') }}"
+                       class="form-control"
+                       placeholder="{{ placeholder|trans }}"
+                       {% if enable_form_autocomplete %}
+                           {% if autocomplete|default(false) %}autocomplete="{{ autocomplete }}"{% endif %}
+                       {% else %}
+                           autocomplete="off"
+                       {% endif %}
+                />
             </div>
         </div>
     </div>
@@ -34,7 +45,14 @@
         <div class="col-sm-8">
             <div class="input-group">
                 <span class="input-group-addon"><i class="fa fa-fw fa-{{ icon }}"></i></span>
-                <input type="email" name="{{ id }}" id="{{ id }}" value="{{ default_value|default('') }}" class="form-control" placeholder="{{ placeholder|trans }}" />
+                <input type="email"
+                       name="{{ id }}"
+                       id="{{ id }}"
+                       value="{{ default_value|default('') }}"
+                       class="form-control"
+                       placeholder="{{ placeholder|trans }}"
+                       autocomplete="{% if enable_form_autocomplete %}email{% else %}off{% endif %}"
+                />
             </div>
         </div>
     </div>
@@ -52,13 +70,25 @@
     </div>
 {% endmacro %}
 
-{% macro row_input_password(id, label, icon, placeholder) %}
+{% macro row_input_password(id, label, icon, placeholder, default_value, type) %}
     <div class="form-group">
         <label for="{{ id }}" class="col-sm-4 control-label">{{ label|trans }}</label>
         <div class="col-sm-8">
             <div class="input-group">
                 <span class="input-group-addon"><i class="fa fa-fw fa-{{ icon }}"></i></span>
-                <input type="password" name="{{ id }}" id="{{ id }}" value="" class="form-control password" placeholder="{{ placeholder|trans }}" />
+                <input type="password"
+                       name="{{ id }}"
+                       id="{{ id }}"
+                       value="{{ default_value|default('') }}"
+                       class="form-control password"
+                       placeholder="{{ placeholder|trans }}"
+                       {% if enable_form_autocomplete %}
+                           autocomplete="{{ type }}-password"
+                       {% else %}
+                           autocomplete="off"
+                       {% endif %}
+
+                />
                 {% if enable_password_toggle_visibility %}
                     <i class="glyphicon glyphicon-eye-open form-control-feedback"></i>
                 {% endif %}
