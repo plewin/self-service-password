@@ -1,9 +1,12 @@
-# LDAP Tool Box Self-Service Password
+# Self-Service Password
 
+[![LDAP Tool Box](https://img.shields.io/badge/A%20project%20-LDAP%20Toolbox-7ef80b.svg)](https://ltb-project.org)
 [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/372/badge)](https://bestpractices.coreinfrastructure.org/projects/372)
 [![Build Status](https://travis-ci.org/ltb-project/self-service-password.svg?branch=master)](https://travis-ci.org/ltb-project/self-service-password)
-
-## Presentation
+[![PHP 5.4](https://img.shields.io/badge/PHP-^5.4-787cb4.svg)](https://secure.php.net/manual/en/intro-whatis.php)
+[![Symfony 2.8](https://img.shields.io/badge/Symfony-2.8-7aba20.svg)](https://symfony.com/what-is-symfony)
+[![GPL License](https://img.shields.io/github/license/ltb-project/self-service-password.svg)](https://github.com/ltb-project/self-service-password/blob/master/LICENCE)
+[![Twitter Follow](https://img.shields.io/twitter/follow/ltb_project.svg?style=social&label=twitter%20@ltb_project&style=plastic)](https://twitter.com/ltb_project)
 
 Self-Service Password is a PHP application that allows users to change their password in an LDAP directory.
 
