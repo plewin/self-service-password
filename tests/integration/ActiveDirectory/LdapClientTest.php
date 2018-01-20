@@ -8,44 +8,72 @@ use App\Utils\PasswordEncoder;
 use Psr\Log\NullLogger;
 
 /**
- * Class PasswordPolicyTest
+ * Class LdapClientTest
  */
 
-class PasswordPolicyTest extends LdapIntegrationTestCase
+class LdapClientTest extends LdapIntegrationTestCase
 {
     protected function setUp()
     {
         if (getenv('TRAVIS') == 'true') {
-            $this->markTestSkipped('Cannot test Apache Directory Server integration on Travis');
+            $this->markTestSkipped('Cannot test Active Directory integration on Travis');
         }
+
+        //ldap_set_option(NULL, LDAP_OPT_DEBUG_LEVEL, 7);
     }
 
-    public function testUserCannotChangeOwnPassword()
+    /**
+     * Test that we can connect to Active Directory
+     */
+    public function testConnect()
     {
-        $userDn = 'uid=user10,ou=People,dc=example,dc=com';
-
-        $client = $this->createLdapClient([
-            'ldap_bind_dn' => $userDn,
-            'ldap_bind_pw' => 'password10',
-        ]);
+        $client = $this->createLdapClient();
 
         // expect no exception
         /** @noinspection PhpUnhandledExceptionInspection */
         $this->assertTrue($client->connect());
-
-
-        $newPassword = 'shouldberejected';
-        //TODO
-        //$client->changePassword($userDn, $newPassword, '');
     }
 
+    public function testConnectWrongCredentials()
+    {
+        $client = $this->createLdapClient(['ldap_bind_dn' => 'bad_dn']);
+
+        $this->setExpectedException('App\Exception\LdapErrorException');
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $this->assertTrue($client->connect());
+    }
+
+    public function testCheckOldPassword()
+    {
+        $client = $this->createLdapClient();
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $client->connect();
+
+        $context = [
+            'user_dn' => 'cn=user1,ou=People,dc=example,dc=com',
+        ];
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $client->checkOldPassword('Passw0rd!', $context);
+
+        // now we expect the next one to throw an exception
+        $this->setExpectedException('App\Exception\LdapInvalidUserCredentialsException');
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $client->checkOldPassword('badpassword1', $context);
+    }
+
+    /**
+     * @param array $options
+     * @return Client
+     */
     private function createLdapClient($options = [])
     {
         $passwordEncoder = new PasswordEncoder([]);
-        $ldapUrl = 'ldap://localhost:9389';
+        $ldapUrl = 'ldap://localhost:7389';
         $ldapUseTls = isset($options['use_tls']) ? $options['use_tls'] : false;
-        $ldapBindDn = isset($options['ldap_bind_dn']) ? $options['ldap_bind_dn'] : 'uid=admin,ou=system';
-        $ldapBindPw = isset($options['ldap_bind_pw']) ? $options['ldap_bind_pw'] : 'secret';
+        $ldapBindDn = isset($options['ldap_bind_dn']) ? $options['ldap_bind_dn'] : 'cn=ssp,ou=service,dc=example,dc=com';
+        $ldapBindPw = 'Passw0rd!';
         $whoChangePassword = 'user';
         $adMode = false;
         $ldapFilter = isset($options['ldap_filter']) ? $options['ldap_filter'] : '(&(objectClass=person)(uid={login}))';

@@ -46,7 +46,6 @@ class LdapClientTest extends LdapIntegrationTestCase
 
     public function testConnectWrongCredentials()
     {
-        // use tls but but port non tls
         $client = $this->createLdapClient(['ldap_bind_dn' => 'bad_dn']);
 
         $this->setExpectedException('App\Exception\LdapErrorException');
@@ -368,7 +367,7 @@ class LdapClientTest extends LdapIntegrationTestCase
     private function createLdapClient($options = [])
     {
         $passwordEncoder = new PasswordEncoder([]);
-        $ldapUrl = 'ldap://localhost:10389';
+        $ldapUrl = 'ldap://localhost:9389';
         $ldapUseTls = isset($options['use_tls']) ? $options['use_tls'] : false;
         $ldapBindDn = isset($options['ldap_bind_dn']) ? $options['ldap_bind_dn'] : 'uid=admin,ou=system';
         $ldapBindPw = 'secret';

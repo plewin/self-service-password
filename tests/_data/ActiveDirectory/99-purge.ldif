@@ -1,0 +1,14 @@
+dn: CN=user1,OU=People,DC=example,DC=com
+changetype: delete
+
+dn: CN=user20,OU=People,DC=example,DC=com
+changetype: delete
+
+dn: OU=People,DC=example,DC=com
+changetype: delete
+
+dn: CN=ssp,OU=service,DC=example,DC=com
+changetype: delete
+
+dn: OU=service,DC=example,DC=com
+changetype: delete

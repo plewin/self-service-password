@@ -1,0 +1,82 @@
+version: 1
+
+dn: ou=People,dc=example,dc=com
+objectClass: organizationalUnit
+objectClass: top
+ou: People
+
+dn: uid=user1,ou=People,dc=example,dc=com
+objectClass: organizationalPerson
+objectClass: person
+objectClass: inetOrgPerson
+objectClass: top
+cn: User1CN
+sn: User1SN
+uid: user1
+userPassword:: e1NTSEF9S2RZRWROZWtRV21SMHdjeVZtQ1VWaGxQNFc0aDJuY3VFbDdYYXc9P
+ Q==
+mail: user1@example.com
+telephoneNumber: 0123456789
+
+dn: uid=user2,ou=People,dc=example,dc=com
+objectClass: sambaSamAccount
+objectClass: organizationalPerson
+objectClass: person
+objectClass: inetOrgPerson
+objectClass: top
+cn: User2CN
+sambaSID: S-1-5-21-00001
+sn: User2SN
+uid: user2
+userPassword:: e1NTSEF9enZReVI5dk5XVGYxVzhUWE9uTjRuN21ZbDk1amhMMHh1eE81NkE9P
+ Q==
+
+dn: uid=user3,ou=People,dc=example,dc=com
+objectClass: shadowAccount
+objectClass: organizationalPerson
+objectClass: person
+objectClass: inetOrgPerson
+objectClass: top
+cn: User3CN
+sn: User3SN
+uid: user3
+
+dn: uid=user4,ou=People,dc=example,dc=com
+objectClass: ldapPublicKey
+objectClass: organizationalPerson
+objectClass: person
+objectClass: inetOrgPerson
+objectClass: top
+cn: User4CN
+sn: User4SN
+sshPublicKey: test
+uid: user4
+
+dn: uid=user5,ou=People,dc=example,dc=com
+objectClass: extensibleObject
+objectClass: person
+objectClass: organizationalPerson
+objectClass: top
+cn: User5CN
+sn: User5SN
+info: {ice}vanilla
+uid: user5
+
+dn: uid=user10,ou=People,dc=example,dc=com
+objectClass: organizationalPerson
+objectClass: person
+objectClass: inetOrgPerson
+objectClass: top
+objectClass: pwdPolicy
+cn: User10CN
+pwdAttribute: userPassword
+sn: User10SN
+uid: user10
+pwdPolicySubentry: ads-pwdId=sspp1,ou=passwordPolicies,ads-interceptorId=authe
+ nticationInterceptor,ou=interceptors,ads-directoryServiceId=default,ou=config
+userPassword:: e1NTSEF9aHpVNk5ZWFAzVTJ3bGQrSmd1ejVSYmRpbzZUYVlDajNPeHU2M2c9P
+ Q==
+
+
+
+

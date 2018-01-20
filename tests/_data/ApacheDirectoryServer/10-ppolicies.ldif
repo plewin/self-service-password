@@ -1,0 +1,32 @@
+version: 1
+
+dn: ads-pwdId=sspp1,ou=passwordPolicies,ads-interceptorId=authenticationInte
+ rceptor,ou=interceptors,ads-directoryServiceId=default,ou=config
+objectclass: ads-base
+objectclass: top
+objectclass: ads-passwordPolicy
+ads-pwdattribute: userPassword
+ads-pwdId: sspp1
+ads-enabled: TRUE
+ads-pwdallowuserchange: FALSE
+ads-pwdcheckquality: 1
+ads-pwdexpirewarning: 600
+ads-pwdfailurecountinterval: 30
+ads-pwdgraceauthnlimit: 5
+ads-pwdgraceexpire: 0
+ads-pwdinhistory: 5
+ads-pwdlockout: TRUE
+ads-pwdlockoutduration: 0
+ads-pwdmaxage: 0
+ads-pwdmaxdelay: 0
+ads-pwdmaxfailure: 5
+ads-pwdmaxidle: 0
+ads-pwdmaxlength: 0
+ads-pwdminage: 0
+ads-pwdmindelay: 0
+ads-pwdminlength: 5
+ads-pwdmustchange: FALSE
+ads-pwdsafemodify: FALSE
+ads-pwdvalidator: org.apache.directory.server.core.api.authn.ppolicy.Default
+ PasswordValidator
+

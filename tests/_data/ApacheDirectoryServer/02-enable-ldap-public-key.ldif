@@ -1,0 +1,40 @@
+version: 1
+
+dn: cn=openssl-lpk,ou=schema
+objectClass: metaSchema
+objectClass: top
+cn: openssl-lpk
+
+dn: ou=objectClasses,cn=openssl-lpk,ou=schema
+objectClass: organizationalUnit
+objectClass: top
+ou: objectClasses
+
+dn: ou=attributeTypes,cn=openssl-lpk,ou=schema
+objectClass: organizationalUnit
+objectClass: top
+ou: attributeTypes
+
+dn: m-oid=1.3.6.1.4.1.24552.500.1.1.1.13,ou=attributeTypes,cn=openssl-lpk,ou
+ =schema
+objectClass: metaAttributeType
+objectClass: top
+objectClass: metaTop
+m-oid: 1.3.6.1.4.1.24552.500.1.1.1.13
+m-description: MANDATORY: OpenSSH Public key
+m-equality: octetStringMatch
+m-name: sshPublicKey
+m-syntax: 1.3.6.1.4.1.1466.115.121.1.40
+
+dn: m-oid=1.3.6.1.4.1.24552.500.1.1.2.0,ou=objectClasses,cn=openssl-lpk,ou=s
+ chema
+objectClass: top
+objectClass: metaObjectClass
+objectClass: metaTop
+m-oid: 1.3.6.1.4.1.24552.500.1.1.2.0
+m-description: MANDATORY: OpenSSH LPK objectclass
+m-must: sshPublicKey
+m-name: ldapPublicKey
+m-supObjectClass: top
+m-typeObjectClass: AUXILIARY
+

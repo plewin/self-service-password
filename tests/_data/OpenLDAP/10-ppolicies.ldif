@@ -1,0 +1,26 @@
+version: 1
+
+dn: ou=ppolicies,dc=nodomain
+objectClass: top
+objectClass: organizationalUnit
+ou: ppolicies
+
+dn: cn=sspp1,ou=ppolicies,dc=nodomain
+cn: No change allowed
+objectClass: pwdPolicy
+objectClass: device
+objectClass: top
+pwdAllowUserChange: FALSE
+pwdAttribute: 2.5.4.35
+pwdCheckQuality: 1
+
+dn: cn=sspp2,ou=ppolicies,dc=nodomain
+cn: Min lenght 8
+objectClass: pwdPolicy
+objectClass: device
+objectClass: top
+pwdAllowUserChange: TRUE
+pwdAttribute: 2.5.4.35
+pwdMinLength: 8
+pwdCheckQuality: 1
+

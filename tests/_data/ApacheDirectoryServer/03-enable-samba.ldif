@@ -1,0 +1,7 @@
+dn: cn=samba,ou=schema
+changetype: modify
+delete: m-disabled
+
+dn: cn=nis,ou=schema
+changetype: modify
+delete: m-disabled

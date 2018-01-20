@@ -1,0 +1,17 @@
+version: 1
+
+dn: ou=service,dc=nodomain
+objectClass: top
+objectClass: organizationalUnit
+ou: service
+
+dn: uid=ssp,ou=service,dc=nodomain
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+cn: SSP
+sn: SSP
+uid: ssp
+userPassword:: e1NTSEF9S2RZRWROZWtRV21SMHdjeVZtQ1VWaGxQNFc0aDJuY3VFbDdYYXc9P
+ Q==

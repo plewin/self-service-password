@@ -1,0 +1,18 @@
+dn: OU=service,DC=example,DC=com
+objectClass: top
+objectClass: organizationalUnit
+ou: service
+distinguishedName: OU=service,DC=example,DC=com
+name: Service
+
+dn: CN=ssp,OU=service,DC=example,DC=com
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: user
+objectClass: inetOrgPerson
+cn: ssp
+distinguishedName: CN=ssp,OU=service,DC=example,DC=com
+name: ssp
+msDS-UserAccountDisabled: FALSE
+unicodePwd::IgBQAGEAcwBzAHcAMAByAGQAIQAiAA==

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Integration\ApacheDirectoryServer;
+namespace App\Tests\Integration\OpenLdap;
 
 use App\Ldap\Client;
 use App\Tests\Integration\LdapIntegrationTestCase;
@@ -8,48 +8,48 @@ use App\Utils\PasswordEncoder;
 use Psr\Log\NullLogger;
 
 /**
- * Class PasswordPolicyTest
+ * Class LdapClientTest
  */
 
-class PasswordPolicyTest extends LdapIntegrationTestCase
+class LdapClientTest extends LdapIntegrationTestCase
 {
     protected function setUp()
     {
         if (getenv('TRAVIS') == 'true') {
             $this->markTestSkipped('Cannot test Apache Directory Server integration on Travis');
         }
+
+        ldap_set_option(NULL, LDAP_OPT_DEBUG_LEVEL, 7);
     }
 
-    public function testUserCannotChangeOwnPassword()
+    /**
+     * Test that we can connect to Apache Directory Server
+     */
+    public function testConnect()
     {
-        $userDn = 'uid=user10,ou=People,dc=example,dc=com';
-
-        $client = $this->createLdapClient([
-            'ldap_bind_dn' => $userDn,
-            'ldap_bind_pw' => 'password10',
-        ]);
+        $client = $this->createLdapClient();
 
         // expect no exception
         /** @noinspection PhpUnhandledExceptionInspection */
         $this->assertTrue($client->connect());
-
-
-        $newPassword = 'shouldberejected';
-        //TODO
-        //$client->changePassword($userDn, $newPassword, '');
     }
 
+
+    /**
+     * @param array $options
+     * @return Client
+     */
     private function createLdapClient($options = [])
     {
         $passwordEncoder = new PasswordEncoder([]);
-        $ldapUrl = 'ldap://localhost:9389';
+        $ldapUrl = 'ldap://localhost:8389';
         $ldapUseTls = isset($options['use_tls']) ? $options['use_tls'] : false;
-        $ldapBindDn = isset($options['ldap_bind_dn']) ? $options['ldap_bind_dn'] : 'uid=admin,ou=system';
-        $ldapBindPw = isset($options['ldap_bind_pw']) ? $options['ldap_bind_pw'] : 'secret';
+        $ldapBindDn = isset($options['ldap_bind_dn']) ? $options['ldap_bind_dn'] : 'uid=ssp,ou=service,dc=nodomain';
+        $ldapBindPw = 'password10';
         $whoChangePassword = 'user';
         $adMode = false;
         $ldapFilter = isset($options['ldap_filter']) ? $options['ldap_filter'] : '(&(objectClass=person)(uid={login}))';
-        $ldapBase = isset($options['ldap_base']) ? $options['ldap_base'] : 'ou=People,dc=example,dc=com';
+        $ldapBase = isset($options['ldap_base']) ? $options['ldap_base'] : 'ou=People,dc=nodomain';
         $hash = isset($options['hash']) ? $options['hash'] : 'clear';
         $smsAttribute = 'telephoneNumber';
         $answerObjectClass = "extensibleObject";

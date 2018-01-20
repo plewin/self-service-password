@@ -1,0 +1,18 @@
+dn: OU=People,DC=example,DC=com
+objectClass: top
+objectClass: organizationalUnit
+ou: People
+distinguishedName: OU=People,DC=example,DC=com
+name: People
+
+dn: CN=user1,OU=People,DC=example,DC=com
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: user
+objectClass: inetOrgPerson
+cn: user1
+distinguishedName: CN=user1,OU=People,DC=example,DC=com
+name: user1
+msDS-UserAccountDisabled: FALSE
+unicodePwd::IgBQAGEAcwBzAHcAMAByAGQAIQAiAA==

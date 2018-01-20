@@ -1,0 +1,19 @@
+version: 1
+
+dn: ou=People,dc=nodomain
+objectClass: top
+objectClass: organizationalUnit
+ou: People
+
+dn: uid=user10,ou=People,dc=nodomain
+objectClass: pwdPolicy
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+cn: User10CN
+sn: User10SN
+uid: user10
+pwdPolicySubentry: cn=sspp1,ou=ppolicies,dc=nodomain
+pwdAttribute: 2.5.4.35
+userPassword:: e1NIQX05bzdFSE40VzlyZ0cxN0JNY0ZkbXR6R1B1eDA9

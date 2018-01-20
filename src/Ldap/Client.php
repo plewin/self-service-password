@@ -421,7 +421,9 @@ class Client implements ClientInterface
             $userdata['userPassword'] = $newpassword;
         }
 
+        ErrorHandler::start(E_WARNING);
         $success = ldap_mod_replace($this->ldap, $entryDn, $userdata);
+        ErrorHandler::stop();
         if (!$success) {
             $errno = ldap_errno($this->ldap);
             $this->logger->critical("LDAP - Modify password error $errno (".ldap_error($this->ldap).")");
