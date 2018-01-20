@@ -58,19 +58,31 @@ class GetTokenBySmsVerificationController extends Controller
         $token = $request->get('token');
         $smstoken = $request->get('smstoken');
 
-        if (!empty($token) and !empty($smstoken)) {
+        if (!empty($token) and !empty($smstoken) and $request->request->has('_csrf_token')) {
+            if (!$this->isCsrfTokenValid('sms_token_attempt', $request->request->get('_csrf_token'))) {
+                throw $this->createAccessDeniedException('Invalid CSRF token');
+            }
+
             return $this->processSmsTokenAttempt($request);
         }
 
         $encryptedSmsLogin = $request->get('encrypted_sms_login');
 
-        if (!empty($encryptedSmsLogin)) {
+        if (!empty($encryptedSmsLogin) and $request->request->has('_csrf_token')) {
+            if (!$this->isCsrfTokenValid('send_sms_token', $request->request->get('_csrf_token'))) {
+                throw $this->createAccessDeniedException('Invalid CSRF token');
+            }
+
             return $this->generateAndSendSmsToken($request);
         }
 
         $login = $request->get('login');
 
-        if (!empty($login)) {
+        if (!empty($login) and $request->request->has('_csrf_token')) {
+            if (!$this->isCsrfTokenValid('user_entry_search', $request->request->get('_csrf_token'))) {
+                throw $this->createAccessDeniedException('Invalid CSRF token');
+            }
+
             return $this->processSearchUserFormData($request);
         }
 
@@ -97,12 +109,10 @@ class GetTokenBySmsVerificationController extends Controller
         $receivedSmsCode = $request->get('smstoken');
 
         $session = $this->get('session');
-        $session->setId($tokenid);
         $session->start();
 
         /** @var LoggerInterface $logger */
         $logger = $this->get('logger');
-
 
         if (!$session->has('smstoken')) {
             $logger->notice("Unable to open session $tokenid");
@@ -194,7 +204,6 @@ class GetTokenBySmsVerificationController extends Controller
 
         /** @var SessionInterface $session */
         $session = $this->get('session');
-
         $session->start();
         $smstoken = [
             'login' => $login,

@@ -69,7 +69,8 @@ class ChangeSecurityQuestionsController extends Controller
     {
         return $request->request->has('password')
             && $request->request->has('question')
-            && $request->request->has('answer');
+            && $request->request->has('answer')
+            && $request->request->has('_csrf_token');
     }
 
     /**
@@ -79,6 +80,10 @@ class ChangeSecurityQuestionsController extends Controller
      */
     private function processFormData(Request $request)
     {
+        if (!$this->isCsrfTokenValid('change_security_question', $request->request->get('_csrf_token'))) {
+            throw $this->createAccessDeniedException('Invalid CSRF token');
+        }
+
         $login = $request->get('login');
         $password = $request->request->get('password');
         $question = $request->request->get('question');

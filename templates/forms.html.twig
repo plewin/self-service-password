@@ -155,3 +155,7 @@
         </div>
     </div>
 {% endmacro %}
+
+{% macro csrf_token_hidden_input(tokenId) %}
+<input type="hidden" name="_csrf_token" value="{{ csrf_token(tokenId) }}">
+{% endmacro %}

@@ -72,7 +72,8 @@ class GetTokenByEmailVerificationController extends Controller
     private function isFormSubmitted(Request $request)
     {
         return ($request->request->has('login') || $request->query->has('login'))
-            && ($this->getParameter('mail_address_use_ldap') || $request->request->has('mail'));
+            && ($this->getParameter('mail_address_use_ldap') || $request->request->has('mail'))
+            && $request->request->has('_csrf_token');
     }
 
     /**
@@ -82,6 +83,10 @@ class GetTokenByEmailVerificationController extends Controller
      */
     private function processFormData(Request $request)
     {
+        if (!$this->isCsrfTokenValid('get_token_by_email', $request->request->get('_csrf_token'))) {
+            throw $this->createAccessDeniedException('Invalid CSRF token');
+        }
+
         $login = $request->get('login');
         $mail = $request->request->get('mail', '');
 

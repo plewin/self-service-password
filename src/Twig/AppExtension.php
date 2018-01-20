@@ -20,49 +20,67 @@
 
 namespace App\Twig;
 
-use Symfony\Component\Translation\TranslatorInterface;
-use Twig_Extension_GlobalsInterface;
-use Twig_SimpleFilter;
-use Twig_SimpleFunction;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
+use Twig\TwigFilter;
+use Twig\TwigFunction;
+use Twig\Extension\GlobalsInterface;
 
 /**
  * Class AppExtension
  */
-class AppExtension extends \Twig_Extension implements Twig_Extension_GlobalsInterface
+class AppExtension extends \Twig_Extension implements GlobalsInterface
 {
     /** @var string */
     private $pwd_show_policy;
+
+    /** @var CsrfTokenManagerInterface */
+    private $csrfTokenManager;
 
     /**
      * AppExtension constructor.
      *
      * @param string $pwd_show_policy
+     * @param CsrfTokenManagerInterface $csrfTokenManager
      */
-    public function __construct($pwd_show_policy)
+    public function __construct($pwd_show_policy, $csrfTokenManager)
     {
         $this->pwd_show_policy = $pwd_show_policy;
+        $this->csrfTokenManager = $csrfTokenManager;
     }
 
     /**
-     * @return \Twig_SimpleFilter[]
+     * @return TwigFilter[]
      */
     public function getFilters()
     {
         return [
-            new Twig_SimpleFilter('fa_class', [$this, 'getFaClass']),
-            new Twig_SimpleFilter('criticality', [$this, 'getCriticality']),
-            new Twig_SimpleFilter('max_criticality', [$this, 'getMaxCriticality']),
+            new TwigFilter('fa_class', [$this, 'getFaClass']),
+            new TwigFilter('criticality', [$this, 'getCriticality']),
+            new TwigFilter('max_criticality', [$this, 'getMaxCriticality']),
         ];
     }
 
     /**
-     * @return Twig_SimpleFunction[]
+     * @return TwigFunction[]
      */
     public function getFunctions()
     {
         return [
-            new Twig_SimpleFunction('show_policy_for', [$this, 'showPolicyFor']),
+            new TwigFunction('show_policy_for', [$this, 'showPolicyFor']),
+            new TwigFunction('csrf_token', [$this, 'renderCsrfToken']),
         ];
+    }
+
+    /**
+     * Renders a CSRF token.
+     *
+     * @param string $tokenId The ID of the CSRF token
+     *
+     * @return string A CSRF token
+     */
+    public function renderCsrfToken($tokenId)
+    {
+        return $this->csrfTokenManager->getToken($tokenId)->getValue();
     }
 
     /**

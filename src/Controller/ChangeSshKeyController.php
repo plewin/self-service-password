@@ -71,7 +71,8 @@ class ChangeSshKeyController extends Controller
     {
         return ($request->request->has('login') || $request->query->has('login'))
             && $request->request->has('password')
-            && $request->request->has('sshkey');
+            && $request->request->has('sshkey')
+            && $request->request->has('_csrf_token');
     }
 
     /**
@@ -81,6 +82,10 @@ class ChangeSshKeyController extends Controller
      */
     private function processFormData(Request $request)
     {
+        if (!$this->isCsrfTokenValid('change_ssh_key', $request->request->get('_csrf_token'))) {
+            throw $this->createAccessDeniedException('Invalid CSRF token');
+        }
+
         $login = $request->get('login', '');
         $password = $request->request->get('password', '');
         $sshkey = $request->request->get('sshkey', '');

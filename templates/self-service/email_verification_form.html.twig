@@ -26,6 +26,7 @@
                     {{ forms.row_gregwarcaptcha(captcha_image) }}
                 {% endif %}
             {% endif %}
+            {{ forms.csrf_token_hidden_input('get_token_by_email') }}
             {{ forms.row_button_submit() }}
         </form>
     </div>

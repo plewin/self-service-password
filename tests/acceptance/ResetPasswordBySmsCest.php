@@ -45,7 +45,7 @@ class ResetPasswordBySmsCest
         $code = $I->grabCodeInSms();
         $I->fillField('smstoken', $code);
         $I->click('Send');
-        $I->see('Your new password is required');
+        $I->see('Reset your password');
         $I->see('The token sent by sms allows you to reset your password.');
     }
 

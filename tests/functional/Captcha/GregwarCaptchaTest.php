@@ -60,6 +60,7 @@ class GregwarCaptchaTest extends CaptchaTestCase
                 'oldpassword' => 'password1',
                 'newpassword' => 'newpassword',
                 'confirmpassword' => 'confirmpassword',
+                '_csrf_token' => 'FAKE CSRF TOKEN',
             ]
         );
         $mockSessionStorage = new MockArraySessionStorage();
@@ -74,6 +75,7 @@ class GregwarCaptchaTest extends CaptchaTestCase
 
         $services = [
             'twig' => $this->createOverridedTwig($client->getContainer(), $parameters, $request),
+            'security.csrf.token_manager' => $this->createMockCsrfTokenManager(),
         ];
 
         $container = $this->createMockContainer($parameters, $services);
@@ -108,6 +110,7 @@ class GregwarCaptchaTest extends CaptchaTestCase
             'username_validity_checker' => $this->createMockUsernameValidityChecker(),
             'password_strength_checker' => $this->createMockPasswordStrengthChecker(),
             'recaptcha_service' => $this->createMockRecaptchaService(false),
+            'security.csrf.token_manager' => $this->createMockCsrfTokenManager(),
         ];
 
         $container = $this->createMockContainer($parameters, $services);
@@ -125,6 +128,7 @@ class GregwarCaptchaTest extends CaptchaTestCase
                 'newpassword' => 'newpassword',
                 'confirmpassword' => 'newpassword',
                 'captcha' => 'plop42',
+                '_csrf_token' => 'FAKE CSRF TOKEN',
             ]
         );
         // reuse mock session storage
@@ -159,6 +163,7 @@ class GregwarCaptchaTest extends CaptchaTestCase
             'recaptcha_service' => $this->createMockRecaptchaService(false),
             'ldap_client' => $this->createMockLdapClient(),
             'event_dispatcher' => $this->getMock('Symfony\\Component\\EventDispatcher\\EventDispatcher'),
+            'security.csrf.token_manager' => $this->createMockCsrfTokenManager(),
         ];
 
         $container = $this->createMockContainer($parameters, $services);
@@ -177,6 +182,7 @@ class GregwarCaptchaTest extends CaptchaTestCase
                 'confirmpassword' => 'newpassword',
                 // cheat, get the captcha phrase from the session
                 'captcha' => $mockSession->get('captcha'),
+                '_csrf_token' => 'FAKE CSRF TOKEN',
             ]
         );
         // reuse mock session storage

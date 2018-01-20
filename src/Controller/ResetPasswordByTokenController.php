@@ -74,6 +74,15 @@ class ResetPasswordByTokenController extends Controller
         }
 
         // Next is the form submitted ?
+        if (!$request->request->has('_csrf_token')) {
+            return $this->renderEmptyPage($request, $login);
+        }
+
+        if (!$this->isCsrfTokenValid('reset_by_token', $request->request->get('_csrf_token'))) {
+            throw $this->createAccessDeniedException('Invalid CSRF token');
+        }
+
+
         $newpassword = $request->request->get('newpassword');
         $confirmpassword = $request->request->get('confirmpassword');
         if (!$newpassword) {
@@ -153,6 +162,24 @@ class ResetPasswordByTokenController extends Controller
 
         // render success page
         return $this->render('self-service/change_password_success.html.twig');
+    }
+
+    /**
+     * @param Request $request
+     * @param string  $login
+     *
+     * @return Response
+     */
+    private function renderEmptyPage(Request $request, $login)
+    {
+        return $this->render('self-service/reset_password_by_token_form.html.twig', [
+            //TODO refactor translation
+            'result' => 'emptyresetbyquestionsform',
+            'problems' => [],
+            'source' => $request->get('source'),
+            'token' => $request->get('token'),
+            'login' => $login,
+        ] + $this->getCaptchaTemplateExtraVars($request));
     }
 
     /**

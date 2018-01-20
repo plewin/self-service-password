@@ -26,6 +26,7 @@
                     {{ forms.row_gregwarcaptcha(captcha_image) }}
                 {% endif %}
             {% endif %}
+            {{ forms.csrf_token_hidden_input('user_entry_search') }}
             {{ forms.row_button_submit('getuser', 'search') }}
         </form>
     </div>

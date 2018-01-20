@@ -75,7 +75,8 @@ class ChangePasswordController extends Controller
         return ($request->request->has('login') || $request->query->has('login'))
             && $request->request->has('newpassword')
             && $request->request->has('oldpassword')
-            && $request->request->has('confirmpassword');
+            && $request->request->has('confirmpassword')
+            && $request->request->has('_csrf_token');
     }
 
     /**
@@ -85,6 +86,10 @@ class ChangePasswordController extends Controller
      */
     private function processFormData(Request $request)
     {
+        if (!$this->isCsrfTokenValid('change_password', $request->request->get('_csrf_token'))) {
+            throw $this->createAccessDeniedException('Invalid CSRF token');
+        }
+
         $login = $request->get('login', '');
         $oldpassword = $request->request->get('oldpassword', '');
         $newpassword = $request->request->get('newpassword', '');

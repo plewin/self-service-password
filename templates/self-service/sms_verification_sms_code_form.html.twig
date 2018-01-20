@@ -12,6 +12,7 @@
         <form action="#" method="post" class="form-horizontal">
             <input type="hidden" name="token" value="{{ token }}" />
             {{ forms.row_input_text('smstoken', 'smstoken', 'key', 'smstoken') }}
+            {{ forms.csrf_token_hidden_input('sms_token_attempt') }}
             {{ forms.row_button_submit() }}
         </form>
     </div>

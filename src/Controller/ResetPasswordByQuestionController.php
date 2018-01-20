@@ -74,7 +74,8 @@ class ResetPasswordByQuestionController extends Controller
             && $request->request->has('question')
             && $request->request->has('answer')
             && $request->request->has('newpassword')
-            && $request->request->has('confirmpassword');
+            && $request->request->has('confirmpassword')
+            && $request->request->has('_csrf_token');
     }
 
     /**
@@ -84,6 +85,10 @@ class ResetPasswordByQuestionController extends Controller
      */
     private function processFormData(Request $request)
     {
+        if (!$this->isCsrfTokenValid('reset_password_by_security_question', $request->request->get('_csrf_token'))) {
+            throw $this->createAccessDeniedException('Invalid CSRF token');
+        }
+
         $login = $request->get('login', '');
         $question = $request->request->get('question', '');
         $answer = $request->request->get('answer', '');

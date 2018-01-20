@@ -123,4 +123,15 @@ abstract class CaptchaTestCase extends FunctionalTestCase
 
         return $ldapClient;
     }
+
+    protected function createMockCsrfTokenManager()
+    {
+        $container = $this->getMock('Symfony\Component\Security\Csrf\CsrfTokenManager');
+        $container
+            ->expects($this->any())
+            ->method('isTokenValid')
+            ->willReturn(true)
+        ;
+        return $container;
+    }
 }

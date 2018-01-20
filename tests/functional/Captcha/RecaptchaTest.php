@@ -58,6 +58,7 @@ class RecaptchaTest extends CaptchaTestCase
                 'oldpassword' => 'password1',
                 'newpassword' => 'newpassword',
                 'confirmpassword' => 'confirmpassword',
+                '_csrf_token' => 'FAKE CSRF TOKEN',
             ]
         );
 
@@ -73,6 +74,7 @@ class RecaptchaTest extends CaptchaTestCase
 
         $services = [
             'twig' => $this->createOverridedTwig($client->getContainer(), $parameters, $request),
+            'security.csrf.token_manager' => $this->createMockCsrfTokenManager(),
         ];
 
         $container = $this->createMockContainer($parameters, $services);
@@ -99,6 +101,7 @@ class RecaptchaTest extends CaptchaTestCase
                 'newpassword' => 'newpassword',
                 'confirmpassword' => 'newpassword',
                 'g-recaptcha-response' => 'plop42',
+                '_csrf_token' => 'FAKE CSRF TOKEN',
             ]
         );
 
@@ -117,6 +120,7 @@ class RecaptchaTest extends CaptchaTestCase
             'username_validity_checker' => $this->createMockUsernameValidityChecker(),
             'password_strength_checker' => $this->createMockPasswordStrengthChecker(),
             'recaptcha_service' => $this->createMockRecaptchaService(false),
+            'security.csrf.token_manager' => $this->createMockCsrfTokenManager(),
         ];
 
         $container = $this->createMockContainer($parameters, $services);
@@ -142,6 +146,7 @@ class RecaptchaTest extends CaptchaTestCase
                 'newpassword' => 'newpassword',
                 'confirmpassword' => 'newpassword',
                 'g-recaptcha-response' => 'plop42',
+                '_csrf_token' => 'FAKE CSRF TOKEN',
             ]
         );
 
@@ -162,6 +167,7 @@ class RecaptchaTest extends CaptchaTestCase
             'recaptcha_service' => $this->createMockRecaptchaService(true),
             'ldap_client' => $this->createMockLdapClient(),
             'event_dispatcher' => $this->getMock('Symfony\\Component\\EventDispatcher\\EventDispatcher'),
+            'security.csrf.token_manager' => $this->createMockCsrfTokenManager(),
         ];
 
         $container = $this->createMockContainer($parameters, $services);
