@@ -1,7 +1,7 @@
 #=================================================
-# Specification file for Self Service Password
+# Specification file for Self-Service Password
 #
-# Install LTB project Self Service Password
+# Install LTB project Self-Service Password
 #
 # GPL License
 #
@@ -38,8 +38,8 @@ Prereq: coreutils
 Requires: php, php-ldap, php-mbstring
 
 %description
-Self Service Password is a simple PHP application that allows users to change their password on an LDAP directory.
-Self Service Password is provided by LDAP Tool Box project: http://ltb-project.org
+Self-Service Password is a simple PHP application that allows users to change their password on an LDAP directory.
+Self-Service Password is provided by LDAP Tool Box project: http://ltb-project.org
                                                                                     
 #=================================================
 # Source preparation

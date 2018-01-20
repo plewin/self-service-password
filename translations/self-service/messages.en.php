@@ -1,6 +1,6 @@
 <?php
 #==============================================================================
-# LTB Self Service Password
+# LTB Self-Service Password
 #
 # Copyright (C) 2009 Clement OUDOT
 # Copyright (C) 2009 LTB-project.org
@@ -33,7 +33,7 @@ $messages['nomatch'] = "Passwords mismatch";
 $messages['badcredentials'] = "Login or password incorrect";
 $messages['passworderror'] = "Password was refused by the LDAP directory";
 $messages['sshkeyerror'] = "SSH Key was refused by the LDAP directory";
-$messages['title'] = "Self service password";
+$messages['title'] = "Self-service password";
 $messages['login'] = "Login";
 $messages['oldpassword'] = "Old password";
 $messages['newpassword'] = "New password";

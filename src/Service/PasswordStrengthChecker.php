@@ -1,6 +1,6 @@
 <?php
 /*
- * LTB Self Service Password
+ * LTB Self-Service Password
  *
  * Copyright (C) 2009 Clement OUDOT
  * Copyright (C) 2009 LTB-project.org
@@ -50,6 +50,7 @@ class PasswordStrengthChecker
 
         $problems = [];
 
+        //TODO hum... why utf8 decode ?
         $length = strlen(utf8_decode($newpassword));
         preg_match_all("/[a-z]/", $newpassword, $lower_res);
         $lower = count( $lower_res[0] );

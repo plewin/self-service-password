@@ -2,7 +2,7 @@
   "name": "ltb-project/self-service-password",
   "license": "GPLv3",
   "type": "project",
-  "description": "LDAP Tool Box Self Service Password",
+  "description": "LDAP Tool Box Self-Service Password",
   "require": {
     "php": ">=5.4",
     "twig/twig": "~1.34",

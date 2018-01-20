@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Make tar.gz distribution of Self Service Password
+# Make tar.gz distribution of Self-Service Password
 # Usage:
 # * Run from current directory
 # * Set version as parameter

@@ -15,7 +15,7 @@ class ChangePasswordCest
     public function changePasswordWorks(AcceptanceTester $I)
     {
         $I->amOnPage('/change-password');
-        $I->see('Self service password');
+        $I->see('Self-service password');
         $I->amGoingTo('fill the form with valid data');
         $I->fillField('login', 'user1');
         $I->fillField('oldpassword', 'password1');
@@ -32,7 +32,7 @@ class ChangePasswordCest
     public function changePasswordFailsWhenConfirmIsWrong(AcceptanceTester $I)
     {
         $I->amOnPage('/change-password');
-        $I->see('Self service password');
+        $I->see('Self-service password');
         $I->amGoingTo('fill the form with a wrong confirmation');
         $I->fillField('login', 'user1');
         $I->fillField('oldpassword', 'password1');
@@ -50,7 +50,7 @@ class ChangePasswordCest
     public function changePasswordFailsWhenOldPasswordIsWrong(AcceptanceTester $I)
     {
         $I->amOnPage('/change-password');
-        $I->see('Self service password');
+        $I->see('Self-service password');
         $I->amGoingTo('fill the form with a wrong old password');
         $I->fillField('login', 'user1');
         $I->fillField('oldpassword', 'invalidpassword');
@@ -68,7 +68,7 @@ class ChangePasswordCest
     public function changePasswordFailsWhenLoginMissing(AcceptanceTester $I)
     {
         $I->amOnPage('/change-password');
-        $I->see('Self service password');
+        $I->see('Self-service password');
         $I->amGoingTo('fill the form with valid data');
         $I->fillField('oldpassword', 'password1');
         $I->fillField('newpassword', 'mynewpass');
@@ -85,7 +85,7 @@ class ChangePasswordCest
     public function changePasswordFailsWhenOldPasswordMissing(AcceptanceTester $I)
     {
         $I->amOnPage('/change-password');
-        $I->see('Self service password');
+        $I->see('Self-service password');
         $I->amGoingTo('fill the form with valid data');
         $I->fillField('login', 'user1');
         $I->fillField('newpassword', 'mynewpass');
@@ -102,7 +102,7 @@ class ChangePasswordCest
     public function changePasswordFailsWhenNewPasswordMissing(AcceptanceTester $I)
     {
         $I->amOnPage('/change-password');
-        $I->see('Self service password');
+        $I->see('Self-service password');
         $I->amGoingTo('fill the form with valid data');
         $I->fillField('login', 'user1');
         $I->fillField('oldpassword', 'password1');
@@ -119,7 +119,7 @@ class ChangePasswordCest
     public function changePasswordFailsWhenConfirmPasswordMissing(AcceptanceTester $I)
     {
         $I->amOnPage('/change-password');
-        $I->see('Self service password');
+        $I->see('Self-service password');
         $I->amGoingTo('fill the form with valid data');
         $I->fillField('login', 'user1');
         $I->fillField('newpassword', 'mynewpass');
@@ -136,7 +136,7 @@ class ChangePasswordCest
     public function changePasswordFailsWhenLoginContainsInvalidCharacters(AcceptanceTester $I)
     {
         $I->amOnPage('/change-password');
-        $I->see('Self service password');
+        $I->see('Self-service password');
         $I->amGoingTo('fill the form with valid data');
         $I->fillField('login', '&é"\'(-è_ç)');
         $I->fillField('newpassword', 'mynewpass');
@@ -154,7 +154,7 @@ class ChangePasswordCest
     public function changePasswordFailsWhenAccountHasForbiddenChangeInPasswordPolicy(AcceptanceTester $I)
     {
         $I->amOnPage('/change-password');
-        $I->see('Self service password');
+        $I->see('Self-service password');
         $I->amGoingTo('fill the form with valid data');
         $I->fillField('login', 'user10');
         $I->fillField('oldpassword', 'password10');

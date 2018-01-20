@@ -1,6 +1,6 @@
 <?php
 #==============================================================================
-# LTB Self Service Password
+# LTB Self-Service Password
 #
 # Copyright (C) 2009 Clement OUDOT
 # Copyright (C) 2009 LTB-project.org
@@ -31,7 +31,7 @@ $messages['passwordchanged'] = "Ditt lösenord är nu ändrat";
 $messages['nomatch'] = "Angivna lösenord är olika";
 $messages['badcredentials'] = "Lösenord eller Användarnamn är felaktiga";
 $messages['passworderror'] = "Lösenordet godtogs inte av LDAPkatalogen";
-$messages['title'] = "Self service password";
+$messages['title'] = "Self-service password";
 $messages['login'] = "Användarnamn";
 $messages['oldpassword'] = "Gammalt lösenord";
 $messages['newpassword'] = "Nytt lösenord";

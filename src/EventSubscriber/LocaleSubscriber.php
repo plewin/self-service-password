@@ -1,6 +1,6 @@
 <?php
 /*
- * LTB Self Service Password
+ * LTB Self-Service Password
  *
  * Copyright (C) 2009 Clement OUDOT
  * Copyright (C) 2009 LTB-project.org

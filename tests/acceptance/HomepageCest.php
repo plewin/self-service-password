@@ -16,7 +16,7 @@ class HomepageCest
     {
         $I->wantTo('See the homepage');
         $I->amOnPage('/');
-        $I->see('Self service password');
+        $I->see('Self-service password');
     }
 
     /**

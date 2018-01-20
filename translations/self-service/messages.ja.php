@@ -1,6 +1,6 @@
 <?php
 #==============================================================================
-# LTB Self Service Password
+# LTB Self-Service Password
 #
 # Copyright (C) 2009 Clement OUDOT
 # Copyright (C) 2009 LTB-project.org
@@ -31,7 +31,7 @@ $messages['passwordchanged'] = "パスワードは変更されました";
 $messages['nomatch'] = "パスワードが合致しません";
 $messages['badcredentials'] = "ログインIDかパスワードが間違っています";
 $messages['passworderror'] = "パスワードはLDAPディレクトリーに拒否されました";
-$messages['title'] = "Self service password";
+$messages['title'] = "Self-service password";
 $messages['login'] = "ログインID";
 $messages['oldpassword'] = "現在のパスワード";
 $messages['newpassword'] = "新しいパスワード";

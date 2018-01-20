@@ -177,7 +177,7 @@ parameters:
     ## Mailing
     # Who the email should come from
     mail_from: "admin@example.com"
-    mail_from_name: "Self Service Password"
+    mail_from_name: "Self-Service Password"
     # email signature deprecated
     mail_signature: ""
     # Change config.yml for more configuration parameters.

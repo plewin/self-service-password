@@ -1,6 +1,6 @@
 ﻿<?php
 #==============================================================================
-# LTB Self Service Password
+# LTB Self-Service Password
 #
 # Copyright (C) 2009 Clement OUDOT
 # Copyright (C) 2009 LTB-project.org
@@ -31,7 +31,7 @@ $messages['passwordchanged'] = "Ваш пароль изменен";
 $messages['nomatch'] = "Проверьте правильность написания пароля";
 $messages['badcredentials'] = "Проверьте правильность написания логина или пароля";
 $messages['passworderror'] = "Ваш пароль отклонен LDAP directory";
-$messages['title'] = "Self service password";
+$messages['title'] = "Self-service password";
 $messages['login'] = "Логин";
 $messages['oldpassword'] = "Ваш старый пароль";
 $messages['newpassword'] = "Ваш новый пароль";
