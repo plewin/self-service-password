@@ -10,10 +10,9 @@ use App\Utils\PasswordVerifier;
 use Psr\Log\NullLogger;
 
 /**
- * Class LdapClientTest
+ * Class ApacheDirectoryServerClientTest
  */
-
-class LdapClientTest extends LdapIntegrationTestCase
+class ApacheDirectoryServerClientTest extends LdapIntegrationTestCase
 {
     protected function setUp()
     {

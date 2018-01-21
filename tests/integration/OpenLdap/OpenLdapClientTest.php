@@ -8,48 +8,37 @@ use App\Utils\PasswordEncoder;
 use Psr\Log\NullLogger;
 
 /**
- * Class PasswordPolicyTest
+ * Class OpenLdapClientTest
  */
 
-class PasswordPolicyTest extends LdapIntegrationTestCase
+class OpenLdapClientTest extends LdapIntegrationTestCase
 {
     protected function setUp()
     {
         if (getenv('TRAVIS') == 'true') {
-            $this->markTestSkipped('Cannot test Open Ldap integration on Travis');
+            $this->markTestSkipped('Cannot test Apache Directory Server integration on Travis');
         }
 
         ldap_set_option(NULL, LDAP_OPT_DEBUG_LEVEL, 7);
     }
 
-    public function testUserCannotChangeOwnPassword()
+    /**
+     * Test that we can connect to Apache Directory Server
+     */
+    public function testConnect()
     {
         $client = $this->createLdapClient();
 
         // expect no exception
         /** @noinspection PhpUnhandledExceptionInspection */
         $this->assertTrue($client->connect());
-
-        $newPassword = 'pass';
-
-        $context = $client->fetchUserEntryContext('user10', ['dn']);
-        $client->checkOldPassword('password10', $context);
-
-        //ldap_mod_replace(): Modify: Insufficient access
-        //ldap_error: Insufficient access
-        //ldap_get_option: User alteration of password is not allowed
-
-        try {
-            var_dump($client->changePassword($context['user_dn'], $newPassword, '', $context));
-        }
-        catch (\Exception $e) {
-            //ignore
-        }
-        echo "ldap_error: " . ldap_error($client->getConnection());
-        ldap_get_option($client->getConnection(), LDAP_OPT_DIAGNOSTIC_MESSAGE, $err);
-        echo "ldap_get_option: $err";
     }
 
+
+    /**
+     * @param array $options
+     * @return Client
+     */
     private function createLdapClient($options = [])
     {
         $passwordEncoder = new PasswordEncoder([]);
