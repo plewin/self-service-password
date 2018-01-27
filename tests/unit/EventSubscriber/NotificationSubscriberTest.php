@@ -32,7 +32,6 @@ class NotificationSubscriberTest extends \PHPUnit_Framework_TestCase
         $notificationSubscriber = new NotificationSubscriber(
             $mailNotificationService,
             $translator,
-            'signature',
             false,
             true
         );
@@ -63,7 +62,6 @@ class NotificationSubscriberTest extends \PHPUnit_Framework_TestCase
         $notificationSubscriber = new NotificationSubscriber(
             $mailNotificationService,
             $translator,
-            'signature',
             true,
             false
         );
@@ -84,7 +82,6 @@ class NotificationSubscriberTest extends \PHPUnit_Framework_TestCase
         $mailNotificationService
             ->expects($this->once())
             ->method('send')
-            ->with($this->equalTo('user1@example.com'), $this->equalTo('thesubject'), $this->equalTo('thebodysignature'))
         ;
 
         $translator = $this
@@ -105,7 +102,6 @@ class NotificationSubscriberTest extends \PHPUnit_Framework_TestCase
         $notificationSubscriber = new NotificationSubscriber(
             $mailNotificationService,
             $translator,
-            'signature',
             true,
             false
         );
@@ -133,7 +129,6 @@ class NotificationSubscriberTest extends \PHPUnit_Framework_TestCase
         $mailNotificationService
             ->expects($this->once())
             ->method('send')
-            ->with($this->equalTo('user1@example.com'), $this->equalTo('thesubject'), $this->equalTo('thebodysignature'))
         ;
 
         $translator = $this
@@ -154,7 +149,6 @@ class NotificationSubscriberTest extends \PHPUnit_Framework_TestCase
         $notificationSubscriber = new NotificationSubscriber(
             $mailNotificationService,
             $translator,
-            'signature',
             false,
             true
         );

@@ -23,7 +23,7 @@ namespace App\Service;
 use App\Utils\MailSender;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
-
+use Twig\Environment;
 /**
  * Class MailNotificationService
  */
@@ -36,34 +36,70 @@ class MailNotificationService implements LoggerAwareInterface
     private $mailFromAddress;
     private $mailFromName;
 
+    /** @var @var Environment */
+    private $twig;
+
     /**
      * MailNotificationService constructor.
-     * @param MailSender $mailerSender
-     * @param string     $mailFromAddress
-     * @param string     $mailFromName
+     *
+     * @param Environment $twig
+     * @param MailSender  $mailerSender
+     * @param string      $mailFromAddress
+     * @param string      $mailFromName
      */
-    public function __construct($mailerSender, $mailFromAddress, $mailFromName)
+    public function __construct(Environment $twig, $mailerSender, $mailFromAddress, $mailFromName)
     {
+        $this->twig = $twig;
         $this->mailSender = $mailerSender;
         $this->mailFromAddress = $mailFromAddress;
         $this->mailFromName = $mailFromName;
     }
 
     /**
-     * @param string $mail
-     * @param string $subject
-     * @param string $body
+     * @param string $template Twig template name
      * @param array  $data
      *
      * @return boolean
      */
-    public function send($mail, $subject, $body, $data)
+    public function send($template, $data)
     {
-        $success = $this->mailSender->send($mail, $this->mailFromAddress, $this->mailFromName, $subject, $body, $data);
+        $template = $this->twig->load($template.'.mail.twig');
+
+        //ignore result, fills metadata
+        $template->renderBlock('meta', $data);
+
+        $bodyHtml = $template->renderBlock('body_html', $data);
+        $bodyText = $template->renderBlock('body_text', $data);
+
+        /** @var \App\Twig\AppExtension $extension */
+        $extension = $this->twig->getExtension('\App\Twig\AppExtension');
+
+        $metadata = $extension->getMeta();
+
+        $success = $this->mailSender->send(
+            $this->array2addresses($metadata['to']),
+            $this->array2addresses($metadata['from']),
+            $metadata['subject'],
+            $bodyText,
+            $bodyHtml
+        )
+        ;
         if (!$success) {
-            $this->logger->critical("Error while sending email notification to $mail (user ${data['login']})");
+            $this->logger->critical("Error while sending email notification to ${data['mail']} (user ${data['login']})");
         }
 
         return $success;
+    }
+
+    /**
+     * @param $e
+     *
+     * @return array
+     */
+    private function array2addresses($e)
+    {
+        return [
+            $e['address'] => $e['name'],
+        ];
     }
 }

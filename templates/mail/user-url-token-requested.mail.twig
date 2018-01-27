@@ -1,0 +1,17 @@
+{% block meta %}
+    {% set metadata = {
+        'subject': 'resetsubject'|trans,
+        'to': {'address': mail, 'name': login},
+        'from': {'address': mail_from, 'name': mail_from_name},
+    } %}
+    {{ set_meta(metadata) }}
+{% endblock %}
+
+{% block body_html %}
+{{ 'resetmessage'|trans|replace({'{login}': login|escape, '{url}': url}) }}
+{% endblock %}
+
+{% block body_text %}
+{{ 'resetmessage'|trans|replace({'{login}': login, '{url}': url}) }}
+{% endblock %}
+

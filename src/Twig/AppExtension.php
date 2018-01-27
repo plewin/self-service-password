@@ -36,6 +36,9 @@ class AppExtension extends \Twig_Extension implements GlobalsInterface
     /** @var CsrfTokenManagerInterface */
     private $csrfTokenManager;
 
+    /** @var array */
+    private $meta;
+
     /**
      * AppExtension constructor.
      *
@@ -68,6 +71,7 @@ class AppExtension extends \Twig_Extension implements GlobalsInterface
         return [
             new TwigFunction('show_policy_for', [$this, 'showPolicyFor']),
             new TwigFunction('csrf_token', [$this, 'renderCsrfToken']),
+            new TwigFunction('set_meta', [$this, 'setMeta']),
         ];
     }
 
@@ -223,6 +227,16 @@ class AppExtension extends \Twig_Extension implements GlobalsInterface
         ];
 
         return in_array($msg, $errorList);
+    }
+
+    public function setMeta(array $meta)
+    {
+        $this->meta = $meta;
+    }
+
+    public function getMeta()
+    {
+        return $this->meta;
     }
 
     /*

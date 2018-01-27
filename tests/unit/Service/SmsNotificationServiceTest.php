@@ -37,10 +37,12 @@ class SmsNotificationServiceTest extends \PHPUnit_Framework_TestCase
         $login = 'user1';
         $smsMailSubject = 'sms mail subject';
         $smsMessage = '{smsresetmessage} {smstoken}';
-        $data = [
-            'smsresetmessage' => 'thesmsresetmessage'
-        ];
         $smsCode = '1234';
+        $data = [
+            'smsresetmessage' => 'thesmsresetmessage',
+            'smstoken' => $smsCode,
+        ];
+
 
         $this->assertSame('smssent', $smsNotificationService->send($sms, $login, $smsMailSubject, $smsMessage, $data, $smsCode));
     }

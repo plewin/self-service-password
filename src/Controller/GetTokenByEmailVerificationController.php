@@ -32,7 +32,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * This page is called to send a reset token by mail
@@ -130,6 +129,8 @@ class GetTokenByEmailVerificationController extends Controller
         /** @var ClientInterface $ldapClient */
         $ldapClient = $this->get('ldap_client');
 
+        $context = [];
+
         try {
             $ldapClient->connect();
 
@@ -169,18 +170,16 @@ class GetTokenByEmailVerificationController extends Controller
         $logger = $this->get('logger');
         $logger->notice("Send reset URL $resetUrl");
 
-        /** @var TranslatorInterface */
-        $translator = $this->get('translator');
-
         /** @var MailNotificationService $mailService */
         $mailService = $this->get('mail_notification_service');
-        $data = ['login' => $login, 'mail' => $mail, 'url' => $resetUrl];
-        $success = $mailService->send(
-            $mail,
-            $translator->trans('resetsubject'),
-            $translator->trans('resetmessage').$this->getParameter('mail_signature'),
-            $data
-        );
+        $data = [
+            'login'   => $login,
+            'mail'    => $mail,
+            'url'     => $resetUrl,
+            'context' => $context,
+        ];
+        $success = $mailService->send('mail/user-url-token-requested', $data);
+
         if (!$success) {
             return $this->renderFormWithError('tokennotsent', [], $request);
         }

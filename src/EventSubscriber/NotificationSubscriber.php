@@ -37,9 +37,6 @@ class NotificationSubscriber implements EventSubscriberInterface
     /** @var TranslatorInterface */
     private $translator;
 
-    /** @var string */
-    private $signature;
-
     private $notifyOnPasswordChanged;
 
     private $notifyOnSshKeyChanged;
@@ -49,15 +46,13 @@ class NotificationSubscriber implements EventSubscriberInterface
      *
      * @param MailNotificationService $mailNotificationService
      * @param TranslatorInterface     $translator
-     * @param string                  $signature
      * @param boolean                 $notifyOnPasswordChanged
      * @param boolean                 $notifyOnSshKeyChanged
      */
-    public function __construct($mailNotificationService, TranslatorInterface $translator, $signature, $notifyOnPasswordChanged, $notifyOnSshKeyChanged)
+    public function __construct($mailNotificationService, TranslatorInterface $translator, $notifyOnPasswordChanged, $notifyOnSshKeyChanged)
     {
         $this->mailNotificationService = $mailNotificationService;
         $this->translator = $translator;
-        $this->signature = $signature;
         $this->notifyOnPasswordChanged = $notifyOnPasswordChanged;
         $this->notifyOnSshKeyChanged = $notifyOnSshKeyChanged;
     }
@@ -84,13 +79,19 @@ class NotificationSubscriber implements EventSubscriberInterface
 
         $context = $event['context'];
 
-        if ($context['user_mail']) {
-            $data = ['login' =>  $event['login'], 'mail' => $context['user_mail'], 'password' => $event['new_password']];
-            $subject = $this->translator->trans('changesubject');
-            $body = $this->translator->trans('changemessage').$this->signature;
-            $this->mailNotificationService->send($context['user_mail'], $subject, $body, $data);
+        if (empty($context['user_mail'])) {
+            // TODO log when missing email
+            return;
         }
-        // TODO log when missing email
+
+        $data = [
+            'login'    => $event['login'],
+            'mail'     => $context['user_mail'],
+            'password' => $event['new_password'],
+            'context'  => $context,
+        ];
+
+        $this->mailNotificationService->send('mail/user-password-changed', $data);
     }
 
     /**
@@ -104,16 +105,18 @@ class NotificationSubscriber implements EventSubscriberInterface
 
         $context = $event['context'];
 
-        if ($context['user_mail']) {
-            $data = [
-                'login'  => $event['login'],
-                'mail'   => $context['user_mail'],
-                'sshkey' => $event['ssh_key'],
-            ];
-            $subject = $this->translator->trans('changesshkeysubject');
-            $body = $this->translator->trans('changesshkeymessage').$this->signature;
-            $this->mailNotificationService->send($context['user_mail'], $subject, $body, $data);
+        if (empty($context['user_mail'])) {
+            // TODO log when missing email
+            return;
         }
-        // TODO log when missing email
+
+        $data = [
+            'login'   => $event['login'],
+            'mail'    => $context['user_mail'],
+            'sshkey'  => $event['ssh_key'],
+            'context' => $context,
+        ];
+
+        $this->mailNotificationService->send('mail/user-ssh-key-changed', $data);
     }
 }

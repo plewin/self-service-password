@@ -19,6 +19,7 @@ class Acceptance extends \Codeception\Module
     {
         $this->getSymfonyModule()->seeEmailIsSent();
     }
+
     /**
      * @param \Swift_Message $mail
      */
@@ -30,6 +31,16 @@ class Acceptance extends \Codeception\Module
         preg_match('/\b(?:(?:https?|ftp|file):\/\/|www\.|ftp\.)[-A-Z0-9+&@#\/%=~_|$?!:,.]*[A-Z0-9+&@#\/%=~_|$]/i', $body, $result);
 
         $this->assertGreaterOrEquals(1, count($result), 'Expected at least one url in mail');
+    }
+
+    /**
+     * @param string $expected
+     * @param \Swift_Message $mail
+     */
+    public function seeInMail($expected, $mail)
+    {
+        $body = $mail->getBody();
+        $this->assertContains($expected, $body);
     }
 
     /**

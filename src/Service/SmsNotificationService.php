@@ -71,8 +71,22 @@ class SmsNotificationService implements LoggerAwareInterface
      */
     public function send($sms, $login, $smsMailSubject, $smsMessage, $data, $smsCode)
     {
+        //TODO make generic
+        $search = [
+            '{smsresetmessage}',
+            '{smstoken}',
+        ];
+        $replace = [
+            $data['smsresetmessage'],
+            $data['smstoken'],
+        ];
+
+        $smsMessage = str_replace($search, $replace, $smsMessage);
+
         if ($this->smsMethod === 'mail') {
-            if ($this->mailSender->send($this->smsmailto, $this->mailFromAddress, $this->mailFromName, $smsMailSubject, $smsMessage, $data)) {
+            $from = [$this->mailFromAddress => $this->mailFromName];
+            $to = $this->smsmailto;
+            if ($this->mailSender->send($to, $from, $smsMailSubject, $smsMessage)) {
                 $this->logger->notice("Send SMS code $smsCode by ".$this->smsMethod." to $sms");
 
                 return "smssent";
@@ -87,8 +101,6 @@ class SmsNotificationService implements LoggerAwareInterface
             }
 
             include_once($this->smsApiLib);
-            $smsMessage = str_replace('{smsresetmessage}', $data['smsresetmessage'], $smsMessage);
-            $smsMessage = str_replace('{smstoken}', $smsCode, $smsMessage);
             if (send_sms_by_api($sms, $smsMessage)) {
                 $this->logger->notice("Send SMS code $smsCode by ".$this->smsMethod." to $sms");
 

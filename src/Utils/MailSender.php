@@ -46,18 +46,16 @@ class MailSender implements LoggerAwareInterface
     /**
      * Send a mail, replace strings in body
      *
-     * @param string $mail            Destination
-     * @param string $mailFromAddress Sender
-     * @param string $mailFromName    Sender name
+     * @param string|array $mail      Destination
+     * @param array  $mailFrom        Sender
      * @param string $subject         Subject
-     * @param string $body            Body
-     * @param array  $data            Data for string replacement
+     * @param string $body            Body Text
+     * @param string|null $bodyHtml   Body Html
      *
      * @return bool
      */
-    public function send($mail, $mailFromAddress, $mailFromName, $subject, $body, $data)
+    public function send($mail, array $mailFrom, $subject, $body, $bodyHtml = null)
     {
-
         $result = false;
 
         if (!$mail) {
@@ -66,20 +64,15 @@ class MailSender implements LoggerAwareInterface
             return $result;
         }
 
-        /* Replace data in mail, subject and body */
-        foreach ($data as $key => $value) {
-            $mail = str_replace('{'.$key.'}', $value, $mail);
-            $mailFromAddress = str_replace('{'.$key.'}', $value, $mailFromAddress);
-            $subject = str_replace('{'.$key.'}', $value, $subject);
-            $body = str_replace('{'.$key.'}', $value, $body);
-        }
-
-
         $message = (new \Swift_Message($subject))
-            ->setFrom($mailFromAddress, $mailFromName)
+            ->setFrom($mailFrom)
             ->setTo($mail)
             ->setBody($body)
         ;
+
+        if (null !== $bodyHtml) {
+            $message->addPart($bodyHtml, 'text/html');
+        }
 
         $nbDeliveries = $this->mailer->send($message);
 

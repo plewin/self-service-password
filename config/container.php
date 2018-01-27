@@ -36,7 +36,6 @@ $container->register('posthook.subscriber', '\App\EventSubscriber\PosthookSubscr
 $container->register('notifier.subscriber', '\App\EventSubscriber\NotificationSubscriber')
     ->addArgument(new Reference('mail_notification_service'))
     ->addArgument(new Reference('translator'))
-    ->addArgument('%mail_signature%')
     ->addArgument('%notify_user_on_password_change%')
     ->addArgument('%notify_user_on_sshkey_change%')
     ->addTag('kernel.event_subscriber')
@@ -73,6 +72,7 @@ $container->register('mail_sender', '\App\Utils\MailSender')
 ;
 
 $container->register('mail_notification_service', '\App\Service\MailNotificationService')
+    ->addArgument(new Reference('twig'))
     ->addArgument(new Reference('mail_sender'))
     ->addArgument('%mail_from%')
     ->addArgument('%mail_from_name%')

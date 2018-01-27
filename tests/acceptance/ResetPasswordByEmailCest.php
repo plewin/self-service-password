@@ -184,6 +184,7 @@ class ResetPasswordByEmailCest
         $I->see('A confirmation email has been sent');
         $I->seeEmailIsSent();
         $myEmailMessage = $I->grabLastSentEmail();
+        $I->seeInMail($user,$myEmailMessage);
         $I->seeUrlInMail($myEmailMessage);
         return $I->grabUrlInMail($myEmailMessage);
     }
