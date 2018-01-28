@@ -38,7 +38,8 @@
 ## Key Features
 
 * Support any LDAPv3 directory (OpenLDAP, ApacheDS, 389DS, generic LDAP, etc) including Active Directory
-* Samba mode to change Samba passwords
+* Customizable and localizable user interface
+* Support of samba attributes (samba.schema) and shadow attributes (rfc2307)
 * Local password policy:
   * Minimum/maximum length
   * Forbidden characters
@@ -48,10 +49,10 @@
   * Complexity (different class of characters)
 * Help messages
 * Reset by questions
-* Reset by mail challenge (token sent by mail)
+* Reset by mail challenge (reset link sent by mail)
 * Reset by SMS (trough external Email 2 SMS service or SMS API)
 * Change SSH Key in LDAP directory
-* reCAPTCHA (Google API)
+* CAPTCHA: Google reCAPTCHA, Gregwar CAPTCHA
 * Mail notification after password change
 * Hook script after password change
 
@@ -61,12 +62,16 @@ Soon
 
 ## Installation
 
-* PHP extensions required:
-  * php-ldap
-  * php-gd2 (if using gregwar captcha)
+### Requirements
+
+* Web server with PHP 5.4 minimum 
+* PHP extensions:
+  * php-ldap (required)
+  * php-openssl (recommended: ldaps, emails via smtps)
+  * php-gd2 (suggested: required for gregwar captcha)
 * strong cryptography functions available (for random_compat, php 7 or libsodium or /dev/urandom readable or php-mcrypt extension installed)
-* valid PHP mail server configuration (reset mail)
-* valid PHP session configuration (reset mail)
+* valid PHP mail server configuration (reset by mail/reset by sms, mail notifications)
+* valid PHP session configuration
 
 Tarballs and packages for Debian and Red Hat are available on http://ltb-project.org/wiki/download#self_service_password
 
