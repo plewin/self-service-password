@@ -31,7 +31,7 @@ use Twig\Extension\GlobalsInterface;
 class AppExtension extends \Twig_Extension implements GlobalsInterface
 {
     /** @var string */
-    private $pwd_show_policy;
+    private $pwdShowPolicy;
 
     /** @var CsrfTokenManagerInterface */
     private $csrfTokenManager;
@@ -42,12 +42,12 @@ class AppExtension extends \Twig_Extension implements GlobalsInterface
     /**
      * AppExtension constructor.
      *
-     * @param string $pwd_show_policy
+     * @param string                    $pwdShowPolicy
      * @param CsrfTokenManagerInterface $csrfTokenManager
      */
-    public function __construct($pwd_show_policy, $csrfTokenManager)
+    public function __construct($pwdShowPolicy, CsrfTokenManagerInterface $csrfTokenManager)
     {
-        $this->pwd_show_policy = $pwd_show_policy;
+        $this->pwdShowPolicy = $pwdShowPolicy;
         $this->csrfTokenManager = $csrfTokenManager;
     }
 
@@ -94,7 +94,7 @@ class AppExtension extends \Twig_Extension implements GlobalsInterface
      */
     public function showPolicyFor($result)
     {
-        return ( $this->pwd_show_policy === 'always' or ( $this->pwd_show_policy === 'onerror' and $this->isError($result)));
+        return ( $this->pwdShowPolicy === 'always' or ( $this->pwdShowPolicy === 'onerror' and $this->isError($result)));
     }
 
     /**
@@ -124,7 +124,7 @@ class AppExtension extends \Twig_Extension implements GlobalsInterface
     /**
      * Get message criticality
      *
-     * @param $msg
+     * @param string $msg
      *
      * @return string
      */
@@ -188,6 +188,13 @@ class AppExtension extends \Twig_Extension implements GlobalsInterface
         return 'success';
     }
 
+    /**
+     * Get the maximum criticality found in $msgs
+     *
+     * @param array $msgs
+     *
+     * @return string
+     */
     public function getMaxCriticality(array $msgs)
     {
         $maxCriticality = 'success';
@@ -204,6 +211,26 @@ class AppExtension extends \Twig_Extension implements GlobalsInterface
         }
 
         return $maxCriticality;
+    }
+
+    /**
+     * Set metadata for this template
+     *
+     * @param array $meta
+     */
+    public function setMeta(array $meta)
+    {
+        $this->meta = $meta;
+    }
+
+    /**
+     * Get the metadata of the template
+     *
+     * @return array
+     */
+    public function getMeta()
+    {
+        return $this->meta;
     }
 
     /**
@@ -227,16 +254,6 @@ class AppExtension extends \Twig_Extension implements GlobalsInterface
         ];
 
         return in_array($msg, $errorList);
-    }
-
-    public function setMeta(array $meta)
-    {
-        $this->meta = $meta;
-    }
-
-    public function getMeta()
-    {
-        return $this->meta;
     }
 
     /*

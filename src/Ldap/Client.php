@@ -69,27 +69,27 @@ class Client implements ClientInterface
      * Client constructor.
      *
      * @param PasswordEncoder $passwordEncoder
-     * @param $ldapUrl
-     * @param $ldapUseTls
-     * @param $ldapBindDn
-     * @param $ldapBindPw
-     * @param $whoChangePassword
-     * @param $adMode
-     * @param $ldapFilter
-     * @param $ldapBase
-     * @param $hash
-     * @param $smsAttribute
-     * @param $answerObjectClass
-     * @param $answerAttribute
-     * @param $whoChangeSshKey
-     * @param $sshKeyAttribute
-     * @param $mailAttribute
-     * @param $fullnameAttribute
-     * @param $adOptions
-     * @param $sambaMode
-     * @param $sambaOptions
-     * @param $shadowOptions
-     * @param $mailAddressUseLdap
+     * @param string          $ldapUrl
+     * @param bool            $ldapUseTls
+     * @param string|null     $ldapBindDn
+     * @param string|null     $ldapBindPw
+     * @param string          $whoChangePassword
+     * @param bool            $adMode
+     * @param string          $ldapFilter
+     * @param string          $ldapBase
+     * @param string          $hash
+     * @param string          $smsAttribute
+     * @param string          $answerObjectClass
+     * @param string          $answerAttribute
+     * @param string          $whoChangeSshKey
+     * @param string          $sshKeyAttribute
+     * @param string          $mailAttribute
+     * @param string          $fullnameAttribute
+     * @param array           $adOptions
+     * @param bool            $sambaMode
+     * @param array           $sambaOptions
+     * @param array           $shadowOptions
+     * @param bool            $mailAddressUseLdap
      */
     public function __construct(
         $passwordEncoder,

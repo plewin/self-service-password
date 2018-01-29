@@ -39,7 +39,7 @@ class PosthookSubscriber implements EventSubscriberInterface
     /**
      * PosthookSubscriber constructor.
      *
-     * @param bool $posthookEnabled
+     * @param bool             $posthookEnabled
      * @param PosthookExecutor $posthookExecutor
      */
     public function __construct($posthookEnabled, $posthookExecutor)

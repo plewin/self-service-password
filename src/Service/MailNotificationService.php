@@ -24,6 +24,7 @@ use App\Utils\MailSender;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Twig\Environment;
+
 /**
  * Class MailNotificationService
  */
@@ -82,8 +83,8 @@ class MailNotificationService implements LoggerAwareInterface
             $metadata['subject'],
             $bodyText,
             $bodyHtml
-        )
-        ;
+        );
+
         if (!$success) {
             $this->logger->critical("Error while sending email notification to ${data['mail']} (user ${data['login']})");
         }
@@ -92,7 +93,7 @@ class MailNotificationService implements LoggerAwareInterface
     }
 
     /**
-     * @param $e
+     * @param array $e
      *
      * @return array
      */

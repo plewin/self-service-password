@@ -46,11 +46,11 @@ class MailSender implements LoggerAwareInterface
     /**
      * Send a mail, replace strings in body
      *
-     * @param string|array $mail      Destination
-     * @param array  $mailFrom        Sender
-     * @param string $subject         Subject
-     * @param string $body            Body Text
-     * @param string|null $bodyHtml   Body Html
+     * @param string|array $mail     Destination
+     * @param array        $mailFrom Sender
+     * @param string       $subject  Subject
+     * @param string       $body     Body Text
+     * @param string|null  $bodyHtml Body Html
      *
      * @return bool
      */

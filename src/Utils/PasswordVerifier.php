@@ -39,12 +39,20 @@ class PasswordVerifier
         $this->passwordEncoder = $passwordEncoder;
     }
 
+    /**
+     * @param string $password
+     * @param string $ldapHash
+     *
+     * @return bool
+     */
     public function verify($password, $ldapHash)
     {
         $hashDetails = $this->userPasswordAnalyzer($ldapHash);
 
         // return false if the ldap password could not be analyzed (unknown scheme)
-        if (false === $hashDetails ) return false;
+        if (false === $hashDetails) {
+            return false;
+        }
 
         $password = $this->passwordEncoder->hash($hashDetails['scheme'], $password, $hashDetails['salt']);
 
@@ -53,24 +61,28 @@ class PasswordVerifier
 
     /**
      * Returns an array with "scheme" and "salt"
+     *
+     * @param string $userPasswordValue
+     *
+     * @return array|false
      */
     private function userPasswordAnalyzer($userPasswordValue)
     {
         $matches = [];
-        if ( !preg_match('/{(\S+)}(\S+)/', $userPasswordValue, $matches) ) {
+        if (!preg_match('/{(\S+)}(\S+)/', $userPasswordValue, $matches)) {
             throw new InvalidArgumentException('Hashed password does not validate LDAP format');
         }
 
         $scheme = strtoupper($matches[1]);
-        $base64_hash_and_salt = $matches[2];
+        $base64HashAndSalt = $matches[2];
 
-        if ($scheme == 'CRYPT') {
-            # crypt is actually easier, we do not extract the salt, we use the hash as the salt for crypt()
+        if ('CRYPT' === $scheme) {
+            // crypt is actually easier, we do not extract the salt, we use the hash as the salt for crypt()
             return [
                 'user_password_value' => $userPasswordValue,
                 'scheme'              => $scheme,
-                'password_hash'       => $base64_hash_and_salt,
-                'salt'                => $base64_hash_and_salt, # hash can be used as salt
+                'password_hash'       => $base64HashAndSalt,
+                'salt'                => $base64HashAndSalt, // hash can be used as salt
             ];
         }
 
@@ -93,12 +105,12 @@ class PasswordVerifier
             return false;
         }
 
-        $hash_and_salt = base64_decode($base64_hash_and_salt);
+        $hashAndSalt = base64_decode($base64HashAndSalt);
 
         // salt may contain null bytes
-        $unpacked = unpack("H{$schemes[$scheme]['size']}hash/C*salt", $hash_and_salt);
+        $unpacked = unpack("H{$schemes[$scheme]['size']}hash/C*salt", $hashAndSalt);
 
-        $password_hash = $unpacked['hash'];
+        $passwordHash = $unpacked['hash'];
 
         // remove hash to keep only the salt bytes
         unset($unpacked['hash']);
@@ -108,9 +120,8 @@ class PasswordVerifier
         return [
             'user_password_value' => $userPasswordValue,
             'scheme'              => $scheme,
-            'password_hash'       => $password_hash,
+            'password_hash'       => $passwordHash,
             'salt'                => $salt,
         ];
     }
-
 }

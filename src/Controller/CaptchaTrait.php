@@ -62,7 +62,7 @@ trait CaptchaTrait
 
     /**
      * @param Request $request
-     * @param $login
+     * @param string  $login
      *
      * @return bool
      */
@@ -94,11 +94,11 @@ trait CaptchaTrait
     }
 
     /**
-     * @param $request
+     * @param Request $request
      *
      * @return array
      */
-    protected function getCaptchaTemplateExtraVars($request)
+    protected function getCaptchaTemplateExtraVars(Request $request)
     {
         if (!$this->isCaptchaEnabled()) {
             return [];
@@ -106,7 +106,7 @@ trait CaptchaTrait
 
         $extra = [];
 
-        if ($this->getParameter('captcha_type') == 'gregwar') {
+        if ($this->getParameter('captcha_type') === 'gregwar') {
             $extra['captcha_image'] = $this->generateCaptchaImage($request);
         }
 
@@ -127,6 +127,7 @@ trait CaptchaTrait
         $phrase = $builder->getPhrase();
         $session = $request->getSession();
         $session->set('captcha', $phrase);
+
         return $inline;
     }
 }

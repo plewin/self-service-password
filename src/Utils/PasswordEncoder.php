@@ -38,8 +38,9 @@ class PasswordEncoder
     }
 
     /**
-     * @param string $scheme
-     * @param string $password
+     * @param string      $scheme
+     * @param string      $password
+     * @param string|null $salt
      *
      * @return string
      */
@@ -109,7 +110,8 @@ class PasswordEncoder
     /**
      * Create SSHA password
      *
-     * @param string $password
+     * @param string      $password
+     * @param string|null $salt
      *
      * @return string
      */
@@ -124,7 +126,8 @@ class PasswordEncoder
     /**
      * Create SSHA256 password
      *
-     * @param string $password
+     * @param string      $password
+     * @param string|null $salt
      *
      * @return string
      */
@@ -139,7 +142,8 @@ class PasswordEncoder
     /**
      * Create SSHA384 password
      *
-     * @param string $password
+     * @param string      $password
+     * @param string|null $salt
      *
      * @return string
      */
@@ -154,7 +158,8 @@ class PasswordEncoder
     /**
      * Create SSHA512 password
      *
-     * @param string $password
+     * @param string      $password
+     * @param string|null $salt
      *
      * @return string
      */
@@ -225,7 +230,8 @@ class PasswordEncoder
     /**
      * Create SMD5 password
      *
-     * @param string $password
+     * @param string      $password
+     * @param string|null $salt
      *
      * @return string
      */

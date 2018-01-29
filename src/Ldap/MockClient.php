@@ -34,6 +34,9 @@ class MockClient implements ClientInterface
 
     private $mockData = [];
 
+    /**
+     * MockClient constructor.
+     */
     public function __construct()
     {
         $this->mockData = [
@@ -97,7 +100,7 @@ class MockClient implements ClientInterface
      */
     public function fetchUserEntryContext($login, $wanted)
     {
-        $dn = 'uid=' . $login . ',ou=People,dc=example,dc=com';
+        $dn = 'uid='.$login.',ou=People,dc=example,dc=com';
 
         if (!isset($this->mockData[$dn])) {
             throw new LdapInvalidUserCredentialsException();
@@ -132,9 +135,9 @@ class MockClient implements ClientInterface
      */
     public function checkQuestionAnswer($login, $question, $answer, &$context)
     {
-        $dn = 'uid=' . $login . ',ou=People,dc=example,dc=com';
+        $dn = 'uid='.$login.',ou=People,dc=example,dc=com';
 
-        return $this->mockData[$dn]['questions'][$question] == $answer;
+        return $this->mockData[$dn]['questions'][$question] === $answer;
     }
 
     /**
@@ -142,7 +145,7 @@ class MockClient implements ClientInterface
      */
     public function checkMail($login, $mail)
     {
-        $dn = 'uid=' . $login . ',ou=People,dc=example,dc=com';
+        $dn = 'uid='.$login.',ou=People,dc=example,dc=com';
         if (!isset($this->mockData[$dn])) {
             throw new LdapInvalidUserCredentialsException();
         }
@@ -169,7 +172,7 @@ class MockClient implements ClientInterface
      */
     public function changePassword($entryDn, $newpassword, $oldpassword, $context = [])
     {
-        if ($entryDn === 'uid=user10,ou=People,dc=example,dc=com') {
+        if ('uid=user10,ou=People,dc=example,dc=com' === $entryDn) {
             // poor guy has password change forbidden in password policy
             throw new LdapUpdateFailedException();
         }

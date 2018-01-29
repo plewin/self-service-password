@@ -116,6 +116,7 @@ class GetTokenBySmsVerificationController extends Controller
 
         if (!$session->has('smstoken')) {
             $logger->notice("Unable to open session $tokenid");
+
             return $this->render('self-service/sms_verification_sms_code_failure.html.twig', [
                 //TODO precise error
                 'result' => 'tokennotvalid',
@@ -135,6 +136,7 @@ class GetTokenBySmsVerificationController extends Controller
             if ($smsTokenAgeInSeconds > $this->getParameter('token_lifetime')) {
                 $logger->warning('Token lifetime expired');
                 $session->remove('smstoken');
+
                 return $this->render('self-service/sms_verification_sms_code_failure.html.twig', [
                     //TODO precise error to user
                     'result' => 'tokennotvalid',
@@ -242,10 +244,10 @@ class GetTokenBySmsVerificationController extends Controller
             $token  = $encryptionService->encrypt($session->getId());
 
             return $this->renderTokenForm($result, $token);
-        } else {
-            // sms failed, we don't need the smstoken anymore
-            $session->remove('smstoken');
         }
+
+        // sms failed, we don't need the smstoken anymore
+        $session->remove('smstoken');
 
         return $this->render('self-service/sms_verification_sms_code_failure.html.twig', [
             'result' => $result,

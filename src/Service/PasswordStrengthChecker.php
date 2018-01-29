@@ -34,7 +34,21 @@ class PasswordStrengthChecker
      */
     public function __construct(array $pwdPolicyConfig)
     {
-        $this->pwdPolicyConfig = $pwdPolicyConfig;
+        $defaults = [
+            'pwd_min_length'      => 0,
+            'pwd_max_length'      => 0,
+            'pwd_min_lower'       => 0,
+            'pwd_min_upper'       => 0,
+            'pwd_min_digit'       => 0,
+            'pwd_min_special'     => 0,
+            'pwd_special_chars'   => '^a-zA-Z0-9',
+            'pwd_forbidden_chars' => '%@',
+            'pwd_no_reuse'        => true,
+            'pwd_diff_login'      => true,
+            'pwd_complexity'      => 0,
+        ];
+
+        $this->pwdPolicyConfig = array_merge($defaults, $pwdPolicyConfig);
     }
 
     /**
@@ -46,70 +60,78 @@ class PasswordStrengthChecker
      */
     public function evaluate($newpassword, $oldpassword, $login)
     {
-        extract($this->pwdPolicyConfig);
-
         $problems = [];
 
         //TODO hum... why utf8 decode ?
         $length = strlen(utf8_decode($newpassword));
-        preg_match_all("/[a-z]/", $newpassword, $lower_res);
-        $lower = count( $lower_res[0] );
-        preg_match_all("/[A-Z]/", $newpassword, $upper_res);
-        $upper = count( $upper_res[0] );
-        preg_match_all("/[0-9]/", $newpassword, $digit_res);
-        $digit = count( $digit_res[0] );
+        preg_match_all("/[a-z]/", $newpassword, $lowerRes);
+        $lower = count($lowerRes[0]);
+        preg_match_all("/[A-Z]/", $newpassword, $upperRes);
+        $upper = count($upperRes[0]);
+        preg_match_all("/[0-9]/", $newpassword, $digitRes);
+        $digit = count($digitRes[0]);
 
         $special = 0;
-        if (isset($pwd_special_chars) && !empty($pwd_special_chars)) {
-            preg_match_all("/[$pwd_special_chars]/", $newpassword, $special_res);
-            $special = count( $special_res[0] );
+        if (!empty($this->pwdPolicyConfig['pwd_special_chars'])) {
+            $specialChars = $this->pwdPolicyConfig['pwd_special_chars'];
+            preg_match_all("/[$specialChars]/", $newpassword, $specialRes);
+            $special = count($specialRes[0]);
         }
 
         $forbidden = 0;
-        if (isset($pwd_forbidden_chars) && !empty($pwd_forbidden_chars)) {
-            preg_match_all("/[$pwd_forbidden_chars]/", $newpassword, $forbidden_res);
-            $forbidden = count( $forbidden_res[0] );
+        if (!empty($this->pwdPolicyConfig['pwd_forbidden_chars'])) {
+            $forbiddenChars = $this->pwdPolicyConfig['pwd_special_chars'];
+            preg_match_all("/[$forbiddenChars]/", $newpassword, $forbiddenRes);
+            $forbidden = count($forbiddenRes[0]);
         }
 
         // Complexity: checks for lower, upper, special, digits
-        if ($pwd_complexity) {
+        if ($this->pwdPolicyConfig['pwd_complexity']) {
             $complex = 0;
-            if ( $special > 0 ) { $complex++; }
-            if ( $digit > 0 ) { $complex++; }
-            if ( $lower > 0 ) { $complex++; }
-            if ( $upper > 0 ) { $complex++; }
-            if ( $complex < $pwd_complexity ) {
-                $problems[] = "notcomplex";
+            if ($special > 0) {
+                ++$complex;
+            }
+            if ($digit > 0) {
+                ++$complex;
+            }
+            if ($lower > 0) {
+                ++$complex;
+            }
+            if ($upper > 0) {
+                ++$complex;
+            }
+            if ($complex < $this->pwdPolicyConfig['pwd_complexity']) {
+                $problems[] = 'notcomplex';
             }
         }
 
         // Minimal lenght
-        if ($pwd_min_length and $length < $pwd_min_length) {
+        if ($this->pwdPolicyConfig['pwd_min_length'] and $length < $this->pwdPolicyConfig['pwd_min_length']) {
             $problems[] = 'tooshort';
         }
 
         // Maximal lenght
-        if ($pwd_max_length and $length > $pwd_max_length) {
+        if ($this->pwdPolicyConfig['pwd_max_length'] and $length > $this->pwdPolicyConfig['pwd_max_length']) {
             $problems[] = 'toobig';
         }
 
         // Minimal lower chars
-        if ($pwd_min_lower and $lower < $pwd_min_lower) {
+        if ($this->pwdPolicyConfig['pwd_min_lower'] and $lower < $this->pwdPolicyConfig['pwd_min_lower']) {
             $problems[] = 'minlower';
         }
 
         // Minimal upper chars
-        if ($pwd_min_upper and $upper < $pwd_min_upper) {
+        if ($this->pwdPolicyConfig['pwd_min_upper'] and $upper < $this->pwdPolicyConfig['pwd_min_upper']) {
             $problems[] = 'minupper';
         }
 
         // Minimal digit chars
-        if ($pwd_min_digit and $digit < $pwd_min_digit) {
+        if ($this->pwdPolicyConfig['pwd_min_digit'] and $digit < $this->pwdPolicyConfig['pwd_min_digit']) {
             $problems[] = 'mindigit';
         }
 
         // Minimal special chars
-        if ($pwd_min_special and $special < $pwd_min_special) {
+        if ($this->pwdPolicyConfig['pwd_min_special'] and $special < $this->pwdPolicyConfig['pwd_min_special']) {
             $problems[] = 'minspecial';
         }
 
@@ -119,12 +141,12 @@ class PasswordStrengthChecker
         }
 
         // Same as old password?
-        if ($pwd_no_reuse and $newpassword === $oldpassword) {
+        if ($this->pwdPolicyConfig['pwd_no_reuse'] and $newpassword === $oldpassword) {
             $problems[] = 'sameasold';
         }
 
         // Same as login?
-        if ($pwd_diff_login and $newpassword === $login) {
+        if ($this->pwdPolicyConfig['pwd_diff_login'] and $newpassword === $login) {
             $problems[] = 'sameaslogin';
         }
 

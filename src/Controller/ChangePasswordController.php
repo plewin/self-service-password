@@ -163,7 +163,7 @@ class ChangePasswordController extends Controller
             return $this->renderFormWithError('ldaperror', [], $request);
         } catch (LdapInvalidUserCredentialsException $e) {
             // action needed, password is wrong
-            return $this->renderFormWithError('', ['badcredentials'],  $request);
+            return $this->renderFormWithError('', ['badcredentials'], $request);
         } catch (LdapUpdateFailedException $e) {
             // action needed ? like password does not respect remote password policy
             return $this->renderFormWithError('', ['passworderror'], $request);
@@ -199,5 +199,4 @@ class ChangePasswordController extends Controller
             'login' => $request->get('login'),
         ] + $this->getCaptchaTemplateExtraVars($request));
     }
-
 }

@@ -114,6 +114,9 @@ class TokenManagerService implements LoggerAwareInterface
         return $login;
     }
 
+    /**
+     * Destroy token from session
+     */
     public function destroyToken()
     {
         $this->session->remove('token');

@@ -41,12 +41,13 @@ class SmsNotificationService implements LoggerAwareInterface
 
     /**
      * SmsNotificationService constructor.
-     * @param string $smsMethod
+     *
+     * @param string     $smsMethod
      * @param MailSender $mailSender
-     * @param string $smsMailTo
-     * @param string $mailFromAddress
-     * @param string $mailFromName
-     * @param string $smsApiLib
+     * @param string     $smsMailTo
+     * @param string     $mailFromAddress
+     * @param string     $mailFromName
+     * @param string     $smsApiLib
      */
     public function __construct($smsMethod, $mailSender, $smsMailTo, $mailFromAddress, $mailFromName, $smsApiLib)
     {

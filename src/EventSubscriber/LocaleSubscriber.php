@@ -39,9 +39,9 @@ class LocaleSubscriber implements EventSubscriberInterface
     /**
      * LocaleSubscriber constructor.
      *
-     * @param $defaultLocale
+     * @param string              $defaultLocale
      * @param TranslatorInterface $translator
-     * @param string $supportedLocales
+     * @param string              $supportedLocales
      */
     public function __construct($defaultLocale, TranslatorInterface $translator, $supportedLocales)
     {
@@ -61,7 +61,7 @@ class LocaleSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * @param GetResponseEvent  $event
+     * @param GetResponseEvent $event
      */
     public function onKernelRequest(GetResponseEvent $event)
     {
