@@ -44,6 +44,7 @@ $messages['minupper'] = "Votre mot de passe n'a pas assez de majuscules";
 $messages['mindigit'] = "Votre mot de passe n'a pas assez de chiffres";
 $messages['minspecial'] = "Votre mot de passe n'a pas assez de caractères spéciaux";
 $messages['sameasold'] = "Votre mot de passe est identique au précédent";
+$messages['notstrong'] = "Votre mot de passe n'est pas assez fort";
 $messages['policy'] = "Votre mot de passe doit respecter les contraintes suivantes&nbsp;:";
 $messages['policyminlength'] = "Nombre minimum de caractères&nbsp;:";
 $messages['policymaxlength'] = "Nombre maximum de caractères&nbsp;:";

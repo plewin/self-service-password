@@ -45,6 +45,7 @@ $messages['minupper'] = "A megadott jelszó nem tartalmaz elegendő nagybetűs k
 $messages['mindigit'] = "A megadott jelszó nem tartalmaz elegendő számjegy karaktert!";
 $messages['minspecial'] = "A megadott jelszó nem tartalmaz elegendő speciális karaktert!";
 $messages['sameasold'] = "Az új jelszava nem egyezhet meg a régi jelszavával!";
+$messages['notstrong'] = "Your password is not strong enough";
 $messages['policy'] = "A megadott jelszónak meg kell felelni a következő elvárásoknak:";
 $messages['policyminlength'] = "Minimális hossz:";
 $messages['policymaxlength'] = "Maximális hossz:";

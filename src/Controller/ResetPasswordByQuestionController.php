@@ -24,7 +24,7 @@ use App\Exception\LdapErrorException;
 use App\Exception\LdapInvalidUserCredentialsException;
 use App\Exception\LdapUpdateFailedException;
 use App\Ldap\ClientInterface;
-use App\Service\PasswordStrengthChecker;
+use App\PasswordStrengthChecker\CheckerInterface;
 use App\Service\UsernameValidityChecker;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -138,7 +138,7 @@ class ResetPasswordByQuestionController extends Controller
         }
 
         // Check password strength
-        /** @var PasswordStrengthChecker $passwordChecker */
+        /** @var CheckerInterface $passwordChecker */
         $passwordChecker = $this->get('password_strength_checker');
 
         $errors += $passwordChecker->evaluate($newpassword, '', $login);

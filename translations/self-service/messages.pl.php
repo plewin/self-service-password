@@ -44,6 +44,7 @@ $messages['minupper'] = "Twoje hasło nie posiada wystarczająco dużych liter";
 $messages['mindigit'] = "Twoje hasło nie posiada wystarczająco cyfr";
 $messages['minspecial'] = "Twoje hasło nie posiada wystarczająco znaków specjalnych";
 $messages['sameasold'] = "Twoje nowe hasło jest identyczne z Twoim starym hasłem";
+$messages['notstrong'] = "Your password is not strong enough";
 $messages['policy'] = "Twoje hasło powinno spełniać następujące wymagania:";
 $messages['policyminlength'] = "Minimalna długość:";
 $messages['policymaxlength'] = "Maksymalna długość:";

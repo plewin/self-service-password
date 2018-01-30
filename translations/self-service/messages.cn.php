@@ -44,6 +44,7 @@ $messages['minupper'] = "密码未包含足够的大写字母";
 $messages['mindigit'] = "密码未包含足够的数字";
 $messages['minspecial'] = "密码未包含足够的特殊字符";
 $messages['sameasold'] = "新密码与旧密码相同";
+$messages['notstrong'] = "Your password is not strong enough";
 $messages['policy'] = "密码需要达到以下标准:";
 $messages['policyminlength'] = "最小长度:";
 $messages['policymaxlength'] = "最大长度:";

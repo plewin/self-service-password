@@ -45,6 +45,7 @@ $messages['minupper'] = "Vaše geslo nima dovolj velikih črk";
 $messages['mindigit'] = "Vaše geslo nima dovolj številk";
 $messages['minspecial'] = "Vaše geslo nima dovolj posebnih znakov";
 $messages['sameasold'] = "Vaše novo geslo je enako prejšnjemu";
+$messages['notstrong'] = "Your password is not strong enough";
 $messages['policy'] = "Izbrati morate geslo, ki bo zadostovalo sledečim zahtevam:";
 $messages['policyminlength'] = "Najmanjša dolžina:";
 $messages['policymaxlength'] = "Največja dolžina:";

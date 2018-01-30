@@ -95,6 +95,13 @@ parameters:
         # Complexity: number of different class of character required
         pwd_complexity: 0
 
+
+    password_strength_check:
+        strategy: 'multi'
+
+    psc_zxcvbn:
+        min_strength: 3
+
     # Other policies
     # Invalid characters in login
     # Set at least "*()&|" to prevent LDAP injection

@@ -61,8 +61,19 @@ $container->register('recaptcha_service', '\App\Service\RecaptchaService')
     ->addMethodCall('setLogger', [new Reference('logger')])
 ;
 
+$container->setAlias('password_strength_checker', 'password_strength_checker.zxcvbn');
 
-$container->register('password_strength_checker', '\App\Service\PasswordStrengthChecker')
+$container->register('password_strength_checker.multi', '\App\PasswordStrengthChecker\MultiChecker')
+    ->addMethodCall('setContainer', [new Reference('service_container')])
+    ->addMethodCall('addChecker', [new Reference('password_strength_checker.zxcvbn')])
+    ->addMethodCall('addChecker', [new Reference('password_strength_checker.legacy')])
+;
+
+$container->register('password_strength_checker.zxcvbn', '\App\PasswordStrengthChecker\ZxcvbnChecker')
+    ->addArgument('%psc_zxcvbn%')
+;
+
+$container->register('password_strength_checker.legacy', '\App\PasswordStrengthChecker\LegacyChecker')
     ->addArgument('%pwd_policy_config%')
 ;
 

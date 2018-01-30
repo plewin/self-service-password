@@ -46,6 +46,7 @@ $messages['minupper'] = "La vostra contrasenya no té prou majúscules";
 $messages['mindigit'] = "La vostra contrasenya no té prou xifres";
 $messages['minspecial'] = "La vostra contrasenya no té prou caràcters especials";
 $messages['sameasold'] = "La nova contrasenya és igual a la antiga";
+$messages['notstrong'] = "Your password is not strong enough";
 $messages['policy'] = "Cal que la contrasenya respecti les següents normes";
 $messages['policyminlength'] = "Longitud mínima";
 $messages['policymaxlength'] = "Longitud màxima";

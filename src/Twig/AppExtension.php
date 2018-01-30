@@ -161,6 +161,7 @@ class AppExtension extends \Twig_Extension implements GlobalsInterface
             'sameaslogin',
             'sshkeyerror',
             'badcaptcha',
+            'notstrong',
         ];
 
         if (in_array($msg, $dangerList)) {
@@ -251,6 +252,7 @@ class AppExtension extends \Twig_Extension implements GlobalsInterface
             'sameasold',
             'notcomplex',
             'sameaslogin',
+            'notstrong',
         ];
 
         return in_array($msg, $errorList);

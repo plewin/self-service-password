@@ -45,6 +45,7 @@ $messages['mindigit'] = "A senha não contém caracteres suficientes";
 $messages['minspecial'] = "A senha não contém caracteres especiais";
 $messages['forbiddenchars'] = "A senha contém caracteres proibidos";
 $messages['sameasold'] = "A senha nova é igual a senha atual";
+$messages['notstrong'] = "Your password is not strong enough";
 $messages['policy'] = "A senha deve respeitar as regras de restrição:";
 $messages['policyminlength'] = "Tamanho mínimo: ";
 $messages['policymaxlength'] = "Tamanho máximo: ";

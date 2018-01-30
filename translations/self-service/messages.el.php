@@ -45,6 +45,7 @@ $messages['minupper'] = "Ο κωδικός δεν έχει αρκετούς κε
 $messages['mindigit'] = "Ο κωδικός δεν έχει αρκετούς αριθμούς";
 $messages['minspecial'] = "Ο κωδικός δεν έχει αρκετούς ειδικούς χαρακτήρες";
 $messages['sameasold'] = "Ο νέος κωδικός που επιλέξατε είναι ίδιος με τον ισχύοντα";
+$messages['notstrong'] = "Your password is not strong enough";
 $messages['policy'] = "Ο κωδικός σας πρέπει να πληροί τις παρακάτω προδιαγραφές:";
 $messages['policyminlength'] = "Ελάχιστο μήκος:";
 $messages['policymaxlength'] = "Μέγιστο μήκος:";

@@ -25,7 +25,7 @@ use App\Exception\LdapInvalidUserCredentialsException;
 use App\Exception\LdapUpdateFailedException;
 use App\Exception\TokenException;
 use App\Ldap\ClientInterface;
-use App\Service\PasswordStrengthChecker;
+use App\PasswordStrengthChecker\CheckerInterface;
 use App\Service\TokenManagerService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -101,7 +101,7 @@ class ResetPasswordByTokenController extends Controller
             $missings[] = 'captcharequired';
         }
 
-        /** @var PasswordStrengthChecker $passwordChecker */
+        /** @var CheckerInterface $passwordChecker */
         $passwordChecker = $this->get('password_strength_checker');
 
         // Check password strength

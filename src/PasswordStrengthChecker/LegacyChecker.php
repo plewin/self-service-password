@@ -18,12 +18,12 @@
  * GPL License: http://www.gnu.org/licenses/gpl.txt
  */
 
-namespace App\Service;
+namespace App\PasswordStrengthChecker;
 
 /**
- * Class PasswordStrengthChecker
+ * Class LegacyChecker
  */
-class PasswordStrengthChecker
+class LegacyChecker implements CheckerInterface
 {
     private $pwdPolicyConfig;
 
@@ -52,15 +52,15 @@ class PasswordStrengthChecker
     }
 
     /**
-     * @param string $newpassword
-     * @param string $oldpassword
-     * @param string $login
+     * @param string      $newpassword
+     * @param string|null $oldpassword
+     * @param string|null $login
      *
      * @return string[]
      */
-    public function evaluate($newpassword, $oldpassword, $login)
+    public function evaluate($newpassword, $oldpassword = null, $login = null)
     {
-        $problems = [];
+        $violations = [];
 
         //TODO hum... why utf8 decode ?
         $length = strlen(utf8_decode($newpassword));
@@ -101,55 +101,55 @@ class PasswordStrengthChecker
                 ++$complex;
             }
             if ($complex < $this->pwdPolicyConfig['pwd_complexity']) {
-                $problems[] = 'notcomplex';
+                $violations[] = 'notcomplex';
             }
         }
 
         // Minimal lenght
         if ($this->pwdPolicyConfig['pwd_min_length'] and $length < $this->pwdPolicyConfig['pwd_min_length']) {
-            $problems[] = 'tooshort';
+            $violations[] = 'tooshort';
         }
 
         // Maximal lenght
         if ($this->pwdPolicyConfig['pwd_max_length'] and $length > $this->pwdPolicyConfig['pwd_max_length']) {
-            $problems[] = 'toobig';
+            $violations[] = 'toobig';
         }
 
         // Minimal lower chars
         if ($this->pwdPolicyConfig['pwd_min_lower'] and $lower < $this->pwdPolicyConfig['pwd_min_lower']) {
-            $problems[] = 'minlower';
+            $violations[] = 'minlower';
         }
 
         // Minimal upper chars
         if ($this->pwdPolicyConfig['pwd_min_upper'] and $upper < $this->pwdPolicyConfig['pwd_min_upper']) {
-            $problems[] = 'minupper';
+            $violations[] = 'minupper';
         }
 
         // Minimal digit chars
         if ($this->pwdPolicyConfig['pwd_min_digit'] and $digit < $this->pwdPolicyConfig['pwd_min_digit']) {
-            $problems[] = 'mindigit';
+            $violations[] = 'mindigit';
         }
 
         // Minimal special chars
         if ($this->pwdPolicyConfig['pwd_min_special'] and $special < $this->pwdPolicyConfig['pwd_min_special']) {
-            $problems[] = 'minspecial';
+            $violations[] = 'minspecial';
         }
 
         // Forbidden chars
         if ($forbidden > 0) {
-            $problems[] = 'forbiddenchars';
+            $violations[] = 'forbiddenchars';
         }
 
         // Same as old password?
         if ($this->pwdPolicyConfig['pwd_no_reuse'] and $newpassword === $oldpassword) {
-            $problems[] = 'sameasold';
+            $violations[] = 'sameasold';
         }
 
         // Same as login?
         if ($this->pwdPolicyConfig['pwd_diff_login'] and $newpassword === $login) {
-            $problems[] = 'sameaslogin';
+            $violations[] = 'sameaslogin';
         }
 
-        return $problems;
+        return $violations;
     }
 }

@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Tests\Unit\Service;
+namespace App\Tests\Unit\PasswordStrengthChecker;
 
-use App\Service\PasswordStrengthChecker;
+use App\PasswordStrengthChecker\LegacyChecker;
 
 /**
- * Class PasswordStrengthCheckerTest
+ * Class LegacyCheckerTest
  */
-class PasswordStrengthCheckerTest extends \PHPUnit_Framework_TestCase
+class LegacyCheckerTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * Test check_password_strength function
@@ -33,7 +33,7 @@ class PasswordStrengthCheckerTest extends \PHPUnit_Framework_TestCase
         $login = "coudot";
         $oldpassword = "secret";
 
-        $passwordChecker = new PasswordStrengthChecker($pwd_policy_config);
+        $passwordChecker = new LegacyChecker($pwd_policy_config);
 
         $this->assertTrue(in_array('sameaslogin', $passwordChecker->evaluate("coudot", $oldpassword, $login)));
         $this->assertTrue(in_array('sameasold', $passwordChecker->evaluate("secret", $oldpassword, $login)));
@@ -60,7 +60,7 @@ class PasswordStrengthCheckerTest extends \PHPUnit_Framework_TestCase
             "pwd_complexity"          => 3
         ];
 
-        $passwordChecker = new PasswordStrengthChecker($pwd_policy_config);
+        $passwordChecker = new LegacyChecker($pwd_policy_config);
 
         $this->assertTrue(in_array('notcomplex', $passwordChecker->evaluate( "simple", $oldpassword, $login )));
         $this->assertEquals([], $passwordChecker->evaluate( "C0mplex", $oldpassword, $login ) );

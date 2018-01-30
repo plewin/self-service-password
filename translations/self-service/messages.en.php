@@ -47,6 +47,7 @@ $messages['minupper'] = "Your password does not have enough uppercase characters
 $messages['mindigit'] = "Your password does not have enough digits";
 $messages['minspecial'] = "Your password does not have enough special characters";
 $messages['sameasold'] = "Your new password is identical to your old password";
+$messages['notstrong'] = "Your password is not strong enough";
 $messages['policy'] = "Your password must conform to the following constraints:";
 $messages['policyminlength'] = "Minimum length:";
 $messages['policymaxlength'] = "Maximum length:";

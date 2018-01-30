@@ -45,6 +45,7 @@ $messages['minupper'] = "パスワードに含まれる大文字が少なすぎ�
 $messages['mindigit'] = "パスワードに含まれる数字が少なすぎます";
 $messages['minspecial'] = "パスワードに含まれる記号が少なすぎます";
 $messages['sameasold'] = "新しいパスワードが現在のパスワードと同じです";
+$messages['notstrong'] = "Your password is not strong enough";
 $messages['policy'] = "パスワードは次の条件を満たす必要があります:";
 $messages['policyminlength'] = "最小の長さ:";
 $messages['policymaxlength'] = "最大の長さ:";
