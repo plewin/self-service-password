@@ -45,6 +45,7 @@ $messages['mindigit'] = "Ihr Passwort hat nicht genug Ziffern";
 $messages['minspecial'] = "Ihr Passwort hat nicht genug Sonderzeichen";
 $messages['sameasold'] = "Ihr neues und Ihr aktuelles Passwort sind identisch";
 $messages['notstrong'] = "Your password is not strong enough";
+$messages['indictionary'] = "Your password is in the server's dictionary";
 $messages['policy'] = "Ihr Passwort muss diese Regeln beachten:";
 $messages['policyminlength'] = "Minimale Länge:";
 $messages['policymaxlength'] = "Maximale Länge:";

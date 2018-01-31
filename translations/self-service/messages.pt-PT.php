@@ -46,6 +46,7 @@ $messages['minspecial'] = "A password não contém carácteres especiais.";
 $messages['forbiddenchars'] = "A password contém carácteres proibidos.";
 $messages['sameasold'] = "A password nova é igual a senha actual.";
 $messages['notstrong'] = "Your password is not strong enough";
+$messages['indictionary'] = "Your password is in the server's dictionary";
 $messages['policy'] = "A password deve respeitar as regras de restrição:";
 $messages['policyminlength'] = "Tamanho minimo: ";
 $messages['policymaxlength'] = "Tamanho maximo: ";

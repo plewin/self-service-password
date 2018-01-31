@@ -46,6 +46,7 @@ $messages['mindigit'] = "У Вашому паролі недостатня кі�
 $messages['minspecial'] = "У Вашому паролі недостатня кількість службових символів";
 $messages['sameasold'] = "Ваш новий пароль збігається зі старим";
 $messages['notstrong'] = "Your password is not strong enough";
+$messages['indictionary'] = "Your password is in the server's dictionary";
 $messages['policy'] = "Ваш пароль повинен відповідати наступним вимогам:";
 $messages['policyminlength'] = "Мінімальна довжина:";
 $messages['policymaxlength'] = "Максимальна довжина:";

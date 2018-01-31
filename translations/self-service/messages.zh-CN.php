@@ -48,6 +48,7 @@ $messages['mindigit'] = "您的密码没有包含足够的数字";
 $messages['minspecial'] = "您的密码没有包含足够的特殊字符";
 $messages['sameasold'] = "您的新密码与旧密码相同";
 $messages['notstrong'] = "Your password is not strong enough";
+$messages['indictionary'] = "Your password is in the server's dictionary";
 $messages['policy'] = "您的密码必须符合以下条件:";
 $messages['policyminlength'] = "最小长度:";
 $messages['policymaxlength'] = "最大长度:";

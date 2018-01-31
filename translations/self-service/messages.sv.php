@@ -46,6 +46,7 @@ $messages['mindigit'] = "Ditt lösenord innehåller för få siffror";
 $messages['minspecial'] = "Ditt lösenord innehåller för få specialtecken";
 $messages['sameasold'] = "Ditt nya lösenord är identisk med ditt gamla lösenord";
 $messages['notstrong'] = "Your password is not strong enough";
+$messages['indictionary'] = "Your password is in the server's dictionary";
 $messages['policy'] = "Ditt lösenord måste uppfylla följande krav:";
 $messages['policyminlength'] = "Minst antal tecken:";
 $messages['policymaxlength'] = "Högst antal tecken:";

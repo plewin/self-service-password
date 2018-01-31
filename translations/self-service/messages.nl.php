@@ -46,6 +46,7 @@ $messages['minspecial'] = "Het wachtwoord bevat niet genoeg bijzondere karakters
 $messages['sameasold'] = "Het nieuwe wachtwoord is gelijk aan het huidige";
 $messages['notstrong'] = "Your password is not strong enough";
 $messages['policy'] = "Het wachtwoord moet voldoen aan de volgende eisen:";
+$messages['indictionary'] = "Your password is in the server's dictionary";
 $messages['policyminlength'] = "Minimum lengte:";
 $messages['policymaxlength'] = "Maximum lengte:";
 $messages['policyminlower'] = "Minimaal aantal kleine letters:";

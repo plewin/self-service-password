@@ -102,6 +102,10 @@ parameters:
     psc_zxcvbn:
         min_strength: 3
 
+    psc_dictionary:
+        dirs:
+            - '%kernel.root_dir%/var/dictionaries'
+
     # Other policies
     # Invalid characters in login
     # Set at least "*()&|" to prevent LDAP injection

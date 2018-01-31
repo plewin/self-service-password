@@ -45,6 +45,7 @@ $messages['mindigit'] = "Su contraseña no tiene suficientes números";
 $messages['minspecial'] = "Su contraseña no tiene suficientes caracteres especiales";
 $messages['sameasold'] = "Su nueva contraseña es idéntica a su contraseña anterior";
 $messages['notstrong'] = "Your password is not strong enough";
+$messages['indictionary'] = "Your password is in the server's dictionary";
 $messages['policy'] = "Su contraseña debe respetar las siguientes normas";
 $messages['policyminlength'] = "Longitud mínima";
 $messages['policymaxlength'] = "Longitud máxima";

@@ -46,6 +46,7 @@ $messages['mindigit'] = "Parolanızda yeterli sayıda rakam yok";
 $messages['minspecial'] = "Parolanızda yeterli sayıda özel karakter yok";
 $messages['sameasold'] = "Yeni parolanız ile eski parolanız aynı";
 $messages['notstrong'] = "Your password is not strong enough";
+$messages['indictionary'] = "Your password is in the server's dictionary";
 $messages['policy'] = "Parolanız bu kısıtlamalara uymalıdır:";
 $messages['policyminlength'] = "Minimum uzunluk:";
 $messages['policymaxlength'] = "Maksimum uzunluk:";

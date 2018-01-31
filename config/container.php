@@ -67,6 +67,7 @@ $container->register('password_strength_checker.multi', '\App\PasswordStrengthCh
     ->addMethodCall('setContainer', [new Reference('service_container')])
     ->addMethodCall('addChecker', [new Reference('password_strength_checker.zxcvbn')])
     ->addMethodCall('addChecker', [new Reference('password_strength_checker.legacy')])
+    ->addMethodCall('addChecker', [new Reference('password_strength_checker.dictionary')])
 ;
 
 $container->register('password_strength_checker.zxcvbn', '\App\PasswordStrengthChecker\ZxcvbnChecker')
@@ -75,6 +76,10 @@ $container->register('password_strength_checker.zxcvbn', '\App\PasswordStrengthC
 
 $container->register('password_strength_checker.legacy', '\App\PasswordStrengthChecker\LegacyChecker')
     ->addArgument('%pwd_policy_config%')
+;
+
+$container->register('password_strength_checker.dictionary', '\App\PasswordStrengthChecker\DictionaryChecker')
+    ->addArgument('%psc_dictionary%')
 ;
 
 $container->register('mail_sender', '\App\Utils\MailSender')

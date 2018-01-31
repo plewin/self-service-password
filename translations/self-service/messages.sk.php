@@ -46,6 +46,7 @@ $messages['mindigit'] = "Vaše heslo neobsahuje dostatok číslic";
 $messages['minspecial'] = "Vaše heslo neobsahuje dostatok špeciálnych znakov";
 $messages['sameasold'] = "Vaše nové heslo je rovnaké ako vaše staré heslo";
 $messages['notstrong'] = "Your password is not strong enough";
+$messages['indictionary'] = "Your password is in the server's dictionary";
 $messages['policy'] = "Vaše heslo musí spĺňať nasledovné obmedzenia:";
 $messages['policyminlength'] = "Minimálne dĺžka:";
 $messages['policymaxlength'] = "Maximálna dĺžka:";

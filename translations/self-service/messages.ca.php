@@ -47,6 +47,7 @@ $messages['mindigit'] = "La vostra contrasenya no té prou xifres";
 $messages['minspecial'] = "La vostra contrasenya no té prou caràcters especials";
 $messages['sameasold'] = "La nova contrasenya és igual a la antiga";
 $messages['notstrong'] = "Your password is not strong enough";
+$messages['indictionary'] = "Your password is in the server's dictionary";
 $messages['policy'] = "Cal que la contrasenya respecti les següents normes";
 $messages['policyminlength'] = "Longitud mínima";
 $messages['policymaxlength'] = "Longitud màxima";
