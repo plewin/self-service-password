@@ -1,4 +1,9 @@
+{% if style|default(null) == 'alert' %}
 <div class="help alert alert-warning">
+{% else %}
+<div class="passwordPolicyHelp offset-md-4 col-sm-8 form-text text-muted">
+{% endif %}
+
     <p>{{ 'policy'|trans }}</p>
 
     <ul>

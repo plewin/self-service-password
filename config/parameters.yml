@@ -199,11 +199,13 @@ parameters:
     ## Default theme settings
     # Show policy constraints message:
     # always, onerror, never (default)
-    pwd_show_policy: 'never'
+    pwd_show_policy: 'onerror'
     # Position of password policy constraints message:
     # above - the form (default)
     # below - the form
-    pwd_show_policy_pos: 'above'
+    # below_input_new - below the new password input
+    # below_input_confirm - below the confirm password input
+    pwd_show_policy_pos: 'below_input_confirm'
     # Display menu on top
     show_menu: true
     # Display help messages
