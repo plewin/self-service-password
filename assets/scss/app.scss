@@ -1,66 +1,41 @@
-// assets/css/global.scss
+// assets/scss/app.scss
 
 // customize some Bootstrap variables
 //$brand-primary: darken(#428bca, 20%);
 // See this page for boostrap customisation
-// https://getbootstrap.com/docs/3.3/css/
+// https://getbootstrap.com/docs/4.0
 
-$icon-font-path: "~bootstrap-sass/assets/fonts/bootstrap/";
-
-// set if you're also including font-awesome
 $fa-font-path: "~font-awesome/fonts";
+$enable-gradients: true;
+$enable-shadows: true;
+$enable-rounded: true;
 
 // the ~ allows you to reference things in node_modules
-@import '~bootstrap-sass/assets/stylesheets/bootstrap';
+@import '~bootstrap/scss/bootstrap';
 @import '~font-awesome/scss/font-awesome.scss';
-
-// TODO port changes in this file and include them here
-@import 'bootstrap-theme.min.css';
 
 /* CSS for LDAP Tool Box Self-Service Password */
 
 html, body {
   background: #eee;
   padding-top: 20px;
-  font-size: 12pt;
+  padding-bottom: 20px;
 }
 
-.panel, .alert, .navbar-wrapper {
+.alert, .navbar {
   box-shadow:0 3px 6px rgba(0,0,0,.25);
 }
 
-.panel {
-  background-color:#fff;
-  background-color:rgba(255,255,255,0.8);
+#application-wrapper {
+  box-shadow:0 3px 6px rgba(0,0,0,.25);
+  background-color: rgba(255,255,255,0.8);
+  padding: 1em;
+  @include border-radius(0.1rem);
 }
 
 img.logo {
-  margin-bottom: 20px;
+  margin-top: 20px;
 }
-
-.title h1 {
-  font-size: 20pt;
-}
-
-.result p {
-  font-size: 14pt;
-}
-
-.result i.fa {
-  font-size: 18pt;
-  margin-right: 10px;
-}
-
-.help i.fa {
-  font-size: 14pt;
-  margin-right: 5px;
-}
-
-textarea {
-  resize: vertical;
-}
-
-
 
 // toggle password visibility
 .form-control.password + .glyphicon {

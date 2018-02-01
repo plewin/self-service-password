@@ -1,7 +1,7 @@
 {% macro show_result(result) %}
     {% if result %}
     <div class="result alert alert-{{ result|criticality }}">
-        <p><i class="fa fa-fw {{ result|fa_class }}" aria-hidden="true"></i> {{ result|trans }}</p>
+        <i class="fa fa-fw {{ result|fa_class }}" aria-hidden="true"></i> {{ result|trans }}
     </div>
     {% endif %}
 {% endmacro %}
@@ -17,16 +17,18 @@
 {% endmacro %}
 
 {% macro row_input_text(id, label, icon, placeholder, default_value, disabled, autocomplete) %}
-    <div class="form-group">
-        <label for="{{ id }}" class="col-sm-4 control-label">{{ label|trans }}</label>
+    <div class="row">
+        <label for="{{ id }}" class="col-sm-4 col-form-label text-right">{{ label|trans }}</label>
         <div class="col-sm-8">
-            <div class="input-group">
-                <span class="input-group-addon"><i class="fa fa-fw fa-{{ icon }}"></i></span>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon3"><i class="fa fa-fw fa-{{ icon }}"></i></span>
+                </div>
                 <input id="{{ id }}"
+                       class="form-control"
                        name="{{ id }}"
                        {% if disabled|default(false) %}disabled{% endif %}
                        value="{{ default_value|default('') }}"
-                       class="form-control"
                        placeholder="{{ placeholder|trans }}"
                        {% if enable_form_autocomplete %}
                            {% if autocomplete|default(false) %}autocomplete="{{ autocomplete }}"{% endif %}
@@ -40,11 +42,13 @@
 {% endmacro %}
 
 {% macro row_input_email(id, label, icon, placeholder, default_value) %}
-    <div class="form-group">
-        <label for="{{ id }}" class="col-sm-4 control-label">{{ label|trans }}</label>
+    <div class="row">
+        <label for="{{ id }}" class="col-sm-4 col-form-label text-right">{{ label|trans }}</label>
         <div class="col-sm-8">
-            <div class="input-group">
-                <span class="input-group-addon"><i class="fa fa-fw fa-{{ icon }}"></i></span>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon3"><i class="fa fa-fw fa-{{ icon }}"></i></span>
+                </div>
                 <input type="email"
                        name="{{ id }}"
                        id="{{ id }}"
@@ -59,11 +63,13 @@
 {% endmacro %}
 
 {% macro row_input_textarea(id, label, icon, placeholder) %}
-    <div class="form-group">
-        <label for="{{ id }}" class="col-sm-4 control-label">{{ label|trans }}</label>
+    <div class="row">
+        <label for="{{ id }}" class="col-sm-4 col-form-label text-right">{{ label|trans }}</label>
         <div class="col-sm-8">
-            <div class="input-group">
-                <span class="input-group-addon"><i class="fa fa-fw fa-{{ icon }}"></i></span>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon3"><i class="fa fa-fw fa-{{ icon }}"></i></span>
+                </div>
                 <textarea name="{{ id }}" id="{{ id }}" class="form-control" rows="2" placeholder="{{ placeholder|trans }}"></textarea>
             </div>
         </div>
@@ -71,11 +77,13 @@
 {% endmacro %}
 
 {% macro row_input_password(id, label, icon, placeholder, default_value, type) %}
-    <div class="form-group">
-        <label for="{{ id }}" class="col-sm-4 control-label">{{ label|trans }}</label>
+    <div class="row">
+        <label for="{{ id }}" class="col-sm-4 col-form-label text-right">{{ label|trans }}</label>
         <div class="col-sm-8">
-            <div class="input-group">
-                <span class="input-group-addon"><i class="fa fa-fw fa-{{ icon }}"></i></span>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon3"><i class="fa fa-fw fa-{{ icon }}"></i></span>
+                </div>
                 <input type="password"
                        name="{{ id }}"
                        id="{{ id }}"
@@ -90,7 +98,12 @@
 
                 />
                 {% if enable_password_toggle_visibility %}
-                    <i class="glyphicon glyphicon-eye-open form-control-feedback"></i>
+                    <div class="input-group-append">
+                        <span class="input-group-text">
+                            <i class="fa fa-fw fa-eye form-control-feedback"></i>
+                        </span>
+                    </div>
+
                 {% endif %}
             </div>
         </div>
@@ -98,11 +111,13 @@
 {% endmacro %}
 
 {% macro row_input_select(id, label, icon, options) %}
-<div class="form-group">
-    <label for="{{ id }}" class="col-sm-4 control-label">{{ label|trans }}</label>
+<div class="row">
+    <label for="{{ id }}" class="col-sm-4 col-form-label text-right">{{ label|trans }}</label>
     <div class="col-sm-8">
-        <div class="input-group">
-            <span class="input-group-addon"><i class="fa fa-fw fa-{{ icon }}"></i></span>
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon3"><i class="fa fa-fw fa-{{ icon }}"></i></span>
+            </div>
             <select name="{{ id }}" id="{{ id }}" class="form-control">
                 {% for key,value in options %}
                     <option value="{{ key }}">{{ value }}</option>
@@ -114,17 +129,17 @@
 {% endmacro %}
 
 {% macro row_static_text(label, value) %}
-    <div class="form-group">
-        <label class="col-sm-4 control-label">{{ label|trans }}</label>
+    <div class="row">
+        <label class="col-sm-4 col-form-label text-right">{{ label|trans }}</label>
         <div class="col-sm-8">
-            <p class="form-control-static">{{ value }}</p>
+            <p class="form-control-static mb-3">{{ value }}</p>
         </div>
     </div>
 {% endmacro %}
 
 {% macro row_button_submit(label, icon) %}
-    <div class="form-group">
-        <div class="col-sm-offset-4 col-sm-8">
+    <div class="row">
+        <div class="offset-md-4 col-sm-8">
             <button class="btn btn-success">
                 <i class="fa fa-fw fa-{{ icon|default('check-square-o') }}"></i> {{ label|default('submit')|trans }}
             </button>
@@ -134,12 +149,12 @@
 
 
 {% macro row_gregwarcaptcha(captcha_image) %}
-    <div class="form-group">
-        <label class="col-sm-4 control-label">{{ 'Captcha'|trans }}</label>
+    <div class="row">
+        <label class="col-sm-4 col-form-label text-right">{{ 'Captcha'|trans }}</label>
         <div class="col-sm-8">
             <img src="{{ captcha_image }}" />
 
-            <div class="input-group">
+            <div class="input-group mb-3">
                 <span class="input-group-addon"><i class="fa fa-fw fa-font"></i></span>
                 <input name="captcha" id="captcha" class="form-control" placeholder="{{ 'Captcha'|trans }}" />
             </div>
@@ -148,8 +163,8 @@
 {% endmacro %}
 
 {% macro row_recaptcha(publickey, theme, type, size, lang) %}
-    <div class="form-group">
-        <div class="col-sm-offset-4 col-sm-8">
+    <div class="row">
+        <div class="offset-md-4 col-sm-8">
             <div class="g-recaptcha" data-sitekey="{{ publickey }}" data-theme="{{ theme }}" data-type="{{ type }}" data-size="{{ size }}"></div>
             <script type="text/javascript" src="https://www.google.com/recaptcha/api.js?hl={{ lang }}"></script>
         </div>

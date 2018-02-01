@@ -1,6 +1,6 @@
 var $ = require('jquery');
 require('hideshowpassword');
-require('bootstrap-sass');
+require('bootstrap');
 
 $(document).ready(function(){
     // Menu links popovers
@@ -11,9 +11,9 @@ $(document).ready(function(){
     });
 
     // toggle password visibility
-    $('.password + .glyphicon').on('click', function() {
+    $('.password + .input-group-append').on('click', function() {
         // toggle our classes for the eye icon
-        $(this).toggleClass('glyphicon-eye-close').toggleClass('glyphicon-eye-open');
+        $(this).find('i.fa').toggleClass('fa-eye-slash').toggleClass('fa-eye');
         // activate the hideShowPassword plugin
         $(this).prev('.password').togglePassword();
     });

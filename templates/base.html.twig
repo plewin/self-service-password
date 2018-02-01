@@ -25,23 +25,25 @@
 <body>
 {% block body %}
 <div class="container">
-    <div class="panel panel-success">
-        <div class="panel-body">
-            {% if show_menu %}
-                {% include 'menu.html.twig' %}
-            {% else %}
-                <div class="title alert alert-success text-center"><h1>{{ 'title'|trans }}</h1></div>
-            {% endif %}
+    <div id="application-wrapper">
+        {% if show_menu %}
+            {% include 'menu.html.twig' %}
+        {% else %}
+            <div class="title alert alert-light text-center"><h1>{{ 'title'|trans }}</h1></div>
+        {% endif %}
 
-            {% if logo %}
-                <a href="{{ path('homepage') }}" alt="Home">
-                    <img src="{{ logo }}" alt="Logo" class="logo img-responsive center-block" />
+        {% if logo %}
+            <p class="text-center">
+                <a href="{{ path('homepage') }}" title="Home">
+                    <img src="{{ logo }}" alt="Logo" class="logo img-fluid" />
                 </a>
-            {% endif %}
+            </p>
+        {% else %}
+            <br />
+        {% endif %}
 
-            {% block main %}
-            {% endblock %}
-        </div>
+        {% block main %}
+        {% endblock %}
     </div>
 </div>
 
