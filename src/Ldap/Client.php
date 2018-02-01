@@ -344,7 +344,7 @@ class Client implements ClientInterface
         // Special case: AD mode with password changed as user
         if ($this->adMode and 'user' === $this->whoChangePassword) {
             // The AD password change procedure is modifying the attribute unicodePwd by
-            // first deleting unicodePwd with the old password and them adding it with the
+            // first deleting unicodePwd with the current password and them adding it with the
             // the new password
             $oldpassword = $this->passwordEncoder->format('ad', $oldpassword);
             $newpassword = $this->passwordEncoder->format('ad', $newpassword);
@@ -643,7 +643,7 @@ class Client implements ClientInterface
      */
     private function verifyPasswordWithBind($dn, $password)
     {
-        // Bind with old password
+        // Bind with current password
         $success = @ldap_bind($this->ldap, $dn, $password);
         if (false === $success) {
             $errno = ldap_errno($this->ldap);

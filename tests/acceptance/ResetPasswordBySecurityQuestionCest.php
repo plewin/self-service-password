@@ -167,7 +167,7 @@ class ResetPasswordBySecurityQuestionCest
         $I->fillField('newpassword', 'mynewpass');
         $I->fillField('confirmpassword', 'mynewpass');
         $I->click('Send');
-        //TODO better message, there is no old password here
+        //TODO better message, there is no password here
         $I->see('Login or password incorrect');
         $I->dontSee('Your password was changed');
     }

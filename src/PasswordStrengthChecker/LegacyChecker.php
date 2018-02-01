@@ -140,7 +140,7 @@ class LegacyChecker implements CheckerInterface
             $violations[] = 'forbiddenchars';
         }
 
-        // Same as old password?
+        // Same as current password?
         if ($this->pwdPolicyConfig['pwd_no_reuse'] and $newpassword === $oldpassword) {
             $violations[] = 'sameasold';
         }

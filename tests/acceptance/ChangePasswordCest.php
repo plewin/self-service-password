@@ -51,7 +51,7 @@ class ChangePasswordCest
     {
         $I->amOnPage('/change-password');
         $I->see('Self-service password');
-        $I->amGoingTo('fill the form with a wrong old password');
+        $I->amGoingTo('fill the form with a wrong current password');
         $I->fillField('login', 'user1');
         $I->fillField('oldpassword', 'invalidpassword');
         $I->fillField('newpassword', 'mynewpass');
@@ -92,7 +92,7 @@ class ChangePasswordCest
         $I->fillField('confirmpassword', 'mynewpass');
         $I->click('Send');
         $I->expect('the new password is not accepted');
-        $I->see('Your old password is required');
+        $I->see('Your current password is required');
         $I->dontSee('Your password was changed');
     }
 

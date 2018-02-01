@@ -17,13 +17,13 @@ class PosthookExecutorTest extends \PHPUnit_Framework_TestCase
 
         $posthookExecutor = new PosthookExecutor('echo');
 
-        // without old password
+        // without current password
         $result = $posthookExecutor->execute('login', 'newpassword');
 
         $this->assertSame(0, $result['return_var']);
         $this->assertSame('login newpassword', $result['output'][0]);
 
-        // with old password
+        // with current password
         $result = $posthookExecutor->execute('login', 'newpassword', 'oldpassword');
 
         $this->assertSame(0, $result['return_var']);
@@ -38,13 +38,13 @@ class PosthookExecutorTest extends \PHPUnit_Framework_TestCase
 
         $posthookExecutor = new PosthookExecutor('echo');
 
-        // without old password
+        // without current password
         $result = $posthookExecutor->execute('login', 'newpassword');
 
         $this->assertSame(0, $result['return_var']);
         $this->assertSame('"login" "newpassword"', $result['output'][0]);
 
-        // with old password
+        // with current password
         $result = $posthookExecutor->execute('login', 'newpassword', 'oldpassword');
 
         $this->assertSame(0, $result['return_var']);
