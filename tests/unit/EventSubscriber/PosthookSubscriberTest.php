@@ -15,7 +15,10 @@ class PosthookSubscriberTest extends \PHPUnit_Framework_TestCase
 {
     public function testPosthookSubscriberEnabled()
     {
-        $mock = $this->getMock(PosthookExecutor::class, ['execute']);
+        $mock = $this->getMockBuilder(PosthookExecutor::class)
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
         $mock
             ->expects($this->once())
             ->method('execute')
@@ -37,7 +40,10 @@ class PosthookSubscriberTest extends \PHPUnit_Framework_TestCase
 
     public function testPosthookSubscriberDisabled()
     {
-        $mock = $this->getMock(PosthookExecutor::class, ['execute']);
+        $mock = $this->getMockBuilder(PosthookExecutor::class)
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
         $mock
             ->expects($this->exactly(0))
             ->method('execute')
