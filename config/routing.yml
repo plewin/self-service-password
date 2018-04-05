@@ -5,39 +5,39 @@
 homepage:
     path: /
     defaults:
-        _controller: default.controller:indexAction
+        _controller: App\Controller\DefaultController::indexAction
 
 change-password:
     path: /change-password
     defaults:
-        _controller: change_password.controller:indexAction
+        _controller: App\Controller\ChangePasswordController::indexAction
 
 change-security-question:
     path: /change-security-question
     defaults:
-        _controller: change_security_questions.controller:indexAction
+        _controller: App\Controller\ChangeSecurityQuestionsController::indexAction
 
 change-ssh-key:
     path: /change-ssh-key
     defaults:
-        _controller: change_ssh_key.controller:indexAction
+        _controller: App\Controller\ChangeSshKeyController::indexAction
 
 reset-password-by-question:
     path: /reset-password-by-question
     defaults:
-        _controller: reset_password_by_question.controller:indexAction
+        _controller: App\Controller\ResetPasswordByQuestionController::indexAction
 
 reset-password-by-email:
     path: /reset-password-by-email
     defaults:
-        _controller: get_token_by_email_verification.controller:indexAction
+        _controller: App\Controller\GetTokenByEmailVerificationController::indexAction
 
 reset-password-by-sms:
     path: /reset-password-by-sms
     defaults:
-        _controller: get_token_by_sms_verification.controller:indexAction
+        _controller: App\Controller\GetTokenBySmsVerificationController::indexAction
 
 reset-password-with-token:
     path: /reset-password-with-token
     defaults:
-        _controller: reset_password_by_token.controller:indexAction
+        _controller: App\Controller\ResetPasswordByTokenController::indexAction

@@ -119,7 +119,7 @@ $container->register('ldap_client', '%ldap_client.class%')
     ->addArgument('%ldap_base%')
     ->addArgument('%hash%')
     ->addArgument('%ldap_attribute_sms%')
-    ->addArgument('%answer_objectclass%')
+    ->addArgument('%answer_objectClass%')
     ->addArgument('%answer_attribute%')
     ->addArgument('%who_change_ssh_key%')
     ->addArgument('%ldap_attribute_sshkey%')
@@ -147,16 +147,6 @@ $container->register('token_manager_service', App\Service\TokenManagerService::c
     ->addArgument('%token_lifetime%')
     ->addMethodCall('setLogger', [new Reference('logger')])
 ;
-
-$container->register('default.controller', Controller\DefaultController::class);
-$container->register('change_password.controller', Controller\ChangePasswordController::class);
-$container->register('change_ssh_key.controller', Controller\ChangeSshKeyController::class);
-$container->register('reset_password_by_question.controller', Controller\ResetPasswordByQuestionController::class);
-$container->register('reset_password_by_token.controller', Controller\ResetPasswordByTokenController::class);
-$container->register('get_token_by_sms_verification.controller', Controller\GetTokenBySmsVerificationController::class);
-$container->register('get_token_by_email_verification.controller', Controller\GetTokenByEmailVerificationController::class);
-$container->register('change_security_questions.controller', Controller\ChangeSecurityQuestionsController::class);
-
 
 $container->register('twig.controller.exception', Controller\ExceptionController::class)
     ->addArgument(new Reference('twig'))

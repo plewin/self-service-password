@@ -15,7 +15,7 @@
     "symfony/debug-bundle": "~3.4",
     "symfony/web-profiler-bundle": "~3.4",
     "symfony/swiftmailer-bundle": "~2.6",
-    "symfony/monolog-bundle" : "~2.12",
+    "symfony/monolog-bundle" : "~3.2",
     "symfony/console": "~3.4",
     "symfony/process": "~3.4",
     "symfony/security-csrf": "~3.4",
