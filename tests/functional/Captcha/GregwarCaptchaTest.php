@@ -14,11 +14,17 @@ use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
  */
 class GregwarCaptchaTest extends CaptchaTestCase
 {
+    protected function setUp()
+    {
+        if (getenv('TRAVIS') == 'true' && version_compare(getenv('TRAVIS_PHP_VERSION'), '5.6', '<')) {
+            $this->markTestSkipped('Skipping because gd module is broken on travis php 5.5, cf https://github.com/travis-ci/travis-ci/issues/8510');
+        }
+    }
+
     public function testChangePasswordGregwarCaptchaVisibleController()
     {
         $client = $this->createClient();
         $changePasswordController = new ChangePasswordController();
-        $changePasswordController->setContainer($client->getContainer());
 
         $request = new Request();
 
@@ -55,7 +61,6 @@ class GregwarCaptchaTest extends CaptchaTestCase
     {
         $client = $this->createClient();
         $changePasswordController = new ChangePasswordController();
-        $changePasswordController->setContainer($client->getContainer());
 
         $request = new Request(
             [],
@@ -97,7 +102,6 @@ class GregwarCaptchaTest extends CaptchaTestCase
     {
         $client = $this->createClient();
         $changePasswordController = new ChangePasswordController();
-        $changePasswordController->setContainer($client->getContainer());
 
         $request1 = new Request();
         $mockSessionStorage = new MockArraySessionStorage();
@@ -149,7 +153,6 @@ class GregwarCaptchaTest extends CaptchaTestCase
     {
         $client = $this->createClient();
         $changePasswordController = new ChangePasswordController();
-        $changePasswordController->setContainer($client->getContainer());
 
         $request1 = new Request();
         $mockSessionStorage = new MockArraySessionStorage();
