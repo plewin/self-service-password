@@ -1,0 +1,47 @@
+[General]
+AdminDomain = localdomain
+ConfigDirectoryAdminID = admin
+ConfigDirectoryAdminPwd = secret
+ConfigDirectoryLdapURL = ldap://localdirserv.localdomain:389/o=NetscapeRoot
+FullMachineName = localdirserv.localdomain
+ServerRoot = /usr/lib64/dirsrv
+StrictHostCheck = true
+SuiteSpotGroup = dirsrv
+SuiteSpotUserID = dirsrv
+[admin]
+Port = 9830
+ServerAdminID = admin
+ServerAdminPwd = secret
+ServerIpAddress = 0.0.0.0
+SysUser = dirsrv
+[slapd]
+AddOrgEntries = Yes
+AddSampleEntries = No
+HashedRootDNPwd = {SSHA512}XiX1glPDO7Lrj329V0ruVJgHf2I9sHFQvP1O0YLtK69+f3qsBXvkjeC4MkJUPDJNA8TutE6LFesQc0WomUG3I5bY7IrHiT0S
+InstScriptsEnabled = true
+InstallLdifFile = suggest
+RootDN = cn=manager
+RootDNPwd = secretsecret
+ServerIdentifier = localdirserv
+ServerPort = 389
+SlapdConfigForMC = yes
+Suffix = dc=example,dc=com
+UseExistingMC = 0
+bak_dir = /var/lib/dirsrv/slapd-localdirserv/bak
+bindir = /usr/bin
+cert_dir = /etc/dirsrv/slapd-localdirserv
+config_dir = /etc/dirsrv/slapd-localdirserv
+datadir = /usr/share
+db_dir = /var/lib/dirsrv/slapd-localdirserv/db
+ds_bename = userRoot
+inst_dir = /usr/lib64/dirsrv/slapd-localdirserv
+ldif_dir = /var/lib/dirsrv/slapd-localdirserv/ldif
+localstatedir = /var
+lock_dir = /var/lock/dirsrv/slapd-localdirserv
+log_dir = /var/log/dirsrv/slapd-localdirserv
+naming_value = example
+run_dir = /var/run/dirsrv
+sbindir = /usr/sbin
+schema_dir = /etc/dirsrv/slapd-localdirserv/schema
+sysconfdir = /etc
+tmp_dir = /tmp

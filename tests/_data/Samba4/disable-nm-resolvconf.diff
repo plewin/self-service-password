@@ -1,0 +1,11 @@
+--- NetworkManager.conf.back    2018-01-22 19:36:10.889867569 +0000
++++ NetworkManager.conf 2018-01-22 19:36:45.396686588 +0000
+@@ -12,7 +12,7 @@
+
+ [main]
+ plugins=ifcfg-rh
+-
++dns=no
+ [logging]
+ #level=DEBUG
+ #domains=ALL

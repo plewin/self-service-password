@@ -2,6 +2,18 @@
 # vi: set ft=ruby :
 
 Vagrant.configure("2") do |config|
+  config.vm.define "test-389ds" do |ds389|
+    # Minimal centos 7 with virtualbox guest additions
+    ds389.vm.box = "geerlingguy/centos7"
+    ds389.vm.network "forwarded_port", guest: 389, host: 10389
+  end
+
+  config.vm.define "test-samba4" do |ds389|
+      # Minimal centos 7 with virtualbox guest additions
+      ds389.vm.box = "geerlingguy/centos7"
+      ds389.vm.network "forwarded_port", guest: 389, host: 11389
+    end
+
   config.vm.define "test-apacheds" do |apacheds|
     apacheds.vm.box = "ubuntu/xenial64"
     apacheds.vm.network "forwarded_port", guest: 10389, host: 9389

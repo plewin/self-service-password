@@ -1,0 +1,17 @@
+apt-get install libnss3-tools
+
+// https://www.centos.org/docs/5/html/CDS/ag/8.0/Managing_SSL-Using_certutil.html
+
+
+echo -n "secretpw" > pwdfile.txt
+echo -n "dsadasdasdasdadasdasdasdasdsadfwerwerjfdksdjfksdlfhjsdk" > noise.txt
+
+certutil -N -d . -f pwdfile.txt
+
+certutil -G -d . -z noise.txt -f pwdfile.txt
+
+certutil -S -n "CA certificate" -s "cn=CAcert" -x -t "CT,," -m 1000 -v 120 -d . -z noise.txt -f pwdfile.txt
+
+certutil -S -n "Server-Cert" -s "cn=localdirserv.localdomain,cn=Directory Server" -c "CA certificate" -t "u,u,u" -m 1001 -v 120 -d . -z noise.txt -f pwdfile.txt
+
+certutil -L -d . -n "CA certificate" -a > cacert.asc

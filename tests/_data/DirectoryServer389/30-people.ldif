@@ -1,0 +1,14 @@
+version: 1
+
+dn: uid=user1,ou=People,dc=example,dc=com
+objectClass: organizationalPerson
+objectClass: person
+objectClass: inetOrgPerson
+objectClass: top
+cn: User1CN
+sn: User1SN
+uid: user1
+userPassword:: e1NTSEF9S2RZRWROZWtRV21SMHdjeVZtQ1VWaGxQNFc0aDJuY3VFbDdYYXc9P
+ Q==
+mail: user1@example.com
+telephoneNumber: 0123456789
