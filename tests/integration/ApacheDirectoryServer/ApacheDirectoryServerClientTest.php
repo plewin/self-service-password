@@ -2,6 +2,9 @@
 
 namespace App\Tests\Integration\ApacheDirectoryServer;
 
+use App\Exception\LdapEntryFoundInvalidException;
+use App\Exception\LdapErrorException;
+use App\Exception\LdapInvalidUserCredentialsException;
 use App\Ldap\Client;
 use App\Ldap\ClientInterface;
 use App\Tests\Integration\LdapIntegrationTestCase;
@@ -38,7 +41,7 @@ class ApacheDirectoryServerClientTest extends LdapIntegrationTestCase
         // use tls but but port non tls
         $client = $this->createLdapClient(['use_tls' => true]);
 
-        $this->setExpectedException('App\Exception\LdapErrorException');
+        $this->setExpectedException(LdapErrorException::class);
         /** @noinspection PhpUnhandledExceptionInspection */
         $this->assertTrue($client->connect());
     }
@@ -47,7 +50,7 @@ class ApacheDirectoryServerClientTest extends LdapIntegrationTestCase
     {
         $client = $this->createLdapClient(['ldap_bind_dn' => 'bad_dn']);
 
-        $this->setExpectedException('App\Exception\LdapErrorException');
+        $this->setExpectedException(LdapErrorException::class);
         /** @noinspection PhpUnhandledExceptionInspection */
         $this->assertTrue($client->connect());
     }
@@ -67,7 +70,7 @@ class ApacheDirectoryServerClientTest extends LdapIntegrationTestCase
         $client->checkOldPassword('password1', $context);
 
         // now we expect the next one to throw an exception
-        $this->setExpectedException('App\Exception\LdapInvalidUserCredentialsException');
+        $this->setExpectedException(LdapInvalidUserCredentialsException::class);
         /** @noinspection PhpUnhandledExceptionInspection */
         $client->checkOldPassword('badpassword1', $context);
     }
@@ -88,7 +91,7 @@ class ApacheDirectoryServerClientTest extends LdapIntegrationTestCase
 
         $client->connect();
 
-        $this->setExpectedException('App\Exception\LdapInvalidUserCredentialsException');
+        $this->setExpectedException(LdapInvalidUserCredentialsException::class);
         $client->checkMail('user456789', 'user1@example.com');
     }
 
@@ -98,7 +101,7 @@ class ApacheDirectoryServerClientTest extends LdapIntegrationTestCase
 
         $client->connect();
 
-        $this->setExpectedException('App\Exception\LdapEntryFoundInvalidException');
+        $this->setExpectedException(LdapInvalidUserCredentialsException::class);
         $client->checkMail('user1', 'user3456789@example.com');
     }
 
@@ -108,7 +111,7 @@ class ApacheDirectoryServerClientTest extends LdapIntegrationTestCase
 
         $client->connect();
 
-        $this->setExpectedException('App\Exception\LdapEntryFoundInvalidException');
+        $this->setExpectedException(LdapEntryFoundInvalidException::class);
         $client->checkMail('user2', 'user2@example.com');
     }
 
@@ -119,7 +122,7 @@ class ApacheDirectoryServerClientTest extends LdapIntegrationTestCase
         $client->connect();
 
         $context = [];
-        $this->setExpectedException('App\Exception\LdapErrorException');
+        $this->setExpectedException(LdapErrorException::class);
         $client->fetchUserEntryContext('user1', ['dn']);
     }
 
@@ -130,7 +133,7 @@ class ApacheDirectoryServerClientTest extends LdapIntegrationTestCase
         $client->connect();
 
         $context = [];
-        $this->setExpectedException('App\Exception\LdapErrorException');
+        $this->setExpectedException(LdapErrorException::class);
         $client->fetchUserEntryContext('user1', ['dn']);
     }
 
@@ -177,7 +180,7 @@ class ApacheDirectoryServerClientTest extends LdapIntegrationTestCase
 
         $client->connect();
 
-        $this->setExpectedException('App\Exception\LdapInvalidUserCredentialsException');
+        $this->setExpectedException(LdapInvalidUserCredentialsException::class);
         $context = $client->fetchUserEntryContext('user456789', ['dn']);
     }
 

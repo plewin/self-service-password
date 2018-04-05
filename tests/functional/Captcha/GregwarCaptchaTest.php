@@ -2,6 +2,8 @@
 
 namespace App\Tests\Functional\Captcha;
 
+use App\Controller\ChangePasswordController;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -15,7 +17,8 @@ class GregwarCaptchaTest extends CaptchaTestCase
     public function testChangePasswordGregwarCaptchaVisibleController()
     {
         $client = $this->createClient();
-        $changePasswordController = $client->getContainer()->get('change_password.controller');
+        $changePasswordController = new ChangePasswordController();
+        $changePasswordController->setContainer($client->getContainer());
 
         $request = new Request();
 
@@ -51,7 +54,8 @@ class GregwarCaptchaTest extends CaptchaTestCase
     public function testChangePasswordRecaptchaNotSubmittedFormController()
     {
         $client = $this->createClient();
-        $changePasswordController = $client->getContainer()->get('change_password.controller');
+        $changePasswordController = new ChangePasswordController();
+        $changePasswordController->setContainer($client->getContainer());
 
         $request = new Request(
             [],
@@ -92,7 +96,8 @@ class GregwarCaptchaTest extends CaptchaTestCase
     public function testChangePasswordGregwarCaptchaSubmittedFormInvalidController()
     {
         $client = $this->createClient();
-        $changePasswordController = $client->getContainer()->get('change_password.controller');
+        $changePasswordController = new ChangePasswordController();
+        $changePasswordController->setContainer($client->getContainer());
 
         $request1 = new Request();
         $mockSessionStorage = new MockArraySessionStorage();
@@ -143,7 +148,8 @@ class GregwarCaptchaTest extends CaptchaTestCase
     public function testChangePasswordGregwarCaptchaSubmittedFormValidController()
     {
         $client = $this->createClient();
-        $changePasswordController = $client->getContainer()->get('change_password.controller');
+        $changePasswordController = new ChangePasswordController();
+        $changePasswordController->setContainer($client->getContainer());
 
         $request1 = new Request();
         $mockSessionStorage = new MockArraySessionStorage();
@@ -162,7 +168,7 @@ class GregwarCaptchaTest extends CaptchaTestCase
             'password_strength_checker' => $this->createMockPasswordStrengthChecker(),
             'recaptcha_service' => $this->createMockRecaptchaService(false),
             'ldap_client' => $this->createMockLdapClient(),
-            'event_dispatcher' => $this->getMock('Symfony\\Component\\EventDispatcher\\EventDispatcher'),
+            'event_dispatcher' => $this->getMock(EventDispatcher::class),
             'security.csrf.token_manager' => $this->createMockCsrfTokenManager(),
         ];
 

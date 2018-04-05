@@ -2,8 +2,17 @@
 
 namespace App\Tests\Functional\Security;
 
+use App\Controller\ChangePasswordController;
+use App\Controller\ChangeSecurityQuestionsController;
+use App\Controller\ChangeSshKeyController;
+use App\Controller\GetTokenByEmailVerificationController;
+use App\Controller\GetTokenBySmsVerificationController;
+use App\Controller\ResetPasswordByQuestionController;
+use App\Controller\ResetPasswordByTokenController;
 use App\Tests\Functional\FunctionalTestCase;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * Class ControllersTest
@@ -12,124 +21,110 @@ class ControllersTest extends FunctionalTestCase
 {
     public function testChangePasswordController()
     {
-        $client = $this->createClient();
-        $changePasswordController = $client->getContainer()->get('change_password.controller');
+        $changePasswordController = new ChangePasswordController();
 
-        $container = $this->getMock('Symfony\\Component\\DependencyInjection\Container');
+        $container = $this->getMock(ContainerInterface::class);
 
         $container
             ->method('getParameter')
             ->with('enable_password_change')
             ->willReturn(false);
 
-        $this->setExpectedException('Symfony\Component\Security\Core\Exception\AccessDeniedException');
+        $this->setExpectedException(AccessDeniedException::class);
 
         $changePasswordController->setContainer($container);
-        $request = new Request();
-        $changePasswordController->indexAction($request);
+        $changePasswordController->indexAction(new Request());
     }
 
     public function testChangeSecurityQuestionController()
     {
-        $client = $this->createClient();
-        $changePasswordController = $client->getContainer()->get('change_security_questions.controller');
+        $changeSecurityQuestionsController = new ChangeSecurityQuestionsController();
 
-        $container = $this->getMock('Symfony\\Component\\DependencyInjection\Container');
+        $container = $this->getMock(ContainerInterface::class);
 
         $container
             ->method('getParameter')
             ->with('enable_questions')
             ->willReturn(false);
 
-        $this->setExpectedException('Symfony\Component\Security\Core\Exception\AccessDeniedException');
+        $this->setExpectedException(AccessDeniedException::class);
 
-        $changePasswordController->setContainer($container);
-        $request = new Request();
-        $changePasswordController->indexAction($request);
+        $changeSecurityQuestionsController->setContainer($container);
+        $changeSecurityQuestionsController->indexAction(new Request());
     }
 
     public function testChangeSshKeyController()
     {
-        $client = $this->createClient();
-        $changePasswordController = $client->getContainer()->get('change_ssh_key.controller');
+        $changeSshKeyController = new ChangeSshKeyController();
 
-        $container = $this->getMock('Symfony\\Component\\DependencyInjection\Container');
+        $container = $this->getMock(ContainerInterface::class);
 
         $container
             ->method('getParameter')
             ->with('enable_sshkey_change')
             ->willReturn(false);
 
-        $this->setExpectedException('Symfony\Component\Security\Core\Exception\AccessDeniedException');
+        $this->setExpectedException(AccessDeniedException::class);
 
-        $changePasswordController->setContainer($container);
-        $request = new Request();
-        $changePasswordController->indexAction($request);
+        $changeSshKeyController->setContainer($container);
+        $changeSshKeyController->indexAction(new Request());
     }
 
     public function testGetTokenByEmailVerificationController()
     {
-        $client = $this->createClient();
-        $changePasswordController = $client->getContainer()->get('get_token_by_email_verification.controller');
-
-        $container = $this->getMock('Symfony\\Component\\DependencyInjection\Container');
+        $getTokenByEmailVerificationController = new GetTokenByEmailVerificationController();
+        $container = $this->getMock(ContainerInterface::class);
 
         $container
             ->method('getParameter')
             ->with('enable_reset_by_email')
             ->willReturn(false);
 
-        $this->setExpectedException('Symfony\Component\Security\Core\Exception\AccessDeniedException');
+        $this->setExpectedException(AccessDeniedException::class);
 
-        $changePasswordController->setContainer($container);
-        $request = new Request();
-        $changePasswordController->indexAction($request);
+        $getTokenByEmailVerificationController->setContainer($container);
+        $getTokenByEmailVerificationController->indexAction(new Request());
     }
 
     public function testGetTokenBySmsVerificationController()
     {
-        $client = $this->createClient();
-        $changePasswordController = $client->getContainer()->get('get_token_by_sms_verification.controller');
+        $getTokenBySmsVerificationController = new GetTokenBySmsVerificationController();
 
-        $container = $this->getMock('Symfony\\Component\\DependencyInjection\Container');
+        $container = $this->getMock(ContainerInterface::class);
 
         $container
             ->method('getParameter')
             ->with('enable_reset_by_sms')
             ->willReturn(false);
 
-        $this->setExpectedException('Symfony\Component\Security\Core\Exception\AccessDeniedException');
+        $this->setExpectedException(AccessDeniedException::class);
 
-        $changePasswordController->setContainer($container);
-        $request = new Request();
-        $changePasswordController->indexAction($request);
+        $getTokenBySmsVerificationController->setContainer($container);
+        $getTokenBySmsVerificationController->indexAction(new Request());
     }
 
     public function testResetPasswordByQuestionController()
     {
-        $client = $this->createClient();
-        $changePasswordController = $client->getContainer()->get('reset_password_by_question.controller');
+        $resetPasswordByQuestionController = new ResetPasswordByQuestionController();
 
-        $container = $this->getMock('Symfony\\Component\\DependencyInjection\Container');
+        $container = $this->getMock(ContainerInterface::class);
 
         $container
             ->method('getParameter')
             ->with('enable_questions')
             ->willReturn(false);
 
-        $this->setExpectedException('Symfony\Component\Security\Core\Exception\AccessDeniedException');
+        $this->setExpectedException(AccessDeniedException::class);
 
-        $changePasswordController->setContainer($container);
-        $request = new Request();
-        $changePasswordController->indexAction($request);
+        $resetPasswordByQuestionController->setContainer($container);
+        $resetPasswordByQuestionController->indexAction(new Request());
     }
 
     public function testResetPasswordByTokenController()
     {
-        $client = $this->createClient();
-        $changePasswordController = $client->getContainer()->get('reset_password_by_token.controller');
+        $resetPasswordByTokenController = new ResetPasswordByTokenController();
 
-        $container = $this->getMock('Symfony\\Component\\DependencyInjection\Container');
+        $container = $this->getMock(ContainerInterface::class);
 
         $values = [
             ['enable_reset_by_email', false],
@@ -141,11 +136,10 @@ class ControllersTest extends FunctionalTestCase
             ->will($this->returnValueMap($values))
         ;
 
-        $this->setExpectedException('Symfony\Component\Security\Core\Exception\AccessDeniedException');
+        $this->setExpectedException(AccessDeniedException::class);
 
-        $changePasswordController->setContainer($container);
-        $request = new Request();
-        $changePasswordController->indexAction($request);
+        $resetPasswordByTokenController->setContainer($container);
+        $resetPasswordByTokenController->indexAction(new Request());
     }
 }
 

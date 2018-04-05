@@ -3,10 +3,14 @@
 namespace App\Tests\Functional\Captcha;
 
 use App\Ldap\MockClient;
+use App\PasswordStrengthChecker\CheckerInterface;
+use App\Service\RecaptchaService;
+use App\Service\UsernameValidityChecker;
 use App\Tests\Functional\FunctionalTestCase;
 use Psr\Log\NullLogger;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 /**
  * Class CaptchaTestCase
@@ -36,7 +40,7 @@ abstract class CaptchaTestCase extends FunctionalTestCase
     protected function createMockRecaptchaService($willVerify)
     {
         $recaptchaService = $this
-            ->getMockBuilder('App\\Service\\RecaptchaService')
+            ->getMockBuilder(RecaptchaService::class)
             ->disableOriginalConstructor()
             ->getMock()
         ;
@@ -50,7 +54,7 @@ abstract class CaptchaTestCase extends FunctionalTestCase
 
     protected function createMockUsernameValidityChecker()
     {
-        $usernameValidityChecker = $this->getMock("App\\Service\\UsernameValidityChecker");
+        $usernameValidityChecker = $this->getMock(UsernameValidityChecker::class);
         $usernameValidityChecker
             ->expects($this->once())
             ->method('evaluate')
@@ -64,7 +68,7 @@ abstract class CaptchaTestCase extends FunctionalTestCase
     protected function createMockPasswordStrengthChecker()
     {
         $passwordChecker = $this
-            ->getMockBuilder("App\\PasswordStrengthChecker\\CheckerInterface")
+            ->getMockBuilder(CheckerInterface::class)
             ->disableOriginalConstructor()
             ->getMock()
         ;
@@ -94,7 +98,7 @@ abstract class CaptchaTestCase extends FunctionalTestCase
             $services_has[] = [$serviceName, true];
         }
 
-        $container = $this->getMock('Symfony\\Component\\DependencyInjection\Container');
+        $container = $this->getMock(ContainerInterface::class);
 
         $container
             ->method('getParameter')
@@ -126,7 +130,7 @@ abstract class CaptchaTestCase extends FunctionalTestCase
 
     protected function createMockCsrfTokenManager()
     {
-        $container = $this->getMock('Symfony\Component\Security\Csrf\CsrfTokenManager');
+        $container = $this->getMock(CsrfTokenManagerInterface::class);
         $container
             ->expects($this->any())
             ->method('isTokenValid')

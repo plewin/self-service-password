@@ -2,6 +2,8 @@
 
 namespace App\Tests\Integration\ActiveDirectory;
 
+use App\Exception\LdapErrorException;
+use App\Exception\LdapInvalidUserCredentialsException;
 use App\Ldap\Client;
 use App\Tests\Integration\LdapIntegrationTestCase;
 use App\Utils\PasswordEncoder;
@@ -37,7 +39,7 @@ class ActiveDirectoryClientTest extends LdapIntegrationTestCase
     {
         $client = $this->createLdapClient(['ldap_bind_dn' => 'bad_dn']);
 
-        $this->setExpectedException('App\Exception\LdapErrorException');
+        $this->setExpectedException(LdapErrorException::class);
         /** @noinspection PhpUnhandledExceptionInspection */
         $this->assertTrue($client->connect());
     }
@@ -57,7 +59,7 @@ class ActiveDirectoryClientTest extends LdapIntegrationTestCase
         $client->checkOldPassword('Passw0rd!', $context);
 
         // now we expect the next one to throw an exception
-        $this->setExpectedException('App\Exception\LdapInvalidUserCredentialsException');
+        $this->setExpectedException(LdapInvalidUserCredentialsException::class);
         /** @noinspection PhpUnhandledExceptionInspection */
         $client->checkOldPassword('badpassword1', $context);
     }

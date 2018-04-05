@@ -7,7 +7,6 @@ use App\EventSubscriber\PosthookSubscriber;
 use App\Service\PosthookExecutor;
 use Symfony\Component\EventDispatcher\GenericEvent;
 
-
 /**
  * Class PosthookSubscriberTest
  */

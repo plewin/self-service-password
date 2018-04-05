@@ -2,6 +2,7 @@
 
 namespace App\Tests\Functional;
 
+use App\Kernel;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
@@ -16,6 +17,6 @@ abstract class FunctionalTestCase extends WebTestCase {
      */
     protected static function getKernelClass()
     {
-        return 'App\\Kernel';
+        return Kernel::class;
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Tests\Functional\Captcha;
 
+use App\Controller\ChangePasswordController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -13,7 +14,8 @@ class RecaptchaTest extends CaptchaTestCase
     public function testChangePasswordRecaptchaVisibleController()
     {
         $client = $this->createClient();
-        $changePasswordController = $client->getContainer()->get('change_password.controller');
+        $changePasswordController = new ChangePasswordController();
+        $changePasswordController->setContainer($client->getContainer());
 
         $request = new Request();
 
@@ -49,7 +51,8 @@ class RecaptchaTest extends CaptchaTestCase
     public function testChangePasswordRecaptchaNotSubmittedFormController()
     {
         $client = $this->createClient();
-        $changePasswordController = $client->getContainer()->get('change_password.controller');
+        $changePasswordController = new ChangePasswordController();
+        $changePasswordController->setContainer($client->getContainer());
 
         $request = new Request(
             [],
@@ -91,7 +94,8 @@ class RecaptchaTest extends CaptchaTestCase
     public function testChangePasswordRecaptchaSubmittedFormInvalidController()
     {
         $client = $this->createClient();
-        $changePasswordController = $client->getContainer()->get('change_password.controller');
+        $changePasswordController = new ChangePasswordController();
+        $changePasswordController->setContainer($client->getContainer());
 
         $request = new Request(
             [],
@@ -136,7 +140,8 @@ class RecaptchaTest extends CaptchaTestCase
     public function testChangePasswordRecaptchaSubmittedFormValidController()
     {
         $client = $this->createClient();
-        $changePasswordController = $client->getContainer()->get('change_password.controller');
+        $changePasswordController = new ChangePasswordController();
+        $changePasswordController->setContainer($client->getContainer());
 
         $request = new Request(
             [],
