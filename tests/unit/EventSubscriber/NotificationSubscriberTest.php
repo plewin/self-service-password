@@ -1,10 +1,12 @@
 <?php
 
 namespace App\Tests\Unit\EventSubscriber;
+
 use App\Events;
 use App\EventSubscriber\NotificationSubscriber;
+use App\Service\MailNotificationService;
 use Symfony\Component\EventDispatcher\GenericEvent;
-
+use Symfony\Component\Translation\Translator;
 
 /**
  * Class NotificationSubscriberTest
@@ -14,7 +16,7 @@ class NotificationSubscriberTest extends \PHPUnit_Framework_TestCase
     public function testNotifyOnPasswordChangedDisabled()
     {
         $mailNotificationService = $this
-            ->getMockBuilder('App\Service\MailNotificationService')
+            ->getMockBuilder(MailNotificationService::class)
             ->disableOriginalConstructor()
             ->getMock()
         ;
@@ -24,11 +26,13 @@ class NotificationSubscriberTest extends \PHPUnit_Framework_TestCase
         ;
 
         $translator = $this
-            ->getMockBuilder('Symfony\Component\Translation\Translator')
+            ->getMockBuilder(Translator::class)
             ->disableOriginalConstructor()
             ->getMock()
         ;
 
+        /** @var MailNotificationService $mailNotificationService */
+        /** @var Translator $translator */
         $notificationSubscriber = new NotificationSubscriber(
             $mailNotificationService,
             $translator,
@@ -44,7 +48,7 @@ class NotificationSubscriberTest extends \PHPUnit_Framework_TestCase
     public function testNotifyOnSshKeyChangedDisabled()
     {
         $mailNotificationService = $this
-            ->getMockBuilder('App\Service\MailNotificationService')
+            ->getMockBuilder(MailNotificationService::class)
             ->disableOriginalConstructor()
             ->getMock()
         ;
@@ -54,11 +58,13 @@ class NotificationSubscriberTest extends \PHPUnit_Framework_TestCase
         ;
 
         $translator = $this
-            ->getMockBuilder('Symfony\Component\Translation\Translator')
+            ->getMockBuilder(Translator::class)
             ->disableOriginalConstructor()
             ->getMock()
         ;
 
+        /** @var MailNotificationService $mailNotificationService */
+        /** @var Translator $translator */
         $notificationSubscriber = new NotificationSubscriber(
             $mailNotificationService,
             $translator,
@@ -74,7 +80,7 @@ class NotificationSubscriberTest extends \PHPUnit_Framework_TestCase
     public function testNotifyOnPasswordChangedEnabled()
     {
         $mailNotificationService = $this
-            ->getMockBuilder('App\Service\MailNotificationService')
+            ->getMockBuilder(MailNotificationService::class)
             ->disableOriginalConstructor()
             ->getMock()
         ;
@@ -85,7 +91,7 @@ class NotificationSubscriberTest extends \PHPUnit_Framework_TestCase
         ;
 
         $translator = $this
-            ->getMockBuilder('Symfony\Component\Translation\Translator')
+            ->getMockBuilder(Translator::class)
             ->disableOriginalConstructor()
             ->getMock()
         ;
@@ -99,6 +105,8 @@ class NotificationSubscriberTest extends \PHPUnit_Framework_TestCase
             ->willReturnOnConsecutiveCalls('thesubject', 'thebody')
         ;
 
+        /** @var MailNotificationService $mailNotificationService */
+        /** @var Translator $translator */
         $notificationSubscriber = new NotificationSubscriber(
             $mailNotificationService,
             $translator,
@@ -121,7 +129,7 @@ class NotificationSubscriberTest extends \PHPUnit_Framework_TestCase
     public function testNotifyOnSshKeyChangedEnabled()
     {
         $mailNotificationService = $this
-            ->getMockBuilder('App\Service\MailNotificationService')
+            ->getMockBuilder(MailNotificationService::class)
             ->disableOriginalConstructor()
             ->getMock()
         ;
@@ -132,7 +140,7 @@ class NotificationSubscriberTest extends \PHPUnit_Framework_TestCase
         ;
 
         $translator = $this
-            ->getMockBuilder('Symfony\Component\Translation\Translator')
+            ->getMockBuilder(Translator::class)
             ->disableOriginalConstructor()
             ->getMock()
         ;
@@ -146,6 +154,8 @@ class NotificationSubscriberTest extends \PHPUnit_Framework_TestCase
             ->willReturnOnConsecutiveCalls('thesubject', 'thebody')
         ;
 
+        /** @var MailNotificationService $mailNotificationService */
+        /** @var Translator $translator */
         $notificationSubscriber = new NotificationSubscriber(
             $mailNotificationService,
             $translator,

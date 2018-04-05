@@ -19,8 +19,8 @@ class ChangePasswordCest
         $I->amGoingTo('fill the form with valid data');
         $I->fillField('login', 'user1');
         $I->fillField('oldpassword', 'password1');
-        $I->fillField('newpassword', 'mynewpass');
-        $I->fillField('confirmpassword', 'mynewpass');
+        $I->fillField('newpassword', 'myNewpa0$$');
+        $I->fillField('confirmpassword', 'myNewpa0$$');
         $I->click('Send');
         $I->expect('the new password is accepted');
         $I->see('Your password was changed');
@@ -54,8 +54,8 @@ class ChangePasswordCest
         $I->amGoingTo('fill the form with a wrong current password');
         $I->fillField('login', 'user1');
         $I->fillField('oldpassword', 'invalidpassword');
-        $I->fillField('newpassword', 'mynewpass');
-        $I->fillField('confirmpassword', 'mynewpass');
+        $I->fillField('newpassword', 'myNewPa0$$');
+        $I->fillField('confirmpassword', 'myNewPa0$$');
         $I->click('Send');
         $I->expect('the new password is not accepted');
         $I->see('Login or password incorrect');
@@ -158,8 +158,8 @@ class ChangePasswordCest
         $I->amGoingTo('fill the form with valid data');
         $I->fillField('login', 'user10');
         $I->fillField('oldpassword', 'password10');
-        $I->fillField('newpassword', 'password11');
-        $I->fillField('confirmpassword', 'password11');
+        $I->fillField('newpassword', 'myNewPa0$$');
+        $I->fillField('confirmpassword', 'myNewPa0$$');
         $I->click('Send');
         $I->expect('the new password is not accepted');
         $I->see('Password was refused');

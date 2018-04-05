@@ -69,6 +69,9 @@ parameters:
         crypt_salt_prefix: "$6$"
         crypt_salt_length: "6"
 
+    password_strength_check:
+        strategy: 'multi'
+
     ## Local password policy
     # This is applied before directory password policy
     pwd_policy_config:
@@ -94,10 +97,6 @@ parameters:
         pwd_diff_login: true
         # Complexity: number of different class of character required
         pwd_complexity: 0
-
-
-    password_strength_check:
-        strategy: 'multi'
 
     psc_zxcvbn:
         min_strength: 3
@@ -199,7 +198,7 @@ parameters:
     ## Default theme settings
     # Show policy constraints message:
     # always, onerror, never (default)
-    pwd_show_policy: 'onerror'
+    pwd_show_policy: 'always'
     # Position of password policy constraints message:
     # above - the form (default)
     # below - the form

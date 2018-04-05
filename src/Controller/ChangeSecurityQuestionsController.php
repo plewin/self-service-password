@@ -162,7 +162,7 @@ class ChangeSecurityQuestionsController extends Controller
      *
      * @return Response
      */
-    private function renderFormWithError($result, $problems, Request $request)
+    private function renderFormWithError($result, array $problems, Request $request)
     {
         return $this->render('self-service/change_security_question_form.html.twig', [
             'result' => $result,

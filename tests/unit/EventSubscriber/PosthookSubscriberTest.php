@@ -1,8 +1,10 @@
 <?php
 
 namespace App\Tests\Unit\EventSubscriber;
+
 use App\Events;
 use App\EventSubscriber\PosthookSubscriber;
+use App\Service\PosthookExecutor;
 use Symfony\Component\EventDispatcher\GenericEvent;
 
 
@@ -13,12 +15,14 @@ class PosthookSubscriberTest extends \PHPUnit_Framework_TestCase
 {
     public function testPosthookSubscriberEnabled()
     {
-        $mock = $this->getMock('App\Utils\PosthookExecutor', ['execute']);
+        $mock = $this->getMock(PosthookExecutor::class, ['execute']);
         $mock
             ->expects($this->once())
             ->method('execute')
             ->with($this->equalTo('login'), $this->equalTo('new_password'), $this->equalTo('old_password'));
         ;
+
+        /** @var PosthookExecutor $mock */
 
         $posthookSubscriber = new PosthookSubscriber(true, $mock);
 
@@ -33,11 +37,13 @@ class PosthookSubscriberTest extends \PHPUnit_Framework_TestCase
 
     public function testPosthookSubscriberDisabled()
     {
-        $mock = $this->getMock('App\Utils\PosthookExecutor', ['execute']);
+        $mock = $this->getMock(PosthookExecutor::class, ['execute']);
         $mock
             ->expects($this->exactly(0))
             ->method('execute')
         ;
+
+        /** @var PosthookExecutor $mock */
 
         $posthookSubscriber = new PosthookSubscriber(false, $mock);
 

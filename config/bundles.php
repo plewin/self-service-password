@@ -1,10 +1,11 @@
 <?php
 
 return [
-    '\Symfony\Bundle\FrameworkBundle\FrameworkBundle' => ['all' => true],
-    '\Symfony\Bundle\MonologBundle\MonologBundle' => ['all' => true],
-    '\Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle' => ['all' => true],
-    '\Symfony\Bundle\TwigBundle\TwigBundle' => ['all' => true],
-    '\Symfony\Bundle\DebugBundle\DebugBundle' => ['dev' => true, 'test' => true],
-    '\Symfony\Bundle\WebProfilerBundle\WebProfilerBundle' => ['dev' => true, 'test' => true],
+    Symfony\Bundle\FrameworkBundle\FrameworkBundle::class => ['all' => true],
+    Symfony\Bundle\MonologBundle\MonologBundle::class => ['all' => true],
+    Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle::class => ['all' => true],
+    Symfony\Bundle\TwigBundle\TwigBundle::class => ['all' => true],
+    Symfony\Bundle\DebugBundle\DebugBundle::class => ['dev' => true, 'test' => true],
+    Symfony\Bundle\WebProfilerBundle\WebProfilerBundle::class => ['dev' => true, 'test' => true],
+    Symfony\Bundle\WebServerBundle\WebServerBundle::class => ['dev' => true],
 ];

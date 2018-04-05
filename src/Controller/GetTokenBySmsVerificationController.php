@@ -329,7 +329,7 @@ class GetTokenBySmsVerificationController extends Controller
      *
      * @return Response
      */
-    private function renderSearchUserFormWithError($result, $problems, Request $request)
+    private function renderSearchUserFormWithError($result, array $problems, Request $request)
     {
         return $this->render('self-service/sms_verification_user_search_form.html.twig', [
             'result' => $result,

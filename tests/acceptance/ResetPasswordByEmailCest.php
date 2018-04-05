@@ -38,8 +38,8 @@ class ResetPasswordByEmailCest
         $I->expectTo('see my login already filled and disabled');
         $I->canSeeInField('Login', 'user1');
         $I->seeInField('form input[disabled]','user1');
-        $I->fillField('New password', 'newpass');
-        $I->fillField('Confirm', 'newpass');
+        $I->fillField('New password', 'myNewPa0$$');
+        $I->fillField('Confirm', 'myNewPa0$$');
         $I->click('Send');
         $I->see('Your password was changed');
     }
@@ -116,8 +116,8 @@ class ResetPasswordByEmailCest
         $url = $this->getValidUrlWithToken($I);
         $I->amOnPage($url);
         $I->expectTo('see the reset form because the token is valid');
-        $I->fillField('New password', 'newpass');
-        $I->fillField('Confirm', 'newpass');
+        $I->fillField('New password', 'myNewPa0$$');
+        $I->fillField('Confirm', 'myNewPa0$$');
         $I->click('Send');
         $I->see('Your password was changed');
 

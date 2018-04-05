@@ -49,7 +49,7 @@ class EncryptionServiceTest extends \PHPUnit_Framework_TestCase
         $plaintext1 = "azAZ09,-";
         $passphrase = "secret";
 
-        $mockLogger = $this->getMock('Psr\Log\NullLogger');
+        $mockLogger = $this->getMock(NullLogger::class);
         $mockLogger->expects($this->once())->method('notice');
 
         $encryptionService = new EncryptionService($passphrase);

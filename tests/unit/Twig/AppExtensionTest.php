@@ -3,12 +3,13 @@
 namespace App\Tests\Unit\Utils;
 
 use App\Twig\AppExtension;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 class AppExtensionTest extends \PHPUnit_Framework_TestCase
 {
     public function testFilters()
     {
-        $extension = new AppExtension('always', null);
+        $extension = new AppExtension('always', $this->createMockCsrfTokenManager());
 
         $filters = $extension->getFilters();
         $this->assertTrue(is_array($filters));
@@ -20,7 +21,7 @@ class AppExtensionTest extends \PHPUnit_Framework_TestCase
 
     public function testFunctions()
     {
-        $extension = new AppExtension('always', null);
+        $extension = new AppExtension('always', $this->createMockCsrfTokenManager());
 
         $functions = $extension->getFunctions();
         $this->assertTrue(is_array($functions));
@@ -31,12 +32,12 @@ class AppExtensionTest extends \PHPUnit_Framework_TestCase
 
     public function testShowPolicyFor()
     {
-        $extension = new AppExtension('always', null);
+        $extension = new AppExtension('always', $this->createMockCsrfTokenManager());
 
         $this->assertTrue($extension->showPolicyFor('anything'));
         $this->assertTrue($extension->showPolicyFor('forbiddenchars'));
 
-        $extension = new AppExtension('onerror', null);
+        $extension = new AppExtension('onerror', $this->createMockCsrfTokenManager());
 
         $this->assertFalse($extension->showPolicyFor('anything'));
         $this->assertTrue($extension->showPolicyFor('forbiddenchars'));
@@ -54,5 +55,16 @@ class AppExtensionTest extends \PHPUnit_Framework_TestCase
         if ($present === false) {
             $this->fail("Filter $filterName missing");
         }
+    }
+
+    /**
+     * @return CsrfTokenManagerInterface
+     */
+    private function createMockCsrfTokenManager()
+    {
+        /** @var CsrfTokenManagerInterface $csrfTokenManger */
+        $csrfTokenManger = $this->getMockBuilder(CsrfTokenManagerInterface::class)->getMock();
+
+        return $csrfTokenManger;
     }
 }

@@ -171,7 +171,7 @@ class ChangeSshKeyController extends Controller
      *
      * @return Response
      */
-    private function renderFormWithError($result, $problems, Request $request)
+    private function renderFormWithError($result, array $problems, Request $request)
     {
         return $this->render('self-service/change_ssh_key_form.html.twig', [
             'result' => $result,

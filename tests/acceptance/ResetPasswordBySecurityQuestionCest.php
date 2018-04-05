@@ -33,8 +33,8 @@ class ResetPasswordBySecurityQuestionCest
         $I->fillField('login', 'user1');
         $I->selectOption('Question','When is your birthday?');
         $I->fillField('answer', 'goodbirthday1');
-        $I->fillField('newpassword', 'mynewpass');
-        $I->fillField('confirmpassword', 'mynewpass');
+        $I->fillField('newpassword', 'myNewPa0$$');
+        $I->fillField('confirmpassword', 'myNewPa0$$');
         $I->click('Send');
         $I->see('Your password was changed');
     }
@@ -49,8 +49,8 @@ class ResetPasswordBySecurityQuestionCest
         $I->fillField('login', 'user1');
         $I->selectOption('Question','When is your birthday?');
         $I->fillField('answer', 'bad answer');
-        $I->fillField('newpassword', 'mynewpass');
-        $I->fillField('confirmpassword', 'mynewpass');
+        $I->fillField('newpassword', 'myNewPa0$$');
+        $I->fillField('confirmpassword', 'myNewPa0$$');
         $I->click('Send');
         $I->see('Your answer is incorrect');
         $I->dontSee('Your password was changed');
@@ -66,8 +66,8 @@ class ResetPasswordBySecurityQuestionCest
         $I->fillField('login', 'user1ER5T6Y7U890');
         $I->selectOption('Question','When is your birthday?');
         $I->fillField('answer', 'goodbirthday1');
-        $I->fillField('newpassword', 'mynewpass');
-        $I->fillField('confirmpassword', 'mynewpass');
+        $I->fillField('newpassword', 'myNewPa0$$');
+        $I->fillField('confirmpassword', 'myNewPa0$$');
         $I->click('Send');
         $I->see('Login or password incorrect');
         $I->dontSee('Your password was changed');
@@ -182,8 +182,8 @@ class ResetPasswordBySecurityQuestionCest
         $I->selectOption('Question','When is your birthday?');
         $I->fillField('login', 'user10');
         $I->fillField('answer', 'goodbirthday10');
-        $I->fillField('newpassword', 'mynewpass');
-        $I->fillField('confirmpassword', 'mynewpass');
+        $I->fillField('newpassword', 'myNewPa0$$');
+        $I->fillField('confirmpassword', 'myNewPa0$$');
         $I->click('Send');
         $I->see('Password was refused');
         $I->dontSee('Your password was changed');

@@ -1,7 +1,9 @@
 <?php
 
 namespace App\Tests\Unit\Service;
+
 use App\Service\SmsNotificationService;
+use App\Utils\MailSender;
 use Psr\Log\NullLogger;
 
 /**
@@ -12,7 +14,7 @@ class SmsNotificationServiceTest extends \PHPUnit_Framework_TestCase
     public function testSmsNotificationByApi()
     {
         $mock = $this
-            ->getMockBuilder('App\\Utils\\MailSender')
+            ->getMockBuilder(MailSender::class)
             ->disableOriginalConstructor()
             ->getMock()
         ;
@@ -21,6 +23,8 @@ class SmsNotificationServiceTest extends \PHPUnit_Framework_TestCase
             ->expects($this->never())
             ->method('send')
         ;
+
+        /** @var MailSender $mock */
 
         $smsNotificationService = new SmsNotificationService(
             'api',

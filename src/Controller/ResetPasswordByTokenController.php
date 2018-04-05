@@ -190,7 +190,7 @@ class ResetPasswordByTokenController extends Controller
      *
      * @return Response
      */
-    private function renderErrorPage($result, $problems, Request $request, $login)
+    private function renderErrorPage($result, array $problems, Request $request, $login)
     {
         return $this->render('self-service/reset_password_by_token_form.html.twig', [
             'result' => $result,

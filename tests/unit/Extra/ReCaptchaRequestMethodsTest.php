@@ -2,6 +2,8 @@
 
 namespace App\Tests\Unit\Extra;
 
+use ReCaptcha\RequestMethod;
+
 /**
  * Class ReCaptchaRequestMethodsTest
  */
@@ -23,9 +25,9 @@ class ReCaptchaRequestMethodsTest extends \PHPUnit_Framework_TestCase
     public function requestMethodsProvider()
     {
         return [
-            ['\ReCaptcha\RequestMethod\Post'], // default reCAPTCHA request method
-            ['\ReCaptcha\RequestMethod\SocketPost'],
-            ['\ReCaptcha\RequestMethod\CurlPost'],
+            [RequestMethod\Post::class], // default reCAPTCHA request method
+            [RequestMethod\SocketPost::class],
+            [RequestMethod\CurlPost::class],
         ];
     }
 }

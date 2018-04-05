@@ -64,7 +64,7 @@ abstract class CaptchaTestCase extends FunctionalTestCase
     protected function createMockPasswordStrengthChecker()
     {
         $passwordChecker = $this
-            ->getMockBuilder("App\\Service\\PasswordStrengthChecker")
+            ->getMockBuilder("App\\PasswordStrengthChecker\\CheckerInterface")
             ->disableOriginalConstructor()
             ->getMock()
         ;

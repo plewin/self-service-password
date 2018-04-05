@@ -195,7 +195,7 @@ class GetTokenByEmailVerificationController extends Controller
      *
      * @return Response
      */
-    private function renderFormWithError($result, $problems, Request $request)
+    private function renderFormWithError($result, array $problems, Request $request)
     {
         return $this->render('self-service/email_verification_form.html.twig', [
             'result' => $result,

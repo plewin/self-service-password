@@ -19,21 +19,23 @@
  */
 
 use Symfony\Component\DependencyInjection\Reference;
+use App\EventSubscriber;
+use App\Controller;
 
-$container->register('locale.subscriber', '\App\EventSubscriber\LocaleSubscriber')
+$container->register('locale.subscriber', EventSubscriber\LocaleSubscriber::class)
     ->addArgument('%locale%')
     ->addArgument(new Reference('translator'))
     ->addArgument('%app_locales%')
     ->addTag('kernel.event_subscriber')
 ;
 
-$container->register('posthook.subscriber', '\App\EventSubscriber\PosthookSubscriber')
+$container->register('posthook.subscriber', EventSubscriber\PosthookSubscriber::class)
     ->addArgument('%enable_posthook%')
     ->addArgument(new Reference('posthook_executor'))
     ->addTag('kernel.event_subscriber')
 ;
 
-$container->register('notifier.subscriber', '\App\EventSubscriber\NotificationSubscriber')
+$container->register('notifier.subscriber', EventSubscriber\NotificationSubscriber::class)
     ->addArgument(new Reference('mail_notification_service'))
     ->addArgument(new Reference('translator'))
     ->addArgument('%notify_user_on_password_change%')
@@ -41,53 +43,53 @@ $container->register('notifier.subscriber', '\App\EventSubscriber\NotificationSu
     ->addTag('kernel.event_subscriber')
 ;
 
-$container->register('encryption_service', '\App\Service\EncryptionService')
+$container->register('encryption_service', App\Service\EncryptionService::class)
     ->addArgument('%secret%')
     ->addMethodCall('setLogger', [new Reference('logger')])
 ;
 
-$container->register('sms_token_generator', '\App\Utils\SmsTokenGenerator')
+$container->register('sms_token_generator', App\Utils\SmsTokenGenerator::class)
     ->addArgument('%sms_token_length%')
 ;
 
-$container->register('username_validity_checker', '\App\Service\UsernameValidityChecker')
+$container->register('username_validity_checker', App\Service\UsernameValidityChecker::class)
     ->addArgument('%login_forbidden_chars%')
     ->addMethodCall('setLogger', [new Reference('logger')])
 ;
 
-$container->register('recaptcha_service', '\App\Service\RecaptchaService')
+$container->register('recaptcha_service', App\Service\RecaptchaService::class)
     ->addArgument('%recaptcha_privatekey%')
     ->addArgument('%recaptcha_request_method%')
     ->addMethodCall('setLogger', [new Reference('logger')])
 ;
 
-$container->setAlias('password_strength_checker', 'password_strength_checker.zxcvbn');
+$container->setAlias('password_strength_checker', 'password_strength_checker.multi');
 
-$container->register('password_strength_checker.multi', '\App\PasswordStrengthChecker\MultiChecker')
+$container->register('password_strength_checker.multi', App\PasswordStrengthChecker\MultiChecker::class)
     ->addMethodCall('setContainer', [new Reference('service_container')])
     ->addMethodCall('addChecker', [new Reference('password_strength_checker.zxcvbn')])
     ->addMethodCall('addChecker', [new Reference('password_strength_checker.legacy')])
     ->addMethodCall('addChecker', [new Reference('password_strength_checker.dictionary')])
 ;
 
-$container->register('password_strength_checker.zxcvbn', '\App\PasswordStrengthChecker\ZxcvbnChecker')
+$container->register('password_strength_checker.zxcvbn', App\PasswordStrengthChecker\ZxcvbnChecker::class)
     ->addArgument('%psc_zxcvbn%')
 ;
 
-$container->register('password_strength_checker.legacy', '\App\PasswordStrengthChecker\LegacyChecker')
+$container->register('password_strength_checker.legacy', App\PasswordStrengthChecker\LegacyChecker::class)
     ->addArgument('%pwd_policy_config%')
 ;
 
-$container->register('password_strength_checker.dictionary', '\App\PasswordStrengthChecker\DictionaryChecker')
+$container->register('password_strength_checker.dictionary', App\PasswordStrengthChecker\DictionaryChecker::class)
     ->addArgument('%psc_dictionary%')
 ;
 
-$container->register('mail_sender', '\App\Utils\MailSender')
+$container->register('mail_sender', App\Utils\MailSender::class)
     ->addArgument(new Reference('mailer'))
     ->addMethodCall('setLogger', [new Reference('logger')])
 ;
 
-$container->register('mail_notification_service', '\App\Service\MailNotificationService')
+$container->register('mail_notification_service', App\Service\MailNotificationService::class)
     ->addArgument(new Reference('twig'))
     ->addArgument(new Reference('mail_sender'))
     ->addArgument('%mail_from%')
@@ -95,7 +97,7 @@ $container->register('mail_notification_service', '\App\Service\MailNotification
     ->addMethodCall('setLogger', [new Reference('logger')])
 ;
 
-$container->register('sms_notification_service', '\App\Service\SmsNotificationService')
+$container->register('sms_notification_service', App\Service\SmsNotificationService::class)
     ->addArgument('%sms_method%')
     ->addArgument(new Reference('mail_sender'))
     ->addArgument('%smsmailto%')
@@ -131,61 +133,38 @@ $container->register('ldap_client', '%ldap_client.class%')
     ->addMethodCall('setLogger', [new Reference('logger')])
 ;
 
-$container->register('password_encoder', '\App\Utils\PasswordEncoder')
+$container->register('password_encoder', App\Utils\PasswordEncoder::class)
     ->addArgument('%hash_options%')
 ;
 
-$container->register('posthook_executor', '\App\Service\PosthookExecutor')
+$container->register('posthook_executor', App\Service\PosthookExecutor::class)
     ->addArgument('%posthook%')
 ;
 
-$container->register('token_manager_service', '\App\Service\TokenManagerService')
+$container->register('token_manager_service', App\Service\TokenManagerService::class)
     ->addArgument(new Reference('session'))
     ->addArgument(new Reference('encryption_service'))
     ->addArgument('%token_lifetime%')
     ->addMethodCall('setLogger', [new Reference('logger')])
 ;
 
-$container->register('default.controller', '\App\Controller\DefaultController')
-    ->addMethodCall('setContainer', [new Reference('service_container')])
-;
-
-$container->register('change_password.controller', '\App\Controller\ChangePasswordController')
-    ->addMethodCall('setContainer', [new Reference('service_container')])
-;
-
-$container->register('change_ssh_key.controller', '\App\Controller\ChangeSshKeyController')
-    ->addMethodCall('setContainer', [new Reference('service_container')])
-;
-
-$container->register('reset_password_by_question.controller', '\App\Controller\ResetPasswordByQuestionController')
-    ->addMethodCall('setContainer', [new Reference('service_container')])
-;
-
-$container->register('reset_password_by_token.controller', '\App\Controller\ResetPasswordByTokenController')
-    ->addMethodCall('setContainer', [new Reference('service_container')])
-;
-
-$container->register('get_token_by_sms_verification.controller', '\App\Controller\GetTokenBySmsVerificationController')
-    ->addMethodCall('setContainer', [new Reference('service_container')])
-;
-
-$container->register('get_token_by_email_verification.controller', '\App\Controller\GetTokenByEmailVerificationController')
-    ->addMethodCall('setContainer', [new Reference('service_container')])
-;
-
-$container->register('change_security_questions.controller', '\App\Controller\ChangeSecurityQuestionsController')
-    ->addMethodCall('setContainer', [new Reference('service_container')])
-;
+$container->register('default.controller', Controller\DefaultController::class);
+$container->register('change_password.controller', Controller\ChangePasswordController::class);
+$container->register('change_ssh_key.controller', Controller\ChangeSshKeyController::class);
+$container->register('reset_password_by_question.controller', Controller\ResetPasswordByQuestionController::class);
+$container->register('reset_password_by_token.controller', Controller\ResetPasswordByTokenController::class);
+$container->register('get_token_by_sms_verification.controller', Controller\GetTokenBySmsVerificationController::class);
+$container->register('get_token_by_email_verification.controller', Controller\GetTokenByEmailVerificationController::class);
+$container->register('change_security_questions.controller', Controller\ChangeSecurityQuestionsController::class);
 
 
-$container->register('twig.controller.exception', '\App\Controller\ExceptionController')
+$container->register('twig.controller.exception', Controller\ExceptionController::class)
     ->addArgument(new Reference('twig'))
     ->addArgument('%kernel.debug%')
 ;
 
 $container
-    ->register('app.twig_extension', '\App\Twig\AppExtension')
+    ->register('app.twig_extension', App\Twig\AppExtension::class)
     ->addArgument('%pwd_show_policy%')
     ->addArgument(new Reference('security.csrf.token_manager'))
     ->setPublic(false)

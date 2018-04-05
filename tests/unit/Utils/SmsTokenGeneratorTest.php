@@ -4,7 +4,8 @@ namespace App\Tests\Unit\Utils;
 
 use App\Utils\SmsTokenGenerator;
 
-class SmsTokenGeneratorTest extends \PHPUnit_Framework_TestCase {
+class SmsTokenGeneratorTest extends \PHPUnit_Framework_TestCase
+{
     public function testSmsTokenRegex()
     {
         $tg = new SmsTokenGenerator(6);
