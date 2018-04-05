@@ -66,5 +66,28 @@ class LegacyCheckerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals([], $passwordChecker->evaluate( "C0mplex", $oldpassword, $login ) );
 
     }
+
+    public function testForbiddenChars()
+    {
+        $pwd_policy_config = [
+            "pwd_show_policy"         => true,
+            "pwd_min_length"          => 6,
+            "pwd_max_length"          => 12,
+            "pwd_min_lower"           => 0,
+            "pwd_min_upper"           => 0,
+            "pwd_min_digit"           => 0,
+            "pwd_min_special"         => 0,
+            "pwd_special_chars"       => "^a-zA-Z0-9",
+            "pwd_forbidden_chars"     => "@",
+            "pwd_no_reuse"            => true,
+            "pwd_diff_login"          => true,
+            "pwd_complexity"          => 3
+        ];
+
+        $passwordChecker = new LegacyChecker($pwd_policy_config);
+
+        $this->assertContains('forbiddenchars', $passwordChecker->evaluate('p@sword'));
+        $this->assertNotContains('forbiddenchars', $passwordChecker->evaluate('pa$$word'));
+    }
 }
 

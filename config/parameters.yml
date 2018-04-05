@@ -103,7 +103,7 @@ parameters:
 
     psc_dictionary:
         dirs:
-            - '%kernel.root_dir%/var/dictionaries'
+            - '%kernel.project_dir%/var/dictionaries'
 
     # Other policies
     # Invalid characters in login

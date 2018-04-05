@@ -80,7 +80,7 @@ class LegacyChecker implements CheckerInterface
 
         $forbidden = 0;
         if (!empty($this->pwdPolicyConfig['pwd_forbidden_chars'])) {
-            $forbiddenChars = $this->pwdPolicyConfig['pwd_special_chars'];
+            $forbiddenChars = $this->pwdPolicyConfig['pwd_forbidden_chars'];
             preg_match_all("/[$forbiddenChars]/", $newpassword, $forbiddenRes);
             $forbidden = count($forbiddenRes[0]);
         }

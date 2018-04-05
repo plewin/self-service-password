@@ -13,8 +13,8 @@
 </p>
 
 <p align="center">
-  <a href="https://secure.php.net/manual/en/intro-whatis.php" alt="PHP 5.4"><img src="https://img.shields.io/badge/PHP-^5.4-787cb4.svg" /></a>
-  <a href="https://symfony.com/what-is-symfony" alt="Symfony 2.8"><img src="https://img.shields.io/badge/Symfony-2.8-7aba20.svg" /></a>
+  <a href="https://secure.php.net/manual/en/intro-whatis.php" alt="PHP 5.5.9"><img src="https://img.shields.io/badge/PHP-^5.5.9-787cb4.svg" /></a>
+  <a href="https://symfony.com/what-is-symfony" alt="Symfony 3.4"><img src="https://img.shields.io/badge/Symfony-3.4-7aba20.svg" /></a>
   <a href="https://getbootstrap.com/docs/4.0/" alt="Bootstrap 4.0"><img src="https://img.shields.io/badge/Bootstrap-4.0-5f4586.svg" /></a>
   <a href="https://jquery.com" alt="jQuery 3.2"><img src="https://img.shields.io/badge/jQuery-3.2-0769ad.svg" /></a>
   <a href="https://www.npmjs.com/package/@symfony/webpack-encore" alt="Webpack Encore 0.9"><img src="https://img.shields.io/badge/Webpack%20Encore-0.9-2b3a42.svg" /></a>
@@ -64,7 +64,7 @@ Soon
 
 ### Requirements
 
-* Web server with PHP 5.4 minimum 
+* Web server with PHP 5.5.9 minimum 
 * PHP extensions:
   * php-ldap (required)
   * php-openssl (recommended: ldaps, emails via smtps)

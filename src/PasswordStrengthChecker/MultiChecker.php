@@ -38,7 +38,7 @@ class MultiChecker implements CheckerInterface, ContainerAwareInterface
      */
     public function addChecker(CheckerInterface $checker)
     {
-        $this->checkers += $checker;
+        $this->checkers[] = $checker;
     }
 
     /**
