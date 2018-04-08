@@ -41,6 +41,7 @@ use Symfony\Component\HttpFoundation\Response;
 class ChangePasswordController extends Controller
 {
     use CaptchaTrait;
+    use AsYouTypeTrait;
 
     /**
      * @param Request $request
@@ -198,17 +199,5 @@ class ChangePasswordController extends Controller
             'problems' => $problems,
             'login' => $request->get('login'),
         ] + $this->getCaptchaTemplateExtraVars($request) + $this->getPolicyTemplateExtraVars());
-    }
-
-    private function getPolicyTemplateExtraVars()
-    {
-        if ($this->container->getParameter('enable_as_you_type_policy_enforcement') != true) {
-            return [];
-        }
-
-        /** @var CheckerInterface $passwordStrengthChecker */
-        $passwordStrengthChecker = $this->get('password_strength_checker');
-
-        return ['rules' => $passwordStrengthChecker->getRules()];
     }
 }

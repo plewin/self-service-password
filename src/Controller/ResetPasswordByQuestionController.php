@@ -38,6 +38,7 @@ use Symfony\Component\HttpFoundation\Response;
 class ResetPasswordByQuestionController extends Controller
 {
     use CaptchaTrait;
+    use AsYouTypeTrait;
 
     /**
      * @param Request $request
@@ -60,7 +61,7 @@ class ResetPasswordByQuestionController extends Controller
             'problems' => [],
             'login' => $request->get('login'),
             'questions' => $this->getParameter('questions'),
-        ] + $this->getCaptchaTemplateExtraVars($request));
+        ] + $this->getCaptchaTemplateExtraVars($request) + $this->getPolicyTemplateExtraVars());
     }
 
     /**
@@ -212,6 +213,6 @@ class ResetPasswordByQuestionController extends Controller
             'problems' => $problems,
             'login' => $request->get('login'),
             'questions' => $this->getParameter('questions'),
-        ] + $this->getCaptchaTemplateExtraVars($request));
+        ] + $this->getCaptchaTemplateExtraVars($request) + $this->getPolicyTemplateExtraVars());
     }
 }

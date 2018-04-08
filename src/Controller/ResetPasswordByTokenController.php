@@ -39,6 +39,7 @@ use Symfony\Component\HttpFoundation\Response;
 class ResetPasswordByTokenController extends Controller
 {
     use CaptchaTrait;
+    use AsYouTypeTrait;
 
     /**
      * @param Request $request
@@ -179,7 +180,7 @@ class ResetPasswordByTokenController extends Controller
             'source' => $request->get('source'),
             'token' => $request->get('token'),
             'login' => $login,
-        ] + $this->getCaptchaTemplateExtraVars($request));
+        ] + $this->getCaptchaTemplateExtraVars($request) + $this->getPolicyTemplateExtraVars());
     }
 
     /**
@@ -198,6 +199,6 @@ class ResetPasswordByTokenController extends Controller
             'source' => $request->get('source'),
             'token' => $request->get('token'),
             'login' => $login,
-        ] + $this->getCaptchaTemplateExtraVars($request));
+        ] + $this->getCaptchaTemplateExtraVars($request) + $this->getPolicyTemplateExtraVars());
     }
 }
