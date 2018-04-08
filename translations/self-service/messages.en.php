@@ -124,5 +124,6 @@ $messages['emptysendsmsform'] = "Get a reset code";
 $messages['sameaslogin'] = "Your new password is identical to your login";
 $messages['policydifflogin'] = "Your new password may not be the same as your login";
 $messages['policyzxcvbnmin'] = "Your new password strength score must be at least %min_score%";
+$messages['policynotindictionary'] = "Your new password may not be in the server's list of banned passwords";
 
 return $messages;

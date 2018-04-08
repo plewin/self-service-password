@@ -156,47 +156,70 @@ class LegacyChecker implements CheckerInterface
     /**
      * @return array
      */
-    public function getRules() {
-        return [
-            'policyminlength' => [
+    public function getRules()
+    {
+        $rules = [];
+
+        if ($this->pwdPolicyConfig['pwd_min_length']) {
+            $rules['policyminlength'] = [
                 'onerror' => 'tooshort',
                 'minLength' => $this->pwdPolicyConfig['pwd_min_length'],
-            ],
-            'policymaxlength' => [
+            ];
+        }
+        if ($this->pwdPolicyConfig['pwd_max_length']) {
+            $rules['policymaxlength'] = [
                 'onerror' => 'toobig',
                 'maxLength' => $this->pwdPolicyConfig['pwd_max_length'],
-            ],
-            'policyminlower' => [
+            ];
+        }
+        if ($this->pwdPolicyConfig['pwd_min_lower']) {
+            $rules['policyminlower'] = [
                 'onerror' => 'minlower',
                 'minLower' => $this->pwdPolicyConfig['pwd_min_lower'],
-            ],
-            'policyminupper' => [
+            ];
+        }
+        if ($this->pwdPolicyConfig['pwd_min_upper']) {
+            $rules['policyminupper'] = [
                 'onerror' => 'minupper',
                 'minUpper' => $this->pwdPolicyConfig['pwd_min_upper'],
-            ],
-            'policymindigit' => [
+            ];
+        }
+        if ($this->pwdPolicyConfig['pwd_min_digit']) {
+            $rules['policymindigit'] = [
                 'onerror' => 'mindigit',
                 'minDigit' => $this->pwdPolicyConfig['pwd_min_digit'],
-            ],
-            'policyminspecial' => [
+            ];
+        }
+        if ($this->pwdPolicyConfig['pwd_min_special']) {
+            $rules['policyminspecial'] = [
                 'onerror' => 'minspecial',
                 'specialChars' => $this->pwdPolicyConfig['pwd_special_chars'],
                 'minSpecial' => $this->pwdPolicyConfig['pwd_min_special'],
-            ],
-            'policyforbiddenchars' => [
+            ];
+        }
+        if ($this->pwdPolicyConfig['pwd_forbidden_chars']) {
+            $rules['policyforbiddenchars'] = [
                 'onerror' => 'forbiddenchars',
                 'forbiddenCharacters' => $this->pwdPolicyConfig['pwd_forbidden_chars'],
-            ],
-            'policynoreuse' => [
+            ];
+        }
+        if ($this->pwdPolicyConfig['pwd_no_reuse']) {
+            $rules['policynoreuse'] = [
                 'onerror' => $this->pwdPolicyConfig['pwd_no_reuse'],
-            ],
-            'policymincomplexity' => [
+            ];
+        }
+        if ($this->pwdPolicyConfig['pwd_complexity']) {
+            $rules['policymincomplexity'] = [
                 'onerror' => 'notcomplex',
                 'minComplexity' => $this->pwdPolicyConfig['pwd_complexity'],
-            ],
-            'policydifflogin' => [
+            ];
+        }
+        if ($this->pwdPolicyConfig['pwd_diff_login']) {
+            $rules['policydifflogin'] = [
                 'onerror' => 'sameaslogin',
-            ],
-        ];
+            ];
+        }
+
+        return $rules;
     }
 }

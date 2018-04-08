@@ -9,6 +9,7 @@ var MinDigitRule = require('./min_digit');
 var MinSpecialRule = require('./min_special');
 var MinComplexityRule = require('./min_complexity');
 var ZxcvbnMinRule = require('./zxcvbn_min');
+var NotInDictionaryRule = require('./not_in_dictionary');
 
 function RuleFactory() {
     this.definitions = {
@@ -22,7 +23,8 @@ function RuleFactory() {
         'policynoreuse': NoReuseRule,
         'policymincomplexity': MinComplexityRule,
         'policydifflogin': DiffLoginRule,
-        'policyzxcvbnmin': ZxcvbnMinRule
+        'policyzxcvbnmin': ZxcvbnMinRule,
+        'policynotindictionary': NotInDictionaryRule,
     }
 }
 

@@ -70,11 +70,15 @@ class ZxcvbnChecker implements CheckerInterface
      */
     public function getRules()
     {
-        return [
-            'policyzxcvbnmin' => [
+        $rules = [];
+
+        if ($this->minStrength) {
+            $rules['policyzxcvbnmin'] = [
                 'onerror' => 'notstrong',
                 'minStrength' => $this->minStrength,
-            ],
-        ];
+            ];
+        }
+
+        return $rules;
     }
 }

@@ -21,6 +21,9 @@
 namespace App\PasswordStrengthChecker;
 
 use Symfony\Component\Finder\Finder;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Routing\RequestContext;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * Class DictionaryChecker
@@ -28,15 +31,23 @@ use Symfony\Component\Finder\Finder;
 class DictionaryChecker implements CheckerInterface
 {
     private $dirs;
+    private $enable;
+    private $requestStack;
+    private $router;
 
     /**
      * DictionaryChecker constructor.
      *
      * @param array $config Config array, $config['dirs'] list of directories where SSP can find txt files
+     * @param RequestStack $requestStack
+     * @param RouterInterface $router
      */
-    public function __construct(array $config)
+    public function __construct(array $config, RequestStack $requestStack, RouterInterface $router)
     {
+        $this->enable = $config['enable'];
         $this->dirs = $config['dirs'];
+        $this->requestStack = $requestStack;
+        $this->router = $router;
     }
 
     /**
@@ -48,6 +59,10 @@ class DictionaryChecker implements CheckerInterface
      */
     public function evaluate($newpassword, $oldpassword = null, $login = null)
     {
+        if (!$this->enable){
+            return [];
+        }
+
         $pattern = escapeshellarg('^'.preg_quote($newpassword).'$');
 
         $finder = new Finder();
@@ -83,8 +98,21 @@ class DictionaryChecker implements CheckerInterface
      */
     public function getRules()
     {
+        if (!$this->enable) {
+            return [];
+        }
+
+        $context = new RequestContext();
+        $context->fromRequest($this->requestStack->getCurrentRequest());
+        $this->router->setContext($context);
+        // of course, the die is an example
+        $apiUrl = $this->router->generate('api-dictionary-check');
+
         return [
-            'policynotindictionary' => ['onerror' => 'indictionary'],
+            'policynotindictionary' => [
+                'onerror' => 'indictionary',
+                'apiUrl'  => $apiUrl,
+            ],
         ];
     }
 }

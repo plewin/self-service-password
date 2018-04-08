@@ -99,9 +99,12 @@ parameters:
         pwd_complexity: 2
 
     psc_zxcvbn:
+        # 0 to 4, 0 to disable
         min_strength: 3
 
     psc_dictionary:
+        enable: true
+        strategy: 'grep'
         dirs:
             - '%kernel.project_dir%/var/dictionaries'
 

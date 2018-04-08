@@ -37,6 +37,9 @@
         {% if psc_zxcvbn['min_strength'] > 0 %}
             <li id="rule_policyzxcvbnmin">{{ 'policyzxcvbnmin'|trans({'%min_score%': psc_zxcvbn['min_strength']}) }}</li>
         {% endif %}
+        {% if psc_dictionary['enable'] %}
+            <li id="rule_policynotindictionary">{{ 'policynotindictionary'|trans }}</li>
+        {% endif %}
     </ul>
     <script>
         var rulesDefinitions = {{ rules|json_encode|raw }};

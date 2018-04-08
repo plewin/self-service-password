@@ -41,3 +41,8 @@ reset-password-with-token:
     path: /reset-password-with-token
     defaults:
         _controller: App\Controller\ResetPasswordByTokenController::indexAction
+
+api-dictionary-check:
+    path: /api/dictionary-check
+    defaults:
+        _controller: App\Controller\AjaxController::dictionaryCheckAction

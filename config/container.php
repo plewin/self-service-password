@@ -85,6 +85,9 @@ $container->register('password_strength_checker.legacy', App\PasswordStrengthChe
 
 $container->register('password_strength_checker.dictionary', App\PasswordStrengthChecker\DictionaryChecker::class)
     ->addArgument('%psc_dictionary%')
+    ->addArgument(new Reference('request_stack'))
+    ->addArgument(new Reference('router'))
+    ->setPublic(true)
 ;
 
 $container->register('mail_sender', App\Utils\MailSender::class)
