@@ -58,4 +58,18 @@ class MultiChecker implements CheckerInterface, ContainerAwareInterface
 
         return $violations;
     }
+
+    /**
+     * @return array
+     */
+    public function getRules()
+    {
+        $rules = [];
+
+        foreach ($this->checkers as $checker) {
+            $rules += $checker->getRules();
+        }
+
+        return $rules;
+    }
 }

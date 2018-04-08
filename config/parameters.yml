@@ -96,7 +96,7 @@ parameters:
         # Check that password is different than login
         pwd_diff_login: true
         # Complexity: number of different class of character required
-        pwd_complexity: 0
+        pwd_complexity: 2
 
     psc_zxcvbn:
         min_strength: 3
@@ -246,3 +246,6 @@ parameters:
     enable_password_toggle_visibility: false
 
     enable_form_autocomplete: true
+
+    # Recommended but leak details on your password policy
+    enable_as_you_type_policy_enforcement: true

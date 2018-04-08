@@ -2,6 +2,8 @@ var $ = require('jquery');
 require('hideshowpassword');
 require('bootstrap');
 
+var checkers = require('./password-checker');
+
 $(document).ready(function(){
     // Menu links popovers
     $('[data-toggle="menu-popover"]').popover({
@@ -16,5 +18,29 @@ $(document).ready(function(){
         $(this).find('i.fa').toggleClass('fa-eye-slash').toggleClass('fa-eye');
         // activate the hideShowPassword plugin
         $(this).prev('.password').togglePassword();
+    });
+
+    var newPasswordEl = $('input#newpassword');
+
+    console.log(rulesDefinitions);
+    var rules = checkers.factory.create(rulesDefinitions);
+
+    newPasswordEl.on('input', function(e){
+        if(newPasswordEl.val() === '') {
+            newPasswordEl.addClass('is-invalid');
+        }
+
+        var isValid = true;
+        for(var rule in rules) {
+            if(rules[rule].check() !== true) {
+                isValid = false;
+            }
+        }
+
+        if(isValid || newPasswordEl.val() === '') {
+            newPasswordEl.removeClass('is-invalid');
+        } else {
+            newPasswordEl.addClass('is-invalid');
+        }
     });
 });

@@ -1,22 +1,44 @@
-{% if style|default(null) == 'alert' %}
-<div class="help alert alert-warning">
-{% else %}
-<div class="passwordPolicyHelp offset-md-4 col-sm-8 form-text text-muted">
-{% endif %}
+<div class="{% if style|default(null) == 'alert' %}help alert alert-warning{% else %}passwordPolicyHelp offset-md-4 col-sm-8 form-text text-muted{% endif %}">
+
 
     <p>{{ 'policy'|trans }}</p>
 
     <ul>
-        {% if config['pwd_min_length'] %}<li>{{ 'policyminlength'|trans }} {{ config['pwd_min_length'] }}</li>{% endif %}
-        {% if config['pwd_max_length'] %}<li>{{ 'policymaxlength'|trans }} {{ config['pwd_max_length'] }}</li>{% endif %}
-        {% if config['pwd_min_lower'] %}<li>{{ 'policyminlower'|trans }} {{ config['pwd_min_lower'] }}</li>{% endif %}
-        {% if config['pwd_min_upper'] %}<li>{{ 'policyminupper'|trans }} {{ config['pwd_min_upper'] }}</li>{% endif %}
-        {% if config['pwd_min_digit'] %}<li>{{ 'policymindigit'|trans }} {{ config['pwd_min_digit'] }}</li>{% endif %}
-        {% if config['pwd_min_special'] %}<li>{{ 'policyminspecial'|trans }} {{ config['pwd_min_special'] }}</li>{% endif %}
-        {% if config['pwd_complexity'] %}<li>{{ 'policycomplex'|trans }} {{ config['pwd_complexity'] }}</li>{% endif %}
-        {% if config['pwd_forbidden_chars'] %}<li>{{ 'policyforbiddenchars'|trans }} {{ config['pwd_forbidden_chars'] }}</li>{% endif %}
-
-        {% if config['pwd_no_reuse'] %}<li>{{ 'policynoreuse'|trans }}</li>{% endif %}
-        {% if config['pwd_diff_login'] %}<li>{{ 'policydifflogin'|trans }}</li>{% endif %}
+        {% if config['pwd_min_length'] %}
+            <li id="rule_policyminlength">{{ 'policyminlength'|trans }} {{ config['pwd_min_length'] }}</li>
+        {% endif %}
+        {% if config['pwd_max_length'] %}
+            <li id="rule_policymaxlength">{{ 'policymaxlength'|trans }} {{ config['pwd_max_length'] }}</li>
+        {% endif %}
+        {% if config['pwd_min_lower'] %}
+            <li id="rule_policyminlower">{{ 'policyminlower'|trans }} {{ config['pwd_min_lower'] }}</li>
+        {% endif %}
+        {% if config['pwd_min_upper'] %}
+            <li id="rule_policyminupper">{{ 'policyminupper'|trans }} {{ config['pwd_min_upper'] }}</li>
+        {% endif %}
+        {% if config['pwd_min_digit'] %}
+            <li id="rule_policymindigit">{{ 'policymindigit'|trans }} {{ config['pwd_min_digit'] }}</li>
+        {% endif %}
+        {% if config['pwd_min_special'] %}
+            <li id="rule_policyminspecial">{{ 'policyminspecial'|trans }} {{ config['pwd_min_special'] }}</li>
+        {% endif %}
+        {% if config['pwd_complexity'] %}
+            <li id="rule_policymincomplexity">{{ 'policycomplex'|trans }} {{ config['pwd_complexity'] }}</li>
+        {% endif %}
+        {% if config['pwd_forbidden_chars'] %}
+            <li id="rule_policyforbiddenchars">{{ 'policyforbiddenchars'|trans }} {{ config['pwd_forbidden_chars'] }}</li>
+        {% endif %}
+        {% if config['pwd_no_reuse'] %}
+            <li id="rule_policynoreuse">{{ 'policynoreuse'|trans }}</li>
+        {% endif %}
+        {% if config['pwd_diff_login'] %}
+            <li id="rule_policydifflogin">{{ 'policydifflogin'|trans }}</li>
+        {% endif %}
+        {% if psc_zxcvbn['min_strength'] > 0 %}
+            <li id="rule_policyzxcvbnmin">{{ 'policyzxcvbnmin'|trans({'%min_score%': psc_zxcvbn['min_strength']}) }}</li>
+        {% endif %}
     </ul>
+    <script>
+        var rulesDefinitions = {{ rules|json_encode|raw }};
+    </script>
 </div>

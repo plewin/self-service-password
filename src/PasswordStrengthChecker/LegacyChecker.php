@@ -152,4 +152,51 @@ class LegacyChecker implements CheckerInterface
 
         return $violations;
     }
+
+    /**
+     * @return array
+     */
+    public function getRules() {
+        return [
+            'policyminlength' => [
+                'onerror' => 'tooshort',
+                'minLength' => $this->pwdPolicyConfig['pwd_min_length'],
+            ],
+            'policymaxlength' => [
+                'onerror' => 'toobig',
+                'maxLength' => $this->pwdPolicyConfig['pwd_max_length'],
+            ],
+            'policyminlower' => [
+                'onerror' => 'minlower',
+                'minLower' => $this->pwdPolicyConfig['pwd_min_lower'],
+            ],
+            'policyminupper' => [
+                'onerror' => 'minupper',
+                'minUpper' => $this->pwdPolicyConfig['pwd_min_upper'],
+            ],
+            'policymindigit' => [
+                'onerror' => 'mindigit',
+                'minDigit' => $this->pwdPolicyConfig['pwd_min_digit'],
+            ],
+            'policyminspecial' => [
+                'onerror' => 'minspecial',
+                'specialChars' => $this->pwdPolicyConfig['pwd_special_chars'],
+                'minSpecial' => $this->pwdPolicyConfig['pwd_min_special'],
+            ],
+            'policyforbiddenchars' => [
+                'onerror' => 'forbiddenchars',
+                'forbiddenCharacters' => $this->pwdPolicyConfig['pwd_forbidden_chars'],
+            ],
+            'policynoreuse' => [
+                'onerror' => $this->pwdPolicyConfig['pwd_no_reuse'],
+            ],
+            'policymincomplexity' => [
+                'onerror' => 'notcomplex',
+                'minComplexity' => $this->pwdPolicyConfig['pwd_complexity'],
+            ],
+            'policydifflogin' => [
+                'onerror' => 'sameaslogin',
+            ],
+        ];
+    }
 }

@@ -55,6 +55,7 @@ twig:
         background_image: '%background_image%'
         logo: '%logo%'
         pwd_policy_config: '%pwd_policy_config%'
+        psc_zxcvbn: '%psc_zxcvbn%'
         show_help: '%show_help%'
         pwd_show_policy_pos: '%pwd_show_policy_pos%'
         enable_questions: '%enable_questions%'

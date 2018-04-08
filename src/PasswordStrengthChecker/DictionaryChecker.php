@@ -77,4 +77,14 @@ class DictionaryChecker implements CheckerInterface
 
         return [];
     }
+
+    /**
+     * @return array
+     */
+    public function getRules()
+    {
+        return [
+            'policynotindictionary' => ['onerror' => 'indictionary'],
+        ];
+    }
 }

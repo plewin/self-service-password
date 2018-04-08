@@ -123,5 +123,6 @@ $messages['emptysetquestionsform'] = "Set your password reset questions";
 $messages['emptysendsmsform'] = "Get a reset code";
 $messages['sameaslogin'] = "Your new password is identical to your login";
 $messages['policydifflogin'] = "Your new password may not be the same as your login";
+$messages['policyzxcvbnmin'] = "Your new password strength score must be at least %min_score%";
 
 return $messages;

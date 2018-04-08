@@ -33,4 +33,9 @@ interface CheckerInterface
      * @return string[]
      */
     public function evaluate($newpassword, $oldpassword = null, $login = null);
+
+    /**
+     * @return array
+     */
+    public function getRules();
 }

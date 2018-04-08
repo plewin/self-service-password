@@ -63,7 +63,10 @@ $container->register('recaptcha_service', App\Service\RecaptchaService::class)
     ->addMethodCall('setLogger', [new Reference('logger')])
 ;
 
-$container->setAlias('password_strength_checker', 'password_strength_checker.multi');
+$container
+    ->setAlias('password_strength_checker', 'password_strength_checker.multi')
+    ->setPublic(true)
+;
 
 $container->register('password_strength_checker.multi', App\PasswordStrengthChecker\MultiChecker::class)
     ->addMethodCall('setContainer', [new Reference('service_container')])
