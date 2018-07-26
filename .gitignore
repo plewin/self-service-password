@@ -17,6 +17,7 @@
 /public/build/fonts/glyphicons-*
 /public/build/images/glyphicons-*
 /codeception.yml
+/yarn-error.log
 
 /public/build
 !/public/build/.gitignore
