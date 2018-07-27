@@ -3,6 +3,7 @@
 namespace App\Tests\Acceptance;
 
 use AcceptanceTester;
+use Page\ChangeSecurityQuestion as ChangeSecurityQuestionPage;
 
 /**
  * Class ChangeSecurityQuestionCest
@@ -11,99 +12,72 @@ class ChangeSecurityQuestionCest
 {
     /**
      * @param AcceptanceTester $I
+     * @param ChangeSecurityQuestionPage $changeSecurityQuestionPage
      */
-    public function changeSecurityQuestionWorks(AcceptanceTester $I)
+    public function changeSecurityQuestionWorks(AcceptanceTester $I, ChangeSecurityQuestionPage $changeSecurityQuestionPage)
     {
-        $I->amOnPage('/change-security-question');
-        $I->see('Set your password reset questions');
         $I->amGoingTo('fill the form with valid data');
-        $I->fillField('login', 'user1');
-        $I->fillField('password', 'password1');
-        $I->selectOption('Question','When is your birthday?');
-        $I->fillField('answer', '42');
-        $I->click('Send');
+        $changeSecurityQuestionPage->changePassword('user1', 'password1', 'When is your birthday?', '42');
         $I->expect('the new answer is accepted');
         $I->see('Your answer has been registered');
     }
 
     /**
      * @param AcceptanceTester $I
+     * @param ChangeSecurityQuestionPage $changeSecurityQuestionPage
      */
-    public function changeSecurityQuestionFailWhenMissingLogin(AcceptanceTester $I)
+    public function changeSecurityQuestionFailWhenMissingLogin(AcceptanceTester $I, ChangeSecurityQuestionPage $changeSecurityQuestionPage)
     {
-        $I->amOnPage('/change-security-question');
-        $I->see('Set your password reset questions');
         $I->amGoingTo('fill the form with valid data');
-        $I->fillField('password', 'password1');
-        $I->selectOption('Question','When is your birthday?');
-        $I->fillField('answer', '42');
-        $I->click('Send');
+        $changeSecurityQuestionPage->changePassword(null, 'password1', 'When is your birthday?', '42');
         $I->expect('the new answer is not accepted');
         $I->see('Your login is required');
     }
 
     /**
      * @param AcceptanceTester $I
+     * @param ChangeSecurityQuestionPage $changeSecurityQuestionPage
      */
-    public function changeSecurityQuestionFailWhenPasswordWrong(AcceptanceTester $I)
+    public function changeSecurityQuestionFailWhenPasswordWrong(AcceptanceTester $I, ChangeSecurityQuestionPage $changeSecurityQuestionPage)
     {
-        $I->amOnPage('/change-security-question');
-        $I->see('Set your password reset questions');
         $I->amGoingTo('fill the form with wrong password');
-        $I->fillField('login', 'user1');
-        $I->fillField('password', 'badpassword');
-        $I->selectOption('Question','When is your birthday?');
-        $I->fillField('answer', '42');
-        $I->click('Send');
+        $changeSecurityQuestionPage->changePassword('user1', 'badpassword', 'When is your birthday?', '42');
         $I->expect('the new answer is not accepted');
         $I->see('Login or password incorrect');
     }
 
     /**
      * @param AcceptanceTester $I
+     * @param ChangeSecurityQuestionPage $changeSecurityQuestionPage
      */
-    public function changeSecurityQuestionFailWhenMissingPassword(AcceptanceTester $I)
+    public function changeSecurityQuestionFailWhenMissingPassword(AcceptanceTester $I, ChangeSecurityQuestionPage $changeSecurityQuestionPage)
     {
-        $I->amOnPage('/change-security-question');
-        $I->see('Set your password reset questions');
-        $I->amGoingTo('fill the form with valid data');
-        $I->fillField('login', 'user1');
-        $I->selectOption('Question','When is your birthday?');
-        $I->fillField('answer', '42');
-        $I->click('Send');
+        $I->amGoingTo('fill the form with valid data but missing password');
+        $changeSecurityQuestionPage->changePassword('user1', null, 'When is your birthday?', '42');
         $I->expect('the new answer is not accepted');
         $I->see('Your password is required');
     }
 
     /**
      * @param AcceptanceTester $I
+     * @param ChangeSecurityQuestionPage $changeSecurityQuestionPage
      */
-    public function changeSecurityQuestionFailWhenMissingAnswer(AcceptanceTester $I)
+    public function changeSecurityQuestionFailWhenMissingAnswer(AcceptanceTester $I, ChangeSecurityQuestionPage $changeSecurityQuestionPage)
     {
-        $I->amOnPage('/change-security-question');
-        $I->see('Set your password reset questions');
-        $I->amGoingTo('fill the form with valid data');
-        $I->fillField('login', 'user1');
-        $I->fillField('password', 'password1');
-        $I->selectOption('Question','When is your birthday?');
-        $I->click('Send');
+        $I->amGoingTo('fill the form with valid data but missing answer');
+        $changeSecurityQuestionPage->changePassword('user1', 'password1', 'When is your birthday?', null);
         $I->expect('the new answer is not accepted');
         $I->see('No answer given');
     }
 
     /**
      * @param AcceptanceTester $I
+     * @param ChangeSecurityQuestionPage $changeSecurityQuestionPage
      */
-    public function changeSecurityQuestionFailWhenLoginHasInvalidCharacters(AcceptanceTester $I)
+    public function changeSecurityQuestionFailWhenLoginHasInvalidCharacters(AcceptanceTester $I, ChangeSecurityQuestionPage $changeSecurityQuestionPage)
     {
-        $I->amOnPage('/change-security-question');
-        $I->see('Set your password reset questions');
-        $I->amGoingTo('fill the form with valid data');
-        $I->fillField('login', '&é"\'(-è_çà)');
-        $I->selectOption('Question','When is your birthday?');
-        $I->fillField('answer', '42');
-        $I->fillField('password', 'password1');
-        $I->click('Send');
+        $I->amGoingTo('fill the form with invalid data');
+        $changeSecurityQuestionPage->changePassword('&é"\'(-è_çà)', 'password1', 'When is your birthday?', '42');
         $I->expect('the new answer is not accepted');
         //TODO this message should not say password incorrect
         $I->see('Login or password incorrect');

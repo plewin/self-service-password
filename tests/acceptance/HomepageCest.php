@@ -9,6 +9,7 @@ use AcceptanceTester;
  */
 class HomepageCest
 {
+
     /**
      * @param AcceptanceTester $I
      */

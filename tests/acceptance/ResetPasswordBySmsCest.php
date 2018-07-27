@@ -3,7 +3,7 @@
 namespace App\Tests\Acceptance;
 
 use AcceptanceTester;
-
+use Page\ResetBySms as ResetBySmsPage;
 /**
  * Class ResetPasswordBySmsCest
  */
@@ -25,12 +25,11 @@ class ResetPasswordBySmsCest
 
     /**
      * @param AcceptanceTester $I
+     * @param ResetBySmsPage $resetBySmsPage
      */
-    public function resetPasswordBySmsWorks(AcceptanceTester $I)
+    public function resetPasswordBySmsWorks(AcceptanceTester $I, ResetBySmsPage $resetBySmsPage)
     {
-        $I->amOnPage('/reset-password-by-sms');
-        $I->fillField('login', 'user1');
-        $I->click('Get user');
+        $resetBySmsPage->findUser('user1');
         $I->see('Check that user information are correct and press Send to get SMS token');
         $I->see('User full name');
         $I->see('User1 DisplayName');
@@ -38,25 +37,23 @@ class ResetPasswordBySmsCest
         $I->see('user1');
         $I->see('SMS number');
         $I->see('0612****78');
-        $I->click('Send');
+        $resetBySmsPage->sendSms();
         $I->seeSmsIsSent();
         $I->see('A confirmation code has been send by SMS');
         $I->see('SMS token');
         $code = $I->grabCodeInSms();
-        $I->fillField('smstoken', $code);
-        $I->click('Send');
+        $resetBySmsPage->submitSmsCode($code);
         $I->see('Reset your password');
         $I->see('The token sent by sms allows you to reset your password.');
     }
 
     /**
      * @param AcceptanceTester $I
+     * @param ResetBySmsPage $resetBySmsPage
      */
-    public function findUserFailsWhenLoginHasInvalidCharacters(AcceptanceTester $I)
+    public function findUserFailsWhenLoginHasInvalidCharacters(AcceptanceTester $I, ResetBySmsPage $resetBySmsPage)
     {
-        $I->amOnPage('/reset-password-by-sms');
-        $I->fillField('login', '&é"\'(-è_)');
-        $I->click('Get user');
+        $resetBySmsPage->findUser('&é"\'(-è_)');
         //TODO this message should be better
         $I->see('Login or password incorrect');
         $I->dontSee('Check that user information are correct and press Send to get SMS token');
@@ -65,12 +62,11 @@ class ResetPasswordBySmsCest
 
     /**
      * @param AcceptanceTester $I
+     * @param ResetBySmsPage $resetBySmsPage
      */
-    public function findUserFailsWhenAccountDoesNotExist(AcceptanceTester $I)
+    public function findUserFailsWhenAccountDoesNotExist(AcceptanceTester $I, ResetBySmsPage $resetBySmsPage)
     {
-        $I->amOnPage('/reset-password-by-sms');
-        $I->fillField('login', 'user456789');
-        $I->click('Get user');
+        $resetBySmsPage->findUser('user456789');
         //TODO this message should be better
         $I->see('Login or password incorrect');
         $I->dontSee('Check that user information are correct and press Send to get SMS token');
@@ -79,12 +75,11 @@ class ResetPasswordBySmsCest
 
     /**
      * @param AcceptanceTester $I
+     * @param ResetBySmsPage $resetBySmsPage
      */
-    public function findUserFailsWhenAccountHasNoPhoneNumber(AcceptanceTester $I)
+    public function findUserFailsWhenAccountHasNoPhoneNumber(AcceptanceTester $I, ResetBySmsPage $resetBySmsPage)
     {
-        $I->amOnPage('/reset-password-by-sms');
-        $I->fillField('login', 'user3');
-        $I->click('Get user');
+        $resetBySmsPage->findUser('user3');
         $I->see('Can\'t find mobile number');
         $I->dontSee('Check that user information are correct and press Send to get SMS token');
         $I->dontSee('User full name');
@@ -92,22 +87,20 @@ class ResetPasswordBySmsCest
 
     /**
      * @param AcceptanceTester $I
+     * @param ResetBySmsPage $resetBySmsPage
      */
-    public function noTokenLinkWhenSmsCodeIsWrong(AcceptanceTester $I)
+    public function noTokenLinkWhenSmsCodeIsWrong(AcceptanceTester $I, ResetBySmsPage $resetBySmsPage)
     {
-        $I->amOnPage('/reset-password-by-sms');
-        $I->fillField('login', 'user1');
-        $I->click('Get user');
+        $resetBySmsPage->findUser('user1');
         $I->expect('The user details to be ok');
-        $I->click('Send');
+        $resetBySmsPage->sendSms();
         $I->seeSmsIsSent();
         $I->see('A confirmation code has been send by SMS');
         $I->see('SMS token');
         $code = $I->grabCodeInSms();
         $I->amGoingTo("put the wrong code");
         $wrongCode = $code + 1;
-        $I->fillField('smstoken', $wrongCode);
-        $I->click('Send');
+        $resetBySmsPage->submitSmsCode($wrongCode);
         //TODO change token to sms code
         $I->see('Invalid token, try again');
         $I->see('SMS token');
@@ -118,14 +111,13 @@ class ResetPasswordBySmsCest
 
     /**
      * @param AcceptanceTester $I
+     * @param ResetBySmsPage $resetBySmsPage
      */
-    public function smsCode3AttemptsAllowed(AcceptanceTester $I)
+    public function smsCode3AttemptsAllowed(AcceptanceTester $I, ResetBySmsPage $resetBySmsPage)
     {
-        $I->amOnPage('/reset-password-by-sms');
-        $I->fillField('login', 'user1');
-        $I->click('Get user');
+        $resetBySmsPage->findUser('user1');
         $I->expect('The user details to be ok');
-        $I->click('Send');
+        $resetBySmsPage->sendSms();
         $I->seeSmsIsSent();
         $I->see('A confirmation code has been send by SMS');
         $I->see('SMS token');
@@ -133,24 +125,21 @@ class ResetPasswordBySmsCest
         $I->amGoingTo("put the wrong code");
         $wrongCode = $code + 1;
 
-        $I->fillField('smstoken', $wrongCode);
-        $I->click('Send');
+        $resetBySmsPage->submitSmsCode($wrongCode);
         $I->see('Invalid token, try again');
         $I->see('SMS token');
         $I->see('Send');
         $I->dontSee('Your new password is required');
         $I->dontSee('The token sent by sms allows you to reset your password.');
 
-        $I->fillField('smstoken', $wrongCode);
-        $I->click('Send');
+        $resetBySmsPage->submitSmsCode($wrongCode);
         $I->see('Invalid token, try again');
         $I->see('SMS token');
         $I->see('Send');
         $I->dontSee('Your new password is required');
         $I->dontSee('The token sent by sms allows you to reset your password.');
 
-        $I->fillField('smstoken', $wrongCode);
-        $I->click('Send');
+        $resetBySmsPage->submitSmsCode($wrongCode);
         //TODO message incorrect, there is no try again because it is the last attempt
         $I->see('Invalid token, try again');
         //TODO Should not see this, no more attempts
@@ -159,8 +148,7 @@ class ResetPasswordBySmsCest
         $I->dontSee('Your new password is required');
         $I->dontSee('The token sent by sms allows you to reset your password.');
 
-        $I->fillField('smstoken', $wrongCode);
-        $I->click('Send');
+        $resetBySmsPage->submitSmsCode($wrongCode);
         // TODO message incorrect, there is no try again because it is the last attempt
         $I->see('Token is not valid');
         $I->dontSee('SMS token');

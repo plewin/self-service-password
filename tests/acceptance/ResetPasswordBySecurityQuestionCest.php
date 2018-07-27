@@ -3,6 +3,7 @@
 namespace App\Tests\Acceptance;
 
 use AcceptanceTester;
+use Page\ResetBySecurityQuestion as ResetBySecurityQuestionPage;
 
 /**
  * Class ResetPasswordBySecurityQuestionCest
@@ -25,148 +26,107 @@ class ResetPasswordBySecurityQuestionCest
 
     /**
      * @param AcceptanceTester $I
+     * @param ResetBySecurityQuestionPage $resetBySecurityQuestion
      */
-    public function changePasswordWorks(AcceptanceTester $I)
+    public function changePasswordWorks(AcceptanceTester $I, ResetBySecurityQuestionPage $resetBySecurityQuestion)
     {
-        $I->amOnPage('/reset-password-by-question');
         $I->amGoingTo('fill the form with valid data');
-        $I->fillField('login', 'user1');
-        $I->selectOption('Question','When is your birthday?');
-        $I->fillField('answer', 'goodbirthday1');
-        $I->fillField('newpassword', 'myNewPa0$$');
-        $I->fillField('confirmpassword', 'myNewPa0$$');
-        $I->click('Send');
+        $resetBySecurityQuestion->resetPassword('user1', 'When is your birthday?', 'goodbirthday1', 'myNewPa0$$', 'myNewPa0$$');
         $I->see('Your password was changed');
     }
 
     /**
      * @param AcceptanceTester $I
+     * @param ResetBySecurityQuestionPage $resetBySecurityQuestion
      */
-    public function changePasswordFailsWhenAnswerIsWrong(AcceptanceTester $I)
+    public function changePasswordFailsWhenAnswerIsWrong(AcceptanceTester $I, ResetBySecurityQuestionPage $resetBySecurityQuestion)
     {
-        $I->amOnPage('/reset-password-by-question');
         $I->amGoingTo('fill the form with valid data');
-        $I->fillField('login', 'user1');
-        $I->selectOption('Question','When is your birthday?');
-        $I->fillField('answer', 'bad answer');
-        $I->fillField('newpassword', 'myNewPa0$$');
-        $I->fillField('confirmpassword', 'myNewPa0$$');
-        $I->click('Send');
+        $resetBySecurityQuestion->resetPassword('user1', 'When is your birthday?', 'bad answer', 'myNewPa0$$', 'myNewPa0$$');
         $I->see('Your answer is incorrect');
         $I->dontSee('Your password was changed');
     }
 
     /**
      * @param AcceptanceTester $I
+     * @param ResetBySecurityQuestionPage $resetBySecurityQuestion
      */
-    public function changePasswordFailsWhenAccountDoesNotExists(AcceptanceTester $I)
+    public function changePasswordFailsWhenAccountDoesNotExists(AcceptanceTester $I, ResetBySecurityQuestionPage $resetBySecurityQuestion)
     {
-        $I->amOnPage('/reset-password-by-question');
         $I->amGoingTo('fill the form with valid data');
-        $I->fillField('login', 'user1ER5T6Y7U890');
-        $I->selectOption('Question','When is your birthday?');
-        $I->fillField('answer', 'goodbirthday1');
-        $I->fillField('newpassword', 'myNewPa0$$');
-        $I->fillField('confirmpassword', 'myNewPa0$$');
-        $I->click('Send');
+        $resetBySecurityQuestion->resetPassword('user1ER5T6Y7U890', 'When is your birthday?', 'goodbirthday1', 'myNewPa0$$', 'myNewPa0$$');
         $I->see('Login or password incorrect');
         $I->dontSee('Your password was changed');
     }
 
     /**
      * @param AcceptanceTester $I
+     * @param ResetBySecurityQuestionPage $resetBySecurityQuestion
      */
-    public function changePasswordFailsWhenConfirmationIsWrong(AcceptanceTester $I)
+    public function changePasswordFailsWhenConfirmationIsWrong(AcceptanceTester $I, ResetBySecurityQuestionPage $resetBySecurityQuestion)
     {
-        $I->amOnPage('/reset-password-by-question');
         $I->amGoingTo('fill the form with valid data except confirmation');
-        $I->fillField('login', 'user1');
-        $I->selectOption('Question','When is your birthday?');
-        $I->fillField('answer', 'bad answer');
-        $I->fillField('newpassword', 'mynewpass');
-        $I->fillField('confirmpassword', 'mynewpasd');
-        $I->click('Send');
+        $resetBySecurityQuestion->resetPassword('user1', 'When is your birthday?', 'bad answer', 'mynewpass', 'mynewpasd');
         $I->see('Passwords mismatch');
         $I->dontSee('Your password was changed');
     }
 
     /**
      * @param AcceptanceTester $I
+     * @param ResetBySecurityQuestionPage $resetBySecurityQuestion
      */
-    public function changePasswordFailsWhenLoginMissing(AcceptanceTester $I)
+    public function changePasswordFailsWhenLoginMissing(AcceptanceTester $I, ResetBySecurityQuestionPage $resetBySecurityQuestion)
     {
-        $I->amOnPage('/reset-password-by-question');
         $I->amGoingTo('fill the form without a login');
-        $I->selectOption('Question','When is your birthday?');
-        $I->fillField('answer', 'goodbirthday1');
-        $I->fillField('newpassword', 'mynewpass');
-        $I->fillField('confirmpassword', 'mynewpass');
-        $I->click('Send');
+        $resetBySecurityQuestion->resetPassword(null, 'When is your birthday?', 'goodbirthday1', 'mynewpass', 'mynewpass');
         $I->see('Your login is required');
         $I->dontSee('Your password was changed');
     }
 
     /**
      * @param AcceptanceTester $I
+     * @param ResetBySecurityQuestionPage $resetBySecurityQuestion
      */
-    public function changePasswordFailsWhenAnswerMissing(AcceptanceTester $I)
+    public function changePasswordFailsWhenAnswerMissing(AcceptanceTester $I, ResetBySecurityQuestionPage $resetBySecurityQuestion)
     {
-        $I->amOnPage('/reset-password-by-question');
         $I->amGoingTo('fill the form without a login');
-        $I->selectOption('Question','When is your birthday?');
-        $I->fillField('login', 'user1');
-        $I->fillField('newpassword', 'mynewpass');
-        $I->fillField('confirmpassword', 'mynewpass');
-        $I->click('Send');
+        $resetBySecurityQuestion->resetPassword('user1', 'When is your birthday?', null, 'mynewpass', 'mynewpass');
         $I->see('No answer given');
         $I->dontSee('Your password was changed');
     }
 
     /**
      * @param AcceptanceTester $I
+     * @param ResetBySecurityQuestionPage $resetBySecurityQuestion
      */
-    public function changePasswordFailsWhenNewPasswordMissing(AcceptanceTester $I)
+    public function changePasswordFailsWhenNewPasswordMissing(AcceptanceTester $I, ResetBySecurityQuestionPage $resetBySecurityQuestion)
     {
-        $I->amOnPage('/reset-password-by-question');
         $I->amGoingTo('fill the form without a login');
-        $I->selectOption('Question','When is your birthday?');
-        $I->fillField('login', 'user1');
-        $I->fillField('answer', 'goodbirthday1');
-        $I->fillField('confirmpassword', 'mynewpass');
-        $I->click('Send');
+        $resetBySecurityQuestion->resetPassword('user1', 'When is your birthday?', 'goodbirthday1', null, 'mynewpass');
         $I->see('Your new password is required');
         $I->dontSee('Your password was changed');
     }
 
     /**
      * @param AcceptanceTester $I
+     * @param ResetBySecurityQuestionPage $resetBySecurityQuestion
      */
-    public function changePasswordFailsWhenConfirmPasswordMissing(AcceptanceTester $I)
+    public function changePasswordFailsWhenConfirmPasswordMissing(AcceptanceTester $I, ResetBySecurityQuestionPage $resetBySecurityQuestion)
     {
-        $I->amOnPage('/reset-password-by-question');
         $I->amGoingTo('fill the form without a login');
-        $I->selectOption('Question','When is your birthday?');
-        $I->fillField('login', 'user1');
-        $I->fillField('answer', 'goodbirthday1');
-        $I->fillField('newpassword', 'mynewpass');
-        $I->click('Send');
+        $resetBySecurityQuestion->resetPassword('user1', 'When is your birthday?', 'goodbirthday1', 'mynewpass', null);
         $I->see('Please confirm your new password');
         $I->dontSee('Your password was changed');
     }
 
     /**
      * @param AcceptanceTester $I
+     * @param ResetBySecurityQuestionPage $resetBySecurityQuestion
      */
-    public function changePasswordFailsWhenLoginHasInvalidCharacters(AcceptanceTester $I)
+    public function changePasswordFailsWhenLoginHasInvalidCharacters(AcceptanceTester $I, ResetBySecurityQuestionPage $resetBySecurityQuestion)
     {
-        $I->amOnPage('/reset-password-by-question');
         $I->amGoingTo('fill the form without a login');
-        $I->selectOption('Question','When is your birthday?');
-        $I->fillField('login', 'é"(-è_çà)');
-        $I->fillField('answer', 'goodbirthday1');
-        $I->fillField('newpassword', 'mynewpass');
-        $I->fillField('confirmpassword', 'mynewpass');
-        $I->click('Send');
+        $resetBySecurityQuestion->resetPassword('é"(-è_çà)', 'When is your birthday?', 'goodbirthday1', 'mynewpass', 'mynewpass');
         //TODO better message, there is no password here
         $I->see('Login or password incorrect');
         $I->dontSee('Your password was changed');
@@ -174,17 +134,12 @@ class ResetPasswordBySecurityQuestionCest
 
     /**
      * @param AcceptanceTester $I
+     * @param ResetBySecurityQuestionPage $resetBySecurityQuestion
      */
-    public function changePasswordFailsWhenPasswordRefusedByServer(AcceptanceTester $I)
+    public function changePasswordFailsWhenPasswordRefusedByServer(AcceptanceTester $I, ResetBySecurityQuestionPage $resetBySecurityQuestion)
     {
-        $I->amOnPage('/reset-password-by-question');
         $I->amGoingTo('fill the form without a login');
-        $I->selectOption('Question','When is your birthday?');
-        $I->fillField('login', 'user10');
-        $I->fillField('answer', 'goodbirthday10');
-        $I->fillField('newpassword', 'myNewPa0$$');
-        $I->fillField('confirmpassword', 'myNewPa0$$');
-        $I->click('Send');
+        $resetBySecurityQuestion->resetPassword('user10', 'When is your birthday?', 'goodbirthday10', 'myNewPa0$$', 'myNewPa0$$');
         $I->see('Password was refused');
         $I->dontSee('Your password was changed');
     }

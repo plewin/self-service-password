@@ -3,6 +3,9 @@
 namespace App\Tests\Acceptance;
 
 use AcceptanceTester;
+use Page\ResetByEmail as ResetByEmailPage;
+use Page\ResetPassword as ResetPasswordPage;
+use Step\Acceptance\TesterWithValidToken;
 
 /**
  * Class ResetPasswordByEmailCest
@@ -24,11 +27,11 @@ class ResetPasswordByEmailCest
     }
 
     /**
-     * @param AcceptanceTester $I
+     * @param TesterWithValidToken $I
      */
-    public function resetPasswordByEmailWorks(AcceptanceTester $I)
+    public function resetPasswordByEmailWorks(TesterWithValidToken $I)
     {
-        $url = $this->getValidUrlWithToken($I);
+        $url = $I->getValidUrlWithToken();
         $I->amOnPage($url);
         $I->expectTo('see the reset form because the token is valid');
         $I->see('Login');
@@ -46,146 +49,117 @@ class ResetPasswordByEmailCest
 
     /**
      * @param AcceptanceTester $I
+     * @param ResetByEmailPage $resetByEmailPage
      */
-    public function resetPasswordFailsWhenLoginIsMissing(AcceptanceTester $I)
+    public function resetPasswordFailsWhenLoginIsMissing(AcceptanceTester $I, ResetByEmailPage $resetByEmailPage)
     {
-        $I->amOnPage('/reset-password-by-email');
-        $I->fillField('mail', 'user1@example.com');
-        $I->click('Send');
+        $resetByEmailPage->askResetEmail(null, 'user1@example.com');
         $I->see('Your login is required');
         $I->dontSee('A confirmation email has been sent');
     }
 
     /**
      * @param AcceptanceTester $I
+     * @param ResetByEmailPage $resetByEmailPage
      */
-    public function resetPasswordFailsWhenLoginHasInvalidCharacters(AcceptanceTester $I)
+    public function resetPasswordFailsWhenLoginHasInvalidCharacters(AcceptanceTester $I, ResetByEmailPage $resetByEmailPage)
     {
-        $I->amOnPage('/reset-password-by-email');
-        $I->fillField('login', '{&é"\'(-è_çà');
-        $I->fillField('mail', 'user1@example.com');
-        $I->click('Send');
+        $resetByEmailPage->askResetEmail('{&é"\'(-è_çà', 'user1@example.com');
         $I->see('Login or password incorrect');
         $I->dontSee('A confirmation email has been sent');
     }
 
     /**
      * @param AcceptanceTester $I
+     * @param ResetByEmailPage $resetByEmailPage
      */
-    public function resetPasswordFailsWhenEmailIsMissing(AcceptanceTester $I)
+    public function resetPasswordFailsWhenEmailIsMissing(AcceptanceTester $I, ResetByEmailPage $resetByEmailPage)
     {
-        $I->amOnPage('/reset-password-by-email');
-        $I->fillField('login', 'user1');
-        $I->click('Send');
+        $resetByEmailPage->askResetEmail('user1', null);
         $I->see('Your email address is required');
         $I->dontSee('A confirmation email has been sent');
     }
 
     /**
      * @param AcceptanceTester $I
+     * @param ResetByEmailPage $resetByEmailPage
      */
-    public function resetPasswordFailsWhenEmailIsIncorrect(AcceptanceTester $I)
+    public function resetPasswordFailsWhenEmailIsIncorrect(AcceptanceTester $I, ResetByEmailPage $resetByEmailPage)
     {
-        $I->amOnPage('/reset-password-by-email');
-        $I->fillField('login', 'user1');
-        $I->fillField('mail', 'notuser1@example.com');
-        $I->click('Send');
+        $resetByEmailPage->askResetEmail('user1', 'notuser1@example.com');
         $I->see('The email address does not match the submitted user name');
         $I->dontSee('A confirmation email has been sent');
     }
 
     /**
      * @param AcceptanceTester $I
+     * @param ResetByEmailPage $resetByEmailPage
      */
-    public function resetPasswordFailsWhenAccountDoesNotExist(AcceptanceTester $I)
+    public function resetPasswordFailsWhenAccountDoesNotExist(AcceptanceTester $I, ResetByEmailPage $resetByEmailPage)
     {
-        $I->amOnPage('/reset-password-by-email');
-        $I->fillField('login', 'user34567890');
-        $I->fillField('mail', 'user34567890@example.com');
-        $I->click('Send');
+        $resetByEmailPage->askResetEmail('user34567890', 'user34567890@example.com');
         //TODO fix message, "password incorrect does not make sense here"
         $I->see('Login or password incorrect');
         $I->dontSee('A confirmation email has been sent');
     }
 
     /**
-     * @param AcceptanceTester $I
+     * @param TesterWithValidToken $I
+     * @param ResetPasswordPage $resetPasswordPage
      */
-    public function tokenCannotBeReused(AcceptanceTester $I)
+    public function tokenCannotBeReused(TesterWithValidToken $I, ResetPasswordPage $resetPasswordPage)
     {
-        $url = $this->getValidUrlWithToken($I);
+        $url = $I->getValidUrlWithToken();
         $I->amOnPage($url);
         $I->expectTo('see the reset form because the token is valid');
-        $I->fillField('New password', 'myNewPa0$$');
-        $I->fillField('Confirm', 'myNewPa0$$');
-        $I->click('Send');
+
+        $resetPasswordPage->resetPassword('myNewPa0$$', 'myNewPa0$$');
         $I->see('Your password was changed');
 
         // Reuse attempt
         $I->amOnPage($url);
         $I->expectTo('see don\'t see the form because the token is reused');
         $I->see('Token is not valid');
-        $I->dontSee('New password');
-        $I->dontSee('Confirm');
-        $I->dontSee('Send');
-
+        $I->dontSee($resetPasswordPage::$newPasswordField);
+        $I->dontSee($resetPasswordPage::$confirmPasswordField);
+        $I->dontSee($resetPasswordPage::$sendButton);
     }
 
     /**
-     * @param AcceptanceTester $I
+     * @param TesterWithValidToken $I
+     * @param ResetPasswordPage $resetPasswordPage
      */
-    public function resetPasswordFailsWhenTokenMissing(AcceptanceTester $I)
+    public function resetPasswordFailWhenPasswordAndConfirmMismatch(TesterWithValidToken $I, ResetPasswordPage $resetPasswordPage)
     {
-        $url = $this->getValidUrlWithToken($I);
+        $url = $I->getValidUrlWithToken();
         $I->amOnPage($url);
-        $I->fillField('New password', 'newpass');
-        $I->fillField('Confirm', 'notnewpass');
-        $I->click('Send');
+
+        $resetPasswordPage->resetPassword('newpass', 'notnewpass');
         $I->dontSee('Your password was changed');
     }
 
     /**
-     * @param AcceptanceTester $I
+     * @param TesterWithValidToken $I
+     * @param ResetPasswordPage $resetPasswordPage
      */
-    public function resetPasswordFailsWhenPasswordRefusedByServer(AcceptanceTester $I)
+    public function resetPasswordFailsWhenPasswordRefusedByServer(TesterWithValidToken $I, ResetPasswordPage $resetPasswordPage)
     {
-        $url = $this->getValidUrlWithToken($I, 'user10');
+        $url = $I->getValidUrlWithToken('user10');
         $I->amOnPage($url);
-        $I->fillField('New password', 'should be rejected');
-        $I->fillField('Confirm', 'should be rejected');
-        $I->click('Send');
+        $resetPasswordPage->resetPassword('should be rejected', 'should be rejected');
         $I->see('password was refused');
         $I->dontSee('Your password was changed');
     }
 
     /**
      * @param AcceptanceTester $I
+     * @param ResetPasswordPage $resetPasswordPage
      */
-    public function resetPasswordFailWhenPasswordAndConfirmMismatch(AcceptanceTester $I)
+    public function resetPasswordFailsWhenTokenMissing(AcceptanceTester $I, ResetPasswordPage $resetPasswordPage)
     {
-        $I->amOnPage('/reset-password-with-token');
+        $I->amOnPage($resetPasswordPage::$URL);
         $I->see('Token is required');
         $I->dontSee('Confirm');
         $I->dontSee('Send', 'form');
-    }
-
-    /**
-     * @param AcceptanceTester $I
-     * @param string $user
-     *
-     * @return string Url with valid token
-     */
-    private function getValidUrlWithToken(AcceptanceTester $I, $user='user1')
-    {
-        $I->amOnPage('/reset-password-by-email');
-        $I->fillField('login', $user);
-        $I->fillField('mail', $user . '@example.com');
-        $I->click('Send');
-        $I->see('A confirmation email has been sent');
-        $I->seeEmailIsSent();
-        $myEmailMessage = $I->grabLastSentEmail();
-        $I->seeInMail($user,$myEmailMessage);
-        $I->seeUrlInMail($myEmailMessage);
-        return $I->grabUrlInMail($myEmailMessage);
     }
 }

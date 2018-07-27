@@ -3,6 +3,7 @@
 namespace App\Tests\Acceptance;
 
 use AcceptanceTester;
+use Page\ChangeSshKey as ChangeSshKeyPage;
 
 /**
  * Class ChangeSshKeyCest
@@ -25,87 +26,72 @@ class ChangeSshKeyCest
 
     /**
      * @param AcceptanceTester $I
+     * @param ChangeSshKeyPage $changeSshKeyPage
      */
-    public function changeSshKeyWorks(AcceptanceTester $I)
+    public function changeSshKeyWorks(AcceptanceTester $I, ChangeSshKeyPage $changeSshKeyPage)
     {
-        $I->amOnPage('/change-ssh-key');
         $I->amGoingTo('fill the form with valid data');
-        $I->fillField('login', 'user1');
-        $I->fillField('password', 'password1');
-        $I->fillField('sshkey', 'dftyguijok');
-        $I->click('Send');
+        $changeSshKeyPage->changeSshKey('user1', 'password1', 'dftyguijok');
         $I->expect('the new ssh key is accepted');
         $I->see('Your SSH Key was changed');
     }
 
     /**
      * @param AcceptanceTester $I
+     * @param ChangeSshKeyPage $changeSshKeyPage
      */
-    public function changeSshKeyFailsWhenMissingLogin(AcceptanceTester $I)
+    public function changeSshKeyFailsWhenMissingLogin(AcceptanceTester $I, ChangeSshKeyPage $changeSshKeyPage)
     {
-        $I->amOnPage('/change-ssh-key');
         $I->amGoingTo('fill the form with valid data without a login');
-        $I->fillField('password', 'password1');
-        $I->fillField('sshkey', 'dftyguijok');
-        $I->click('Send');
+        $changeSshKeyPage->changeSshKey(null, 'password1', 'dftyguijok');
         $I->expect('the new ssh key is not accepted');
         $I->see('Login is required');
     }
 
     /**
      * @param AcceptanceTester $I
+     * @param ChangeSshKeyPage $changeSshKeyPage
      */
-    public function changeSshKeyFailsWhenPasswordWrong(AcceptanceTester $I)
+    public function changeSshKeyFailsWhenPasswordWrong(AcceptanceTester $I, ChangeSshKeyPage $changeSshKeyPage)
     {
-        $I->amOnPage('/change-ssh-key');
         $I->amGoingTo('fill the form with valid data without a login');
-        $I->fillField('login', 'user1');
-        $I->fillField('password', 'bad password');
-        $I->fillField('sshkey', 'dftyguijok');
-        $I->click('Send');
+        $changeSshKeyPage->changeSshKey('user1', 'bad password', 'dftyguijok');
         $I->expect('the new ssh key is not accepted');
         $I->see('login or password incorrect');
     }
 
     /**
      * @param AcceptanceTester $I
+     * @param ChangeSshKeyPage $changeSshKeyPage
      */
-    public function changeSshKeyFailsWhenMissingPassword(AcceptanceTester $I)
+    public function changeSshKeyFailsWhenMissingPassword(AcceptanceTester $I, ChangeSshKeyPage $changeSshKeyPage)
     {
-        $I->amOnPage('/change-ssh-key');
         $I->amGoingTo('fill the form with valid data without a password');
-        $I->fillField('login', 'user1');
-        $I->fillField('sshkey', 'dftyguijok');
-        $I->click('Send');
+        $changeSshKeyPage->changeSshKey('user1', null, 'dftyguijok');
         $I->expect('the new ssh key is not accepted');
         $I->see('Your password is required');
     }
 
     /**
      * @param AcceptanceTester $I
+     * @param ChangeSshKeyPage $changeSshKeyPage
      */
-    public function changeSshKeyFailsWhenMissingSshKey(AcceptanceTester $I)
+    public function changeSshKeyFailsWhenMissingSshKey(AcceptanceTester $I, ChangeSshKeyPage $changeSshKeyPage)
     {
-        $I->amOnPage('/change-ssh-key');
         $I->amGoingTo('fill the form with valid data without a ssh key');
-        $I->fillField('login', 'user1');
-        $I->fillField('password', 'password1');
-        $I->click('Send');
+        $changeSshKeyPage->changeSshKey('user1', 'password1', null);
         $I->expect('the new ssh key is not accepted');
         $I->see('SSH Key is required');
     }
 
     /**
      * @param AcceptanceTester $I
+     * @param ChangeSshKeyPage $changeSshKeyPage
      */
-    public function changeSshKeyFailsWhenLoginHasInvalidCharacters(AcceptanceTester $I)
+    public function changeSshKeyFailsWhenLoginHasInvalidCharacters(AcceptanceTester $I, ChangeSshKeyPage $changeSshKeyPage)
     {
-        $I->amOnPage('/change-ssh-key');
         $I->amGoingTo('fill the form with valid data without a ssh key');
-        $I->fillField('login', '&é"\'(-è_çà)');
-        $I->fillField('password', 'password1');
-        $I->fillField('sshkey', 'dftyguijok');
-        $I->click('Send');
+        $changeSshKeyPage->changeSshKey('&é"\'(-è_çà)', 'password1', 'dftyguijok');
         $I->expect('the new ssh key is not accepted');
         $I->see('Login or password incorrect');
     }
