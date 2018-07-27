@@ -16,7 +16,7 @@
   <a href="https://secure.php.net/manual/en/intro-whatis.php" alt="PHP 5.5.9"><img src="https://img.shields.io/badge/PHP-^5.5.9-787cb4.svg" /></a>
   <a href="https://symfony.com/what-is-symfony" alt="Symfony 3.4"><img src="https://img.shields.io/badge/Symfony-3.4-7aba20.svg" /></a>
   <a href="https://getbootstrap.com/docs/4.1/" alt="Bootstrap 4.1"><img src="https://img.shields.io/badge/Bootstrap-4.1-5f4586.svg" /></a>
-  <a href="https://jquery.com" alt="jQuery 3.2"><img src="https://img.shields.io/badge/jQuery-3.2-0769ad.svg" /></a>
+  <a href="https://jquery.com" alt="jQuery 3.3"><img src="https://img.shields.io/badge/jQuery-3.3-0769ad.svg" /></a>
   <a href="https://www.npmjs.com/package/@symfony/webpack-encore" alt="Webpack Encore 0.9"><img src="https://img.shields.io/badge/Webpack%20Encore-0.9-2b3a42.svg" /></a>
 </p>
 
