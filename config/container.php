@@ -45,15 +45,18 @@ $container->register('notifier.subscriber', EventSubscriber\NotificationSubscrib
 $container->register('encryption_service', App\Service\EncryptionService::class)
     ->addArgument('%secret%')
     ->addMethodCall('setLogger', [new Reference('logger')])
+    ->setPublic(true)
 ;
 
 $container->register('sms_token_generator', App\Utils\SmsTokenGenerator::class)
     ->addArgument('%sms_token_length%')
+    ->setPublic(true)
 ;
 
 $container->register('username_validity_checker', App\Service\UsernameValidityChecker::class)
     ->addArgument('%login_forbidden_chars%')
     ->addMethodCall('setLogger', [new Reference('logger')])
+    ->setPublic(true)
 ;
 
 $container->register('recaptcha_service', App\Service\RecaptchaService::class)
@@ -100,6 +103,7 @@ $container->register('mail_notification_service', App\Service\MailNotificationSe
     ->addArgument('%mail_from%')
     ->addArgument('%mail_from_name%')
     ->addMethodCall('setLogger', [new Reference('logger')])
+    ->setPublic(true)
 ;
 
 $container->register('sms_notification_service', App\Service\SmsNotificationService::class)
@@ -110,6 +114,7 @@ $container->register('sms_notification_service', App\Service\SmsNotificationServ
     ->addArgument('%mail_from_name%')
     ->addArgument('%sms_api_lib%')
     ->addMethodCall('setLogger', [new Reference('logger')])
+    ->setPublic(true)
 ;
 
 $container->register('ldap_client', '%ldap_client.class%')
@@ -136,6 +141,7 @@ $container->register('ldap_client', '%ldap_client.class%')
     ->addArgument('%shadow_options%')
     ->addArgument('%mail_address_use_ldap%')
     ->addMethodCall('setLogger', [new Reference('logger')])
+    ->setPublic(true)
 ;
 
 $container->register('password_encoder', App\Utils\PasswordEncoder::class)
@@ -151,18 +157,23 @@ $container->register('token_manager_service', App\Service\TokenManagerService::c
     ->addArgument(new Reference('encryption_service'))
     ->addArgument('%token_lifetime%')
     ->addMethodCall('setLogger', [new Reference('logger')])
+    ->setPublic(true)
 ;
 
 $container->register('twig.controller.exception', Controller\ExceptionController::class)
     ->addArgument(new Reference('twig'))
     ->addArgument('%kernel.debug%')
+    ->setPublic(true)
 ;
 
 $container
     ->register('app.twig_extension', App\Twig\AppExtension::class)
     ->addArgument('%pwd_show_policy%')
     ->addArgument(new Reference('security.csrf.token_manager'))
-    ->setPublic(false)
     ->addTag('twig.extension')
 ;
 
+$container
+    ->setAlias('logger', 'monolog.logger')
+    ->setPublic(true)
+;

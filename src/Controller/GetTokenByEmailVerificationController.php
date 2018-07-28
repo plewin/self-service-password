@@ -52,7 +52,7 @@ class GetTokenByEmailVerificationController extends Controller
         }
 
         if ($this->isFormSubmitted($request)) {
-            return $this->processFormData($request);
+            return $this->processFormData($request, $this->get('logger'));
         }
 
         // render form empty
@@ -77,10 +77,11 @@ class GetTokenByEmailVerificationController extends Controller
 
     /**
      * @param Request $request
+     * @param LoggerInterface $logger
      *
      * @return Response
      */
-    private function processFormData(Request $request): Response
+    private function processFormData(Request $request, LoggerInterface $logger): Response
     {
         if (!$this->isCsrfTokenValid('get_token_by_email', $request->request->get('_csrf_token'))) {
             throw $this->createAccessDeniedException('Invalid CSRF token');
@@ -139,8 +140,6 @@ class GetTokenByEmailVerificationController extends Controller
                 $context = $ldapClient->fetchUserEntryContext($login, $wanted);
 
                 if (null === $context['user_mail']) {
-                    /** @var LoggerInterface $logger */
-                    $logger = $this->get('logger');
                     $logger->warning("Mail not found for user $login");
                     throw new LdapEntryFoundInvalidException();
                 }
@@ -166,8 +165,6 @@ class GetTokenByEmailVerificationController extends Controller
 
         $resetUrl = $this->generateUrl('reset-password-with-token', ['token' => $token], UrlGeneratorInterface::ABSOLUTE_URL);
 
-        /** @var LoggerInterface $logger */
-        $logger = $this->get('logger');
         $logger->notice("Send reset URL $resetUrl");
 
         /** @var MailNotificationService $mailService */

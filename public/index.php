@@ -1,36 +1,39 @@
 <?php
-/*
- * LTB Self-Service Password
- *
- * Copyright (C) 2009 Clement OUDOT
- * Copyright (C) 2009 LTB-project.org
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * GPL License: http://www.gnu.org/licenses/gpl.txt
- */
 
-require_once __DIR__.'/../vendor/autoload.php';
-require_once __DIR__.'/../src/Kernel.php';
-
-$debug = false;
-$env = 'prod';
-
-$app = new \App\Kernel($env, $debug);
-
+use App\Kernel;
+use Symfony\Component\Debug\Debug;
+use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\HttpFoundation\Request;
 
+require __DIR__.'/../vendor/autoload.php';
+
+// The check is to ensure we don't use .env in production
+if (!isset($_SERVER['APP_ENV'])) {
+    if (!class_exists(Dotenv::class)) {
+        throw new \RuntimeException('APP_ENV environment variable is not defined. You need to define environment variables for configuration or add "symfony/dotenv" as a Composer dependency to load variables from a .env file.');
+    }
+    (new Dotenv())->load(__DIR__.'/../.env');
+}
+
+$env = $_SERVER['APP_ENV'] ?? 'dev';
+$debug = (bool) ($_SERVER['APP_DEBUG'] ?? ('prod' !== $env));
+
+if ($debug) {
+    umask(0000);
+
+    Debug::enable();
+}
+
+if ($trustedProxies = $_SERVER['TRUSTED_PROXIES'] ?? false) {
+    Request::setTrustedProxies(explode(',', $trustedProxies), Request::HEADER_X_FORWARDED_ALL ^ Request::HEADER_X_FORWARDED_HOST);
+}
+
+if ($trustedHosts = $_SERVER['TRUSTED_HOSTS'] ?? false) {
+    Request::setTrustedHosts(explode(',', $trustedHosts));
+}
+
+$kernel = new Kernel($env, $debug);
 $request = Request::createFromGlobals();
-
-$response = $app->handle($request);
+$response = $kernel->handle($request);
 $response->send();
-
-$app->terminate($request, $response);
+$kernel->terminate($request, $response);
