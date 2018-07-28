@@ -23,6 +23,7 @@ namespace App\Service;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use ReCaptcha\ReCaptcha;
+use ReCaptcha\RequestMethod;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -45,9 +46,9 @@ class RecaptchaService implements LoggerAwareInterface
     /**
      * RecaptchaService constructor.
      * @param string $privatekey
-     * @param string $requestMethod
+     * @param string|RequestMethod $requestMethod
      */
-    public function __construct(string $privatekey, string $requestMethod)
+    public function __construct(string $privatekey, $requestMethod)
     {
         $this->privatekey = $privatekey;
         $this->requestMethod = $requestMethod;
