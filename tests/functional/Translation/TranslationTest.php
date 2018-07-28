@@ -9,9 +9,9 @@ use App\Tests\Functional\FunctionalTestCase;
  */
 class TranslationTest extends FunctionalTestCase
 {
-    public function testPageIsTranslated()
+    public function testPageIsTranslated(): void
     {
-        $client = $this->createClient();
+        $client = self::createClient();
 
         $client->request(
             'GET',

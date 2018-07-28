@@ -39,7 +39,7 @@ class UsernameValidityChecker implements LoggerAwareInterface
      * UsernameValidityChecker constructor.
      * @param string $forbiddenChars
      */
-    public function __construct($forbiddenChars = '')
+    public function __construct(string $forbiddenChars = '')
     {
         $this->loginForbiddenChars = $forbiddenChars;
     }
@@ -52,7 +52,7 @@ class UsernameValidityChecker implements LoggerAwareInterface
      *
      * @return string
      */
-    public function evaluate($username)
+    public function evaluate(string $username): string
     {
         // If no forbidden chars are configured, we will check that the username is alphanumeric
         if (!$this->loginForbiddenChars) {

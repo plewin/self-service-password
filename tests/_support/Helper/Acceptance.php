@@ -6,8 +6,8 @@ namespace Helper;
 
 use Codeception\Exception\ModuleException;
 use Codeception\Module\Symfony;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Profiler\Profile;
+use Swift_Message;
 
 /**
  * Class Acceptance
@@ -15,15 +15,15 @@ use Symfony\Component\HttpKernel\Profiler\Profile;
 class Acceptance extends \Codeception\Module
 {
 
-    public function seeSmsIsSent()
+    public function seeSmsIsSent(): void
     {
         $this->getSymfonyModule()->seeEmailIsSent();
     }
 
     /**
-     * @param \Swift_Message $mail
+     * @param Swift_Message $mail
      */
-    public function seeUrlInMail($mail)
+    public function seeUrlInMail($mail): void
     {
         $body = $mail->getBody();
         // http://www.regexguru.com/2008/11/detecting-urls-in-a-block-of-text/
@@ -35,20 +35,20 @@ class Acceptance extends \Codeception\Module
 
     /**
      * @param string $expected
-     * @param \Swift_Message $mail
+     * @param Swift_Message $mail
      */
-    public function seeInMail($expected, $mail)
+    public function seeInMail(string $expected, $mail): void
     {
         $body = $mail->getBody();
         $this->assertContains($expected, $body);
     }
 
     /**
-     * @param \Swift_Message $mail
+     * @param Swift_Message $mail
      *
      * @return string
      */
-    public function grabUrlInMail($mail)
+    public function grabUrlInMail($mail): string
     {
         $body = $mail->getBody();
         // http://www.regexguru.com/2008/11/detecting-urls-in-a-block-of-text/
@@ -61,7 +61,7 @@ class Acceptance extends \Codeception\Module
     /**
      * @return string
      */
-    public function grabCodeInSms()
+    public function grabCodeInSms(): string
     {
         $email = $this->grabLastSentEmail();
         $body = $email->getBody();
@@ -70,9 +70,9 @@ class Acceptance extends \Codeception\Module
     }
 
     /**
-     * @return \Swift_Message
+     * @return Swift_Message
      */
-    public function grabLastSentEmail()
+    public function grabLastSentEmail(): Swift_Message
     {
         $profile = $this->getProfile();
         $mailCollector = $profile->getCollector('swiftmailer');
@@ -88,25 +88,15 @@ class Acceptance extends \Codeception\Module
         $profiler = $this->getSymfonyModule()->grabService('profiler');
         $response = $this->getSymfonyModule()->client->getResponse();
         if (null === $response) {
-            $this->fail("You must perform a request before using this method.");
+            $this->fail('You must perform a request before using this method.');
         }
         return $profiler->loadProfileFromResponse($response);
     }
 
     /**
-     * Return container.
-     *
-     * @return ContainerInterface
+     * @return Symfony|null
      */
-    private function getContainer()
-    {
-        return $this->getSymfonyModule()->_getContainer();
-    }
-
-    /**
-     * @return Symfony
-     */
-    private function getSymfonyModule()
+    private function getSymfonyModule(): ?Symfony
     {
         try {
             /** @var Symfony $module */

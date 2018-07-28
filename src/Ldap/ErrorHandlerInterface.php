@@ -26,7 +26,7 @@ interface ErrorHandlerInterface
      *
      * @return void
      */
-    public function startErrorHandling($level = E_WARNING);
+    public function startErrorHandling(int $level = E_WARNING): void;
 
     /**
      * Stop the error-handling process.
@@ -38,5 +38,5 @@ interface ErrorHandlerInterface
      *
      * @return mixed
      */
-    public function stopErrorHandling($throw = false);
+    public function stopErrorHandling(bool $throw = false);
 }

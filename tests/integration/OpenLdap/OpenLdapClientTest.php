@@ -3,6 +3,7 @@
 namespace App\Tests\Integration\OpenLdap;
 
 use App\Ldap\Client;
+use App\Ldap\ClientInterface;
 use App\Tests\Integration\LdapIntegrationTestCase;
 use App\Utils\PasswordEncoder;
 use Psr\Log\NullLogger;
@@ -15,7 +16,7 @@ class OpenLdapClientTest extends LdapIntegrationTestCase
 {
     protected function setUp()
     {
-        if (getenv('TRAVIS') == 'true') {
+        if ('true' === getenv('TRAVIS')) {
             $this->markTestSkipped('Cannot test Apache Directory Server integration on Travis');
         }
 
@@ -25,7 +26,7 @@ class OpenLdapClientTest extends LdapIntegrationTestCase
     /**
      * Test that we can connect to Apache Directory Server
      */
-    public function testConnect()
+    public function testConnect(): void
     {
         $client = $this->createLdapClient();
 
@@ -37,30 +38,30 @@ class OpenLdapClientTest extends LdapIntegrationTestCase
 
     /**
      * @param array $options
-     * @return Client
+     * @return ClientInterface
      */
-    private function createLdapClient($options = [])
+    private function createLdapClient(array $options = []): ClientInterface
     {
         $passwordEncoder = new PasswordEncoder([]);
         $ldapUrl = 'ldap://localhost:8389';
-        $ldapUseTls = isset($options['use_tls']) ? $options['use_tls'] : false;
-        $ldapBindDn = isset($options['ldap_bind_dn']) ? $options['ldap_bind_dn'] : 'uid=ssp,ou=service,dc=nodomain';
+        $ldapUseTls = $options['use_tls'] ?? false;
+        $ldapBindDn = $options['ldap_bind_dn'] ?? 'uid=ssp,ou=service,dc=nodomain';
         $ldapBindPw = 'password10';
         $whoChangePassword = 'user';
         $adMode = false;
-        $ldapFilter = isset($options['ldap_filter']) ? $options['ldap_filter'] : '(&(objectClass=person)(uid={login}))';
-        $ldapBase = isset($options['ldap_base']) ? $options['ldap_base'] : 'ou=People,dc=nodomain';
-        $hash = isset($options['hash']) ? $options['hash'] : 'clear';
+        $ldapFilter = $options['ldap_filter'] ?? '(&(objectClass=person)(uid={login}))';
+        $ldapBase = $options['ldap_base'] ?? 'ou=People,dc=nodomain';
+        $hash = $options['hash'] ?? 'clear';
         $smsAttribute = 'telephoneNumber';
-        $answerObjectClass = "extensibleObject";
+        $answerObjectClass = 'extensibleObject';
         $answerAttribute = 'info';
         $whoChangeSshKey = 'user';
         $sshKeyAttribute = 'sshPublicKey';
         $mailAttribute = 'mail';
         $fullnameAttribute = 'cn';
         $adOptions = [];
-        $sambaMode = isset($options['samba_mode']) ? $options['samba_mode'] : false;
-        $sambaOptions = isset($options['samba_options']) ? $options['samba_options'] : [];
+        $sambaMode = $options['samba_mode'] ?? false;
+        $sambaOptions = $options['samba_options'] ?? [];
         $shadowOptions = [
             'update_shadowLastChange' => false,
             'update_shadowExpire' => false,

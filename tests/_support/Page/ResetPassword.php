@@ -23,7 +23,7 @@ class ResetPassword
         $this->tester = $I;
     }
 
-    public function resetPassword($newPassword, $confirmPassword)
+    public function resetPassword($newPassword, $confirmPassword): void
     {
         $I = $this->tester;
 
@@ -31,7 +31,5 @@ class ResetPassword
         $I->fillField(self::$newPasswordField, $newPassword);
         $I->fillField(self::$confirmPasswordField, $confirmPassword);
         $I->click(self::$sendButton);
-
-        return $this;
     }
 }

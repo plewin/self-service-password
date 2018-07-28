@@ -23,7 +23,7 @@ class ResetByEmail
         $this->tester = $I;
     }
 
-    public function askResetEmail($login, $email)
+    public function askResetEmail(?string $login, ?string $email): void
     {
         $I = $this->tester;
 
@@ -31,7 +31,5 @@ class ResetByEmail
         $I->fillField(self::$loginField, $login);
         $I->fillField(self::$mailField, $email);
         $I->click(self::$sendButton);
-
-        return $this;
     }
 }

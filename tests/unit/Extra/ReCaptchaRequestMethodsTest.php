@@ -14,15 +14,15 @@ class ReCaptchaRequestMethodsTest extends \PHPUnit_Framework_TestCase
      * @dataProvider requestMethodsProvider
      * @param $requestMethod string Request method FQCN
      */
-    public function testRequestMethodAvailable($requestMethod)
+    public function testRequestMethodAvailable($requestMethod): void
     {
-        $this->assertInstanceOf('\ReCaptcha\RequestMethod', new $requestMethod);
+        $this->assertInstanceOf(RequestMethod::class, new $requestMethod);
     }
 
     /**
      * @return array
      */
-    public function requestMethodsProvider()
+    public function requestMethodsProvider(): array
     {
         return [
             [RequestMethod\Post::class], // default reCAPTCHA request method

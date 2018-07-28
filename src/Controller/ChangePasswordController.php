@@ -48,7 +48,7 @@ class ChangePasswordController extends Controller
      *
      * @return Response
      */
-    public function indexAction(Request $request)
+    public function indexAction(Request $request): Response
     {
         if (!$this->getParameter('enable_password_change')) {
             throw $this->createAccessDeniedException();
@@ -71,7 +71,7 @@ class ChangePasswordController extends Controller
      *
      * @return bool
      */
-    private function isFormSubmitted(Request $request)
+    private function isFormSubmitted(Request $request): bool
     {
         return ($request->request->has('login') || $request->query->has('login'))
             && $request->request->has('newpassword')
@@ -85,7 +85,7 @@ class ChangePasswordController extends Controller
      *
      * @return Response
      */
-    private function processFormData(Request $request)
+    private function processFormData(Request $request): Response
     {
         if (!$this->isCsrfTokenValid('change_password', $request->request->get('_csrf_token'))) {
             throw $this->createAccessDeniedException('Invalid CSRF token');
@@ -110,7 +110,7 @@ class ChangePasswordController extends Controller
             $missings[] = 'confirmpasswordrequired';
         }
 
-        if ($this->isCaptchaEnabled() and !$this->isCaptchaSubmitted($request)) {
+        if ($this->isCaptchaEnabled() && !$this->isCaptchaSubmitted($request)) {
             $missings[] = 'captcharequired';
         }
 
@@ -145,7 +145,7 @@ class ChangePasswordController extends Controller
         }
 
         // Check CAPTCHA
-        if ($this->isCaptchaEnabled() and !$this->verifyCaptcha($request, $login)) {
+        if ($this->isCaptchaEnabled() && !$this->verifyCaptcha($request, $login)) {
             return $this->renderFormWithError('', ['badcaptcha'], $request);
         }
 
@@ -192,7 +192,7 @@ class ChangePasswordController extends Controller
      *
      * @return Response
      */
-    private function renderFormWithError($result, array $problems, Request $request)
+    private function renderFormWithError(string $result, array $problems, Request $request): Response
     {
         return $this->render('self-service/change_password_form.html.twig', [
             'result' => $result,

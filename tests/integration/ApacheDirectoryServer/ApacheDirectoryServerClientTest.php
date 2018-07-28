@@ -19,7 +19,7 @@ class ApacheDirectoryServerClientTest extends LdapIntegrationTestCase
 {
     protected function setUp()
     {
-        if (getenv('TRAVIS') == 'true') {
+        if ('true' === getenv('TRAVIS')) {
             $this->markTestSkipped('Cannot test Apache Directory Server integration on Travis');
         }
     }
@@ -27,7 +27,7 @@ class ApacheDirectoryServerClientTest extends LdapIntegrationTestCase
     /**
      * Test that we can connect to Apache Directory Server
      */
-    public function testConnect()
+    public function testConnect(): void
     {
         $client = $this->createLdapClient();
 
@@ -36,26 +36,26 @@ class ApacheDirectoryServerClientTest extends LdapIntegrationTestCase
         $this->assertTrue($client->connect());
     }
 
-    public function testConnectBrokenTls()
+    public function testConnectBrokenTls(): void
     {
         // use tls but but port non tls
         $client = $this->createLdapClient(['use_tls' => true]);
 
-        $this->setExpectedException(LdapErrorException::class);
+        $this->expectException(LdapErrorException::class);
         /** @noinspection PhpUnhandledExceptionInspection */
         $this->assertTrue($client->connect());
     }
 
-    public function testConnectWrongCredentials()
+    public function testConnectWrongCredentials(): void
     {
         $client = $this->createLdapClient(['ldap_bind_dn' => 'bad_dn']);
 
-        $this->setExpectedException(LdapErrorException::class);
+        $this->expectException(LdapErrorException::class);
         /** @noinspection PhpUnhandledExceptionInspection */
         $this->assertTrue($client->connect());
     }
 
-    public function testCheckOldPassword()
+    public function testCheckOldPassword(): void
     {
         $client = $this->createLdapClient();
 
@@ -70,12 +70,12 @@ class ApacheDirectoryServerClientTest extends LdapIntegrationTestCase
         $client->checkOldPassword('password1', $context);
 
         // now we expect the next one to throw an exception
-        $this->setExpectedException(LdapInvalidUserCredentialsException::class);
+        $this->expectException(LdapInvalidUserCredentialsException::class);
         /** @noinspection PhpUnhandledExceptionInspection */
         $client->checkOldPassword('badpassword1', $context);
     }
 
-    public function testCheckMailValid()
+    public function testCheckMailValid(): void
     {
         $client = $this->createLdapClient();
 
@@ -85,27 +85,27 @@ class ApacheDirectoryServerClientTest extends LdapIntegrationTestCase
         $this->assertTrue($client->checkMail('user1', 'user1@example.com'));
     }
 
-    public function testCheckMailInvalidUser()
+    public function testCheckMailInvalidUser(): void
     {
         $client = $this->createLdapClient();
 
         $client->connect();
 
-        $this->setExpectedException(LdapInvalidUserCredentialsException::class);
+        $this->expectException(LdapInvalidUserCredentialsException::class);
         $client->checkMail('user456789', 'user1@example.com');
     }
 
-    public function testCheckMailInvalidMail()
+    public function testCheckMailInvalidMail(): void
     {
         $client = $this->createLdapClient();
 
         $client->connect();
 
-        $this->setExpectedException(LdapInvalidUserCredentialsException::class);
+        $this->expectException(LdapInvalidUserCredentialsException::class);
         $client->checkMail('user1', 'user3456789@example.com');
     }
 
-    public function testCheckMailUserMailMissing()
+    public function testCheckMailUserMailMissing(): void
     {
         $client = $this->createLdapClient();
 
@@ -115,29 +115,27 @@ class ApacheDirectoryServerClientTest extends LdapIntegrationTestCase
         $client->checkMail('user2', 'user2@example.com');
     }
 
-    public function testFetchUserEntryContextBadFilter()
+    public function testFetchUserEntryContextBadFilter(): void
     {
         $client = $this->createLdapClient(['ldap_filter' => 'badfilter']);
 
         $client->connect();
 
-        $context = [];
-        $this->setExpectedException(LdapErrorException::class);
+        $this->expectException(LdapErrorException::class);
         $client->fetchUserEntryContext('user1', ['dn']);
     }
 
-    public function testFetchUserEntryContextBadBase()
+    public function testFetchUserEntryContextBadBase(): void
     {
         $client = $this->createLdapClient(['ldap_base' => 'ou=sdfghjklkoijuhgyf,dc=invalid']);
 
         $client->connect();
 
-        $context = [];
-        $this->setExpectedException(LdapErrorException::class);
+        $this->expectException(LdapErrorException::class);
         $client->fetchUserEntryContext('user1', ['dn']);
     }
 
-    public function testFetchUserEntryContext()
+    public function testFetchUserEntryContext(): void
     {
         $client = $this->createLdapClient();
 
@@ -174,7 +172,7 @@ class ApacheDirectoryServerClientTest extends LdapIntegrationTestCase
         $this->assertCount(1, $context['user_answers']);
     }
 
-    public function testFetchUserEntryNotFound()
+    public function testFetchUserEntryNotFound(): void
     {
         $client = $this->createLdapClient();
 
@@ -184,7 +182,7 @@ class ApacheDirectoryServerClientTest extends LdapIntegrationTestCase
         $context = $client->fetchUserEntryContext('user456789', ['dn']);
     }
 
-    public function testCheckQuestionAnswer()
+    public function testCheckQuestionAnswer(): void
     {
         $client = $this->createLdapClient();
 
@@ -212,7 +210,7 @@ class ApacheDirectoryServerClientTest extends LdapIntegrationTestCase
         $client->changeQuestion($context['user_dn'], 'ice', 'vanilla');
     }
 
-    public function testChangePasswordClear()
+    public function testChangePasswordClear(): void
     {
         $client = $this->createLdapClient();
 
@@ -225,7 +223,7 @@ class ApacheDirectoryServerClientTest extends LdapIntegrationTestCase
         $this->assertDirectoryAccountPasswordScheme($client, $accountDn, 'SSHA');
     }
 
-    public function testChangePasswordAuto()
+    public function testChangePasswordAuto(): void
     {
         $client = $this->createLdapClient([
             'hash' => 'smd5',
@@ -257,7 +255,7 @@ class ApacheDirectoryServerClientTest extends LdapIntegrationTestCase
     /**
      * @dataProvider hashProvider
      */
-    public function testChangePasswordHash($scheme, $password)
+    public function testChangePasswordHash(string $scheme, string $password): void
     {
         $client = $this->createLdapClient([
             'hash' => $scheme,
@@ -273,7 +271,7 @@ class ApacheDirectoryServerClientTest extends LdapIntegrationTestCase
         $this->assertDirectoryAccountPasswordSame($client, $accountDn, $password);
     }
 
-    public function hashProvider()
+    public function hashProvider(): array
     {
         return [
             ['SHA', 'passwordsha'],
@@ -289,12 +287,12 @@ class ApacheDirectoryServerClientTest extends LdapIntegrationTestCase
         ];
     }
 
-    public function testChangePasswordShadowMode()
+    public function testChangePasswordShadowMode(): void
     {
 
     }
 
-    public function testChangePasswordSambaModeBasics()
+    public function testChangePasswordSambaModeBasics(): void
     {
         $client = $this->createLdapClient([
             'samba_mode' => true,
@@ -315,7 +313,7 @@ class ApacheDirectoryServerClientTest extends LdapIntegrationTestCase
         $this->assertDirectoryObjectAttributeValueSame($client, $accountDn, 'sambaNTPassword', $expectedPassword);
     }
 
-    public function testChangePasswordSambaEnabledButAccountNotSamba()
+    public function testChangePasswordSambaEnabledButAccountNotSamba(): void
     {
         $client = $this->createLdapClient([
             'samba_mode' => true,
@@ -334,7 +332,7 @@ class ApacheDirectoryServerClientTest extends LdapIntegrationTestCase
         $this->assertDirectoryObjectAttributeNotPresent($client, $accountDn, 'sambaPwdLastSet');
     }
 
-    public function testChangeSshKey()
+    public function testChangeSshKey(): void
     {
         $client = $this->createLdapClient();
         $client->connect();
@@ -351,7 +349,7 @@ class ApacheDirectoryServerClientTest extends LdapIntegrationTestCase
         $this->assertDirectoryObjectAttributeValueSame($client, $accountDn, $attribute, $sshKey2);
     }
 
-    private function assertDirectoryAccountPasswordSame(ClientInterface $client, $dn, $expected)
+    private function assertDirectoryAccountPasswordSame(ClientInterface $client, $dn, $expected): void
     {
         $attribute = 'userPassword';
         $connection = $client->getConnection();
@@ -364,30 +362,30 @@ class ApacheDirectoryServerClientTest extends LdapIntegrationTestCase
 
     /**
      * @param array $options
-     * @return Client
+     * @return ClientInterface
      */
-    private function createLdapClient($options = [])
+    private function createLdapClient(array $options = []): ClientInterface
     {
         $passwordEncoder = new PasswordEncoder([]);
         $ldapUrl = 'ldap://localhost:9389';
-        $ldapUseTls = isset($options['use_tls']) ? $options['use_tls'] : false;
-        $ldapBindDn = isset($options['ldap_bind_dn']) ? $options['ldap_bind_dn'] : 'uid=admin,ou=system';
+        $ldapUseTls = $options['use_tls'] ?? false;
+        $ldapBindDn = $options['ldap_bind_dn'] ?? 'uid=admin,ou=system';
         $ldapBindPw = 'secret';
         $whoChangePassword = 'user';
         $adMode = false;
-        $ldapFilter = isset($options['ldap_filter']) ? $options['ldap_filter'] : '(&(objectClass=person)(uid={login}))';
-        $ldapBase = isset($options['ldap_base']) ? $options['ldap_base'] : 'ou=People,dc=example,dc=com';
-        $hash = isset($options['hash']) ? $options['hash'] : 'clear';
+        $ldapFilter = $options['ldap_filter'] ?? '(&(objectClass=person)(uid={login}))';
+        $ldapBase = $options['ldap_base'] ?? 'ou=People,dc=example,dc=com';
+        $hash = $options['hash'] ?? 'clear';
         $smsAttribute = 'telephoneNumber';
-        $answerObjectClass = "extensibleObject";
+        $answerObjectClass = 'extensibleObject';
         $answerAttribute = 'info';
         $whoChangeSshKey = 'user';
         $sshKeyAttribute = 'sshPublicKey';
         $mailAttribute = 'mail';
         $fullnameAttribute = 'cn';
         $adOptions = [];
-        $sambaMode = isset($options['samba_mode']) ? $options['samba_mode'] : false;
-        $sambaOptions = isset($options['samba_options']) ? $options['samba_options'] : [];
+        $sambaMode = $options['samba_mode'] ?? false;
+        $sambaOptions = $options['samba_options'] ?? [];
         $shadowOptions = [
             'update_shadowLastChange' => false,
             'update_shadowExpire' => false,

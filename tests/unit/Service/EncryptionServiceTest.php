@@ -13,16 +13,16 @@ class EncryptionServiceTest extends \PHPUnit_Framework_TestCase
     /**
      * Test encrypt and decrypt functions
      */
-    public function testEncryptionAndDecryption()
+    public function testEncryptionAndDecryption(): void
     {
         // first encrypt use case : phone number + login
-        $plaintext1 = "+33123456789:ldap_username";
+        $plaintext1 = '+33123456789:ldap_username';
 
         // second encrypt use case : session_id
-        $plaintext2 = "azAZ09,-";
+        $plaintext2 = 'azAZ09,-';
 
         // secret from config
-        $passphrase = "secret";
+        $passphrase = 'secret';
 
         $encryptionService = new EncryptionService($passphrase);
         $encryptionService->setLogger(new NullLogger());
@@ -43,14 +43,21 @@ class EncryptionServiceTest extends \PHPUnit_Framework_TestCase
     /**
      * Test decrypt gives empty string if token is invalid
      */
-    public function testDecryptionWithIncorrectTokenGivesEmptyString()
+    public function testDecryptionWithIncorrectTokenGivesEmptyString(): void
     {
         // second encrypt use case : session_id
-        $plaintext1 = "azAZ09,-";
-        $passphrase = "secret";
+        $plaintext1 = 'azAZ09,-';
+        $passphrase = 'secret';
 
-        $mockLogger = $this->getMock(NullLogger::class);
-        $mockLogger->expects($this->once())->method('notice');
+        $mockLogger = $this
+            ->getMockBuilder(NullLogger::class)
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
+        $mockLogger
+            ->expects($this->once())
+            ->method('notice')
+        ;
 
         $encryptionService = new EncryptionService($passphrase);
         /** @noinspection PhpParamsInspection */
@@ -63,7 +70,7 @@ class EncryptionServiceTest extends \PHPUnit_Framework_TestCase
         $token = substr($token, 0, -3);
 
         $decrypted = $encryptionService->decrypt($token);
-        $this->assertEquals("", $decrypted);
+        $this->assertEquals('', $decrypted);
     }
 }
 

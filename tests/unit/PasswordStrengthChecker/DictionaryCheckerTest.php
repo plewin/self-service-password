@@ -14,10 +14,13 @@ class DictionaryCheckerTest extends \PHPUnit_Framework_TestCase
     /**
      *
      */
-    public function testCheckPasswordStrength()
+    public function testCheckPasswordStrength(): void
     {
-        $mockRouter = $this->getMock(RouterInterface::class);
-        $mockRouter->expects($this->any())->method('generate');
+        $mockRouter = $this
+            ->getMockBuilder(RouterInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
 
         $requestStack = new RequestStack();
 
@@ -26,8 +29,8 @@ class DictionaryCheckerTest extends \PHPUnit_Framework_TestCase
             'enable' => true,
         ], $requestStack, $mockRouter);
 
-        $this->assertSame(['indictionary'], $checker->evaluate("123456"));
-        $this->assertSame([], $checker->evaluate("P455w0rd"));
+        $this->assertSame(['indictionary'], $checker->evaluate('123456'));
+        $this->assertSame([], $checker->evaluate('P455w0rd'));
     }
 }
 

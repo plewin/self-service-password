@@ -32,7 +32,7 @@ class PasswordEncoder
      *
      * @param array $hashOptions
      */
-    public function __construct($hashOptions)
+    public function __construct(array $hashOptions)
     {
         $this->hashOptions = $hashOptions;
     }
@@ -44,7 +44,7 @@ class PasswordEncoder
      *
      * @return string
      */
-    public function hash($scheme, $password, $salt = null)
+    public function hash(string $scheme, string $password, ?string $salt = null): string
     {
         $scheme = strtoupper($scheme);
 
@@ -92,7 +92,7 @@ class PasswordEncoder
      *
      * @return string
      */
-    public function format($format, $password)
+    public function format(string $format, string $password): string
     {
         $format = strtoupper($format);
 
@@ -115,12 +115,10 @@ class PasswordEncoder
      *
      * @return string
      */
-    private function makeSshaPassword($password, $salt = null)
+    private function makeSshaPassword(string $password, ?string $salt = null): string
     {
-        $salt = (null !== $salt) ? $salt : random_bytes(4);
-        $hash = "{SSHA}".base64_encode(pack("H*", sha1($password.$salt)).$salt);
-
-        return $hash;
+        $salt = $salt ?? random_bytes(4);
+        return '{SSHA}'.base64_encode(pack('H*', sha1($password.$salt)).$salt);
     }
 
     /**
@@ -131,12 +129,11 @@ class PasswordEncoder
      *
      * @return string
      */
-    private function makeSsha256Password($password, $salt = null)
+    private function makeSsha256Password(string $password, ?string $salt = null): string
     {
-        $salt = (null !== $salt) ? $salt : random_bytes(4);
-        $hash = "{SSHA256}".base64_encode(pack("H*", hash('sha256', $password.$salt)).$salt);
+        $salt = $salt ?? random_bytes(4);
 
-        return $hash;
+        return '{SSHA256}'.base64_encode(pack('H*', hash('sha256', $password.$salt)).$salt);
     }
 
     /**
@@ -147,12 +144,11 @@ class PasswordEncoder
      *
      * @return string
      */
-    private function makeSsha384Password($password, $salt = null)
+    private function makeSsha384Password(string $password, ?string $salt = null): string
     {
-        $salt = (null !== $salt) ? $salt : random_bytes(4);
-        $hash = "{SSHA384}".base64_encode(pack("H*", hash('sha384', $password.$salt)).$salt);
+        $salt = $salt ?? random_bytes(4);
 
-        return $hash;
+        return '{SSHA384}'.base64_encode(pack('H*', hash('sha384', $password.$salt)).$salt);
     }
 
     /**
@@ -163,12 +159,11 @@ class PasswordEncoder
      *
      * @return string
      */
-    private function makeSsha512Password($password, $salt = null)
+    private function makeSsha512Password(string $password, ?string $salt = null): string
     {
-        $salt = (null !== $salt) ? $salt : random_bytes(4);
-        $hash = "{SSHA512}".base64_encode(pack("H*", hash('sha512', $password.$salt)).$salt);
+        $salt = $salt ?? random_bytes(4);
 
-        return $hash;
+        return '{SSHA512}'.base64_encode(pack('H*', hash('sha512', $password.$salt)).$salt);
     }
 
     /**
@@ -178,11 +173,9 @@ class PasswordEncoder
      *
      * @return string
      */
-    private function makeShaPassword($password)
+    private function makeShaPassword(string $password): string
     {
-        $hash = "{SHA}".base64_encode(pack("H*", sha1($password)));
-
-        return $hash;
+        return '{SHA}'.base64_encode(pack('H*', sha1($password)));
     }
 
     /**
@@ -192,11 +185,9 @@ class PasswordEncoder
      *
      * @return string
      */
-    private function makeSha256Password($password)
+    private function makeSha256Password(string $password): string
     {
-        $hash = "{SHA256}".base64_encode(pack("H*", hash('sha256', $password)));
-
-        return $hash;
+        return '{SHA256}'.base64_encode(pack('H*', hash('sha256', $password)));
     }
 
     /**
@@ -206,11 +197,9 @@ class PasswordEncoder
      *
      * @return string
      */
-    private function makeSha384Password($password)
+    private function makeSha384Password(string $password): string
     {
-        $hash = "{SHA384}".base64_encode(pack("H*", hash('sha384', $password)));
-
-        return $hash;
+        return '{SHA384}'.base64_encode(pack('H*', hash('sha384', $password)));
     }
 
     /**
@@ -220,11 +209,9 @@ class PasswordEncoder
      *
      * @return string
      */
-    private function makeSha512Password($password)
+    private function makeSha512Password(string $password): string
     {
-        $hash = "{SHA512}".base64_encode(pack("H*", hash('sha512', $password)));
-
-        return $hash;
+        return '{SHA512}'.base64_encode(pack('H*', hash('sha512', $password)));
     }
 
     /**
@@ -235,12 +222,11 @@ class PasswordEncoder
      *
      * @return string
      */
-    private function makeSmd5Password($password, $salt = null)
+    private function makeSmd5Password(string $password, ?string $salt = null): string
     {
-        $salt = (null !== $salt) ? $salt : random_bytes(4);
-        $hash = "{SMD5}".base64_encode(pack("H*", md5($password.$salt)).$salt);
+        $salt = $salt ?? random_bytes(4);
 
-        return $hash;
+        return '{SMD5}'.base64_encode(pack('H*', md5($password.$salt)).$salt);
     }
 
     /**
@@ -250,11 +236,9 @@ class PasswordEncoder
      *
      * @return string
      */
-    private function makeMd5Password($password)
+    private function makeMd5Password(string $password): string
     {
-        $hash = "{MD5}".base64_encode(pack("H*", md5($password)));
-
-        return $hash;
+        return '{MD5}'.base64_encode(pack('H*', md5($password)));
     }
 
     /**
@@ -265,7 +249,7 @@ class PasswordEncoder
      *
      * @return string
      */
-    private function makeCryptPassword($password, $hashOptions)
+    private function makeCryptPassword(string $password, array $hashOptions): string
     {
 
         $saltLength = 2;
@@ -285,9 +269,7 @@ class PasswordEncoder
             $salt = $hashOptions['crypt_salt_prefix'].$salt;
         }
 
-        $hash = '{CRYPT}'.crypt($password, $salt);
-
-        return $hash;
+        return '{CRYPT}'.crypt($password, $salt);
     }
 
     /**
@@ -297,7 +279,7 @@ class PasswordEncoder
      *
      * @return string
      */
-    private function makeMd4Password($password)
+    private function makeMd4Password(string $password): string
     {
         // TODO mb_convert_encoding has a polyfill, iconv does not
         return strtoupper(hash('md4', iconv('UTF-8', 'UTF-16LE', $password)));
@@ -310,11 +292,10 @@ class PasswordEncoder
      *
      * @return string
      */
-    private function makeAdPassword($password)
+    private function makeAdPassword($password): string
     {
         $password = '"'.$password.'"';
-        $adPassword = mb_convert_encoding($password, 'UTF-16LE', 'UTF-8');
 
-        return $adPassword;
+        return mb_convert_encoding($password, 'UTF-16LE', 'UTF-8');
     }
 }

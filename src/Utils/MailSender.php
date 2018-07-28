@@ -22,6 +22,7 @@ namespace App\Utils;
 
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
+use Swift_Message;
 
 /**
  * Class MailSender
@@ -54,17 +55,15 @@ class MailSender implements LoggerAwareInterface
      *
      * @return bool
      */
-    public function send($mail, array $mailFrom, $subject, $body, $bodyHtml = null)
+    public function send($mail, array $mailFrom, string $subject, string $body, ?string $bodyHtml = null): bool
     {
-        $result = false;
-
         if (!$mail) {
             $this->logger->notice('send_mail: no mail given, exiting...');
 
-            return $result;
+            return false;
         }
 
-        $message = (new \Swift_Message($subject))
+        $message = (new Swift_Message($subject))
             ->setFrom($mailFrom)
             ->setTo($mail)
             ->setBody($body)
@@ -76,12 +75,12 @@ class MailSender implements LoggerAwareInterface
 
         $nbDeliveries = $this->mailer->send($message);
 
-        if ($nbDeliveries > 0) {
-            $result = true;
-        } else {
-            $this->logger->critical("sendmail: error sending email");
+        if (0 === $nbDeliveries) {
+            $this->logger->critical('sendmail: error sending email');
+
+            return false;
         }
 
-        return $result;
+        return true;
     }
 }

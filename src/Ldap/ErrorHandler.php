@@ -34,7 +34,7 @@ class ErrorHandler implements ErrorHandlerInterface
      *
      * @return void
      */
-    public static function start($level = E_WARNING)
+    public static function start(int $level = E_WARNING): void
     {
         self::getErrorHandler()->startErrorHandling($level);
     }
@@ -44,7 +44,7 @@ class ErrorHandler implements ErrorHandlerInterface
      *
      * @return mixed
      */
-    public static function stop($throw = false)
+    public static function stop(bool $throw = false)
     {
         return self::getErrorHandler()->stopErrorHandling($throw);
     }
@@ -58,7 +58,7 @@ class ErrorHandler implements ErrorHandlerInterface
      *
      * @return void
      */
-    public function startErrorHandling($level = E_WARNING)
+    public function startErrorHandling(int $level = E_WARNING): void
     {
         set_error_handler(function ($errNo, $errString) {
         });
@@ -73,7 +73,7 @@ class ErrorHandler implements ErrorHandlerInterface
      *
      * @return void
      */
-    public function stopErrorHandling($throw = false)
+    public function stopErrorHandling(bool $throw = false): void
     {
         restore_error_handler();
     }
@@ -83,7 +83,7 @@ class ErrorHandler implements ErrorHandlerInterface
      *
      * @return ErrorHandlerInterface
      */
-    protected static function getErrorHandler()
+    protected static function getErrorHandler(): ErrorHandlerInterface
     {
         if (! self::$errorHandler && ! self::$errorHandler instanceof ErrorHandlerInterface) {
             self::$errorHandler = new self();

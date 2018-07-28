@@ -32,7 +32,7 @@ class AjaxController extends Controller
      *
      * @return Response
      */
-    public function dictionaryCheckAction(Request $request)
+    public function dictionaryCheckAction(Request $request): Response
     {
         if (!$this->getParameter('enable_as_you_type_policy_enforcement')) {
             throw $this->createAccessDeniedException();

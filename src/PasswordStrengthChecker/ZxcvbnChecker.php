@@ -46,7 +46,7 @@ class ZxcvbnChecker implements CheckerInterface
      *
      * @return string[]
      */
-    public function evaluate($newpassword, $oldpassword = null, $login = null)
+    public function evaluate(string $newpassword, ?string $oldpassword = null, ?string $login = null): array
     {
         $violations = [];
 
@@ -60,7 +60,7 @@ class ZxcvbnChecker implements CheckerInterface
         $strength = $zxcvbn->passwordStrength($newpassword, $userData);
         if ($strength['score'] < $this->minStrength) {
             $violations[] = 'notstrong';
-        };
+        }
 
         return $violations;
     }
@@ -68,7 +68,7 @@ class ZxcvbnChecker implements CheckerInterface
     /**
      * @return array
      */
-    public function getRules()
+    public function getRules(): array
     {
         $rules = [];
 

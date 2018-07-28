@@ -7,30 +7,30 @@ use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 class AppExtensionTest extends \PHPUnit_Framework_TestCase
 {
-    public function testFilters()
+    public function testFilters(): void
     {
         $extension = new AppExtension('always', $this->createMockCsrfTokenManager());
 
         $filters = $extension->getFilters();
-        $this->assertTrue(is_array($filters));
+        $this->assertInternalType('array', $filters);
         // these filters must be available for all templates
         $this->assertPresent('fa_class', $filters);
         $this->assertPresent('criticality', $filters);
         $this->assertPresent('max_criticality', $filters);
     }
 
-    public function testFunctions()
+    public function testFunctions(): void
     {
         $extension = new AppExtension('always', $this->createMockCsrfTokenManager());
 
         $functions = $extension->getFunctions();
-        $this->assertTrue(is_array($functions));
+        $this->assertInternalType('array', $functions);
         $this->assertPresent('show_policy_for', $functions);
         // this function is normally provided by symfony form, so here our own
         $this->assertPresent('csrf_token', $functions);
     }
 
-    public function testShowPolicyFor()
+    public function testShowPolicyFor(): void
     {
         $extension = new AppExtension('always', $this->createMockCsrfTokenManager());
 
@@ -43,11 +43,11 @@ class AppExtensionTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($extension->showPolicyFor('forbiddenchars'));
     }
 
-    public function assertPresent($filterName, array $filters)
+    public function assertPresent($filterName, array $filters): void
     {
         $present = false;
         foreach ($filters as $filter) {
-            if ($filter->getName() == $filterName) {
+            if ($filter->getName() === $filterName) {
                 $present = true;
             }
         }
@@ -60,7 +60,7 @@ class AppExtensionTest extends \PHPUnit_Framework_TestCase
     /**
      * @return CsrfTokenManagerInterface
      */
-    private function createMockCsrfTokenManager()
+    private function createMockCsrfTokenManager(): CsrfTokenManagerInterface
     {
         /** @var CsrfTokenManagerInterface $csrfTokenManger */
         $csrfTokenManger = $this->getMockBuilder(CsrfTokenManagerInterface::class)->getMock();

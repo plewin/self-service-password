@@ -49,7 +49,7 @@ class SmsNotificationService implements LoggerAwareInterface
      * @param string     $mailFromName
      * @param string     $smsApiLib
      */
-    public function __construct($smsMethod, $mailSender, $smsMailTo, $mailFromAddress, $mailFromName, $smsApiLib)
+    public function __construct(string $smsMethod, $mailSender, string $smsMailTo, string $mailFromAddress, string $mailFromName, string $smsApiLib)
     {
         //TODO translator ?
         $this->smsMethod = $smsMethod;
@@ -70,7 +70,7 @@ class SmsNotificationService implements LoggerAwareInterface
      *
      * @return string
      */
-    public function send($sms, $login, $smsMailSubject, $smsMessage, $data, $smsCode)
+    public function send(string $sms, string $login, string $smsMailSubject, string $smsMessage, array $data, string $smsCode): string
     {
         //TODO make generic
         $search = [
@@ -90,7 +90,7 @@ class SmsNotificationService implements LoggerAwareInterface
             if ($this->mailSender->send($to, $from, $smsMailSubject, $smsMessage)) {
                 $this->logger->notice("Send SMS code $smsCode by ".$this->smsMethod." to $sms");
 
-                return "smssent";
+                return 'smssent';
             }
         }
 
@@ -98,18 +98,18 @@ class SmsNotificationService implements LoggerAwareInterface
             if (!$this->smsApiLib) {
                 $this->logger->alert('No API library found, set $sms_api_lib in configuration.');
 
-                return "smsnotsent";
+                return 'smsnotsent';
             }
 
-            include_once($this->smsApiLib);
+            include_once $this->smsApiLib;
             if (send_sms_by_api($sms, $smsMessage)) {
                 $this->logger->notice("Send SMS code $smsCode by ".$this->smsMethod." to $sms");
 
-                return "smssent";
+                return 'smssent';
             }
         }
 
-        $this->logger->critical("Error while sending sms by ".$this->smsMethod." to $sms (user $login)");
+        $this->logger->critical('Error while sending sms by ' .$this->smsMethod." to $sms (user $login)");
 
         //TODO report invalid sms method
         return 'smsnotsent';

@@ -27,9 +27,9 @@ use App\PasswordStrengthChecker\CheckerInterface;
  */
 trait AsYouTypeTrait
 {
-    protected function getPolicyTemplateExtraVars()
+    protected function getPolicyTemplateExtraVars(): array
     {
-        if ($this->container->getParameter('enable_as_you_type_policy_enforcement') != true) {
+        if ($this->container->getParameter('enable_as_you_type_policy_enforcement') !== true) {
             return [];
         }
 

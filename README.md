@@ -13,7 +13,7 @@
 </p>
 
 <p align="center">
-  <a href="https://secure.php.net/manual/en/intro-whatis.php" alt="PHP 5.5.9"><img src="https://img.shields.io/badge/PHP-^5.5.9-787cb4.svg" /></a>
+  <a href="https://secure.php.net/manual/en/intro-whatis.php" alt="PHP 7.1.3"><img src="https://img.shields.io/badge/PHP-^7.1.3-787cb4.svg" /></a>
   <a href="https://symfony.com/what-is-symfony" alt="Symfony 3.4"><img src="https://img.shields.io/badge/Symfony-3.4-7aba20.svg" /></a>
   <a href="https://getbootstrap.com/docs/4.1/" alt="Bootstrap 4.1"><img src="https://img.shields.io/badge/Bootstrap-4.1-5f4586.svg" /></a>
   <a href="https://jquery.com" alt="jQuery 3.3"><img src="https://img.shields.io/badge/jQuery-3.3-0769ad.svg" /></a>
@@ -64,12 +64,11 @@ Soon
 
 ### Requirements
 
-* Web server with PHP 5.5.9 minimum 
+* Web server with PHP 7.1.3 minimum 
 * PHP extensions:
   * php-ldap (required)
   * php-openssl (recommended: ldaps, emails via smtps)
   * php-gd2 (suggested: required for gregwar captcha)
-* strong cryptography functions available (for random_compat, php 7 or libsodium or /dev/urandom readable or php-mcrypt extension installed)
 * valid PHP mail server configuration (reset by mail/reset by sms, mail notifications)
 * valid PHP session configuration
 

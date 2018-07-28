@@ -19,112 +19,113 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
  */
 class ControllersTest extends FunctionalTestCase
 {
-    public function testChangePasswordController()
+    public function testChangePasswordController(): void
     {
         $changePasswordController = new ChangePasswordController();
 
-        $container = $this->getMock(ContainerInterface::class);
+        $container = $this->getMockBuilder(ContainerInterface::class)->getMock();
 
         $container
             ->method('getParameter')
             ->with('enable_password_change')
             ->willReturn(false);
 
-        $this->setExpectedException(AccessDeniedException::class);
+        $this->expectException(AccessDeniedException::class);
 
         $changePasswordController->setContainer($container);
         $changePasswordController->indexAction(new Request());
     }
 
-    public function testChangeSecurityQuestionController()
+    public function testChangeSecurityQuestionController(): void
     {
         $changeSecurityQuestionsController = new ChangeSecurityQuestionsController();
 
-        $container = $this->getMock(ContainerInterface::class);
+        $container = $this->getMockBuilder(ContainerInterface::class)->getMock();
 
         $container
             ->method('getParameter')
             ->with('enable_questions')
             ->willReturn(false);
 
-        $this->setExpectedException(AccessDeniedException::class);
+        $this->expectException(AccessDeniedException::class);
 
         $changeSecurityQuestionsController->setContainer($container);
         $changeSecurityQuestionsController->indexAction(new Request());
     }
 
-    public function testChangeSshKeyController()
+    public function testChangeSshKeyController(): void
     {
         $changeSshKeyController = new ChangeSshKeyController();
 
-        $container = $this->getMock(ContainerInterface::class);
+        $container = $this->getMockBuilder(ContainerInterface::class)->getMock();
 
         $container
             ->method('getParameter')
             ->with('enable_sshkey_change')
             ->willReturn(false);
 
-        $this->setExpectedException(AccessDeniedException::class);
+        $this->expectException(AccessDeniedException::class);
 
         $changeSshKeyController->setContainer($container);
         $changeSshKeyController->indexAction(new Request());
     }
 
-    public function testGetTokenByEmailVerificationController()
+    public function testGetTokenByEmailVerificationController(): void
     {
         $getTokenByEmailVerificationController = new GetTokenByEmailVerificationController();
-        $container = $this->getMock(ContainerInterface::class);
+
+        $container = $this->getMockBuilder(ContainerInterface::class)->getMock();
 
         $container
             ->method('getParameter')
             ->with('enable_reset_by_email')
             ->willReturn(false);
 
-        $this->setExpectedException(AccessDeniedException::class);
+        $this->expectException(AccessDeniedException::class);
 
         $getTokenByEmailVerificationController->setContainer($container);
         $getTokenByEmailVerificationController->indexAction(new Request());
     }
 
-    public function testGetTokenBySmsVerificationController()
+    public function testGetTokenBySmsVerificationController(): void
     {
         $getTokenBySmsVerificationController = new GetTokenBySmsVerificationController();
 
-        $container = $this->getMock(ContainerInterface::class);
+        $container = $this->getMockBuilder(ContainerInterface::class)->getMock();
 
         $container
             ->method('getParameter')
             ->with('enable_reset_by_sms')
             ->willReturn(false);
 
-        $this->setExpectedException(AccessDeniedException::class);
+        $this->expectException(AccessDeniedException::class);
 
         $getTokenBySmsVerificationController->setContainer($container);
         $getTokenBySmsVerificationController->indexAction(new Request());
     }
 
-    public function testResetPasswordByQuestionController()
+    public function testResetPasswordByQuestionController(): void
     {
         $resetPasswordByQuestionController = new ResetPasswordByQuestionController();
 
-        $container = $this->getMock(ContainerInterface::class);
+        $container = $this->getMockBuilder(ContainerInterface::class)->getMock();
 
         $container
             ->method('getParameter')
             ->with('enable_questions')
             ->willReturn(false);
 
-        $this->setExpectedException(AccessDeniedException::class);
+        $this->expectException(AccessDeniedException::class);
 
         $resetPasswordByQuestionController->setContainer($container);
         $resetPasswordByQuestionController->indexAction(new Request());
     }
 
-    public function testResetPasswordByTokenController()
+    public function testResetPasswordByTokenController(): void
     {
         $resetPasswordByTokenController = new ResetPasswordByTokenController();
 
-        $container = $this->getMock(ContainerInterface::class);
+        $container = $this->getMockBuilder(ContainerInterface::class)->getMock();
 
         $values = [
             ['enable_reset_by_email', false],
@@ -136,7 +137,7 @@ class ControllersTest extends FunctionalTestCase
             ->will($this->returnValueMap($values))
         ;
 
-        $this->setExpectedException(AccessDeniedException::class);
+        $this->expectException(AccessDeniedException::class);
 
         $resetPasswordByTokenController->setContainer($container);
         $resetPasswordByTokenController->indexAction(new Request());

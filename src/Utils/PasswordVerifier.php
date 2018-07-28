@@ -45,7 +45,7 @@ class PasswordVerifier
      *
      * @return bool
      */
-    public function verify($password, $ldapHash)
+    public function verify(string $password, string $ldapHash): bool
     {
         $hashDetails = $this->userPasswordAnalyzer($ldapHash);
 
@@ -66,7 +66,7 @@ class PasswordVerifier
      *
      * @return array|false
      */
-    private function userPasswordAnalyzer($userPasswordValue)
+    private function userPasswordAnalyzer(string $userPasswordValue)
     {
         $matches = [];
         if (!preg_match('/{(\S+)}(\S+)/', $userPasswordValue, $matches)) {
@@ -114,7 +114,7 @@ class PasswordVerifier
 
         // remove hash to keep only the salt bytes
         unset($unpacked['hash']);
-        $salt = join('', array_map('chr', $unpacked));
+        $salt = implode('', array_map('\chr', $unpacked));
         $salt = $schemes[$scheme]['salted'] ? $salt : false;
 
         return [

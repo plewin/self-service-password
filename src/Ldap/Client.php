@@ -93,27 +93,27 @@ class Client implements ClientInterface
      */
     public function __construct(
         $passwordEncoder,
-        $ldapUrl,
-        $ldapUseTls,
-        $ldapBindDn,
-        $ldapBindPw,
-        $whoChangePassword,
-        $adMode,
-        $ldapFilter,
-        $ldapBase,
-        $hash,
-        $smsAttribute,
-        $answerObjectClass,
-        $answerAttribute,
-        $whoChangeSshKey,
-        $sshKeyAttribute,
-        $mailAttribute,
-        $fullnameAttribute,
-        $adOptions,
-        $sambaMode,
-        $sambaOptions,
-        $shadowOptions,
-        $mailAddressUseLdap
+        string $ldapUrl,
+        bool $ldapUseTls,
+        ?string $ldapBindDn,
+        ?string $ldapBindPw,
+        string $whoChangePassword,
+        bool $adMode,
+        string $ldapFilter,
+        string $ldapBase,
+        string $hash,
+        string $smsAttribute,
+        string $answerObjectClass,
+        string $answerAttribute,
+        string $whoChangeSshKey,
+        string $sshKeyAttribute,
+        string $mailAttribute,
+        string $fullnameAttribute,
+        array $adOptions,
+        bool $sambaMode,
+        array $sambaOptions,
+        array $shadowOptions,
+        bool $mailAddressUseLdap
     ) {
         $this->passwordEncoder = $passwordEncoder;
         $this->ldapUrl = $ldapUrl;
@@ -142,7 +142,7 @@ class Client implements ClientInterface
     /**
      * @inheritdoc
      */
-    public function connect()
+    public function connect(): bool
     {
         //Connect to LDAP
         $this->ldap = ldap_connect($this->ldapUrl);
@@ -154,7 +154,7 @@ class Client implements ClientInterface
         if ($this->ldapUseTls && !ldap_start_tls($this->ldap)) {
             ErrorHandler::stop();
 
-            $this->logger->alert("LDAP - Unable to use StartTLS");
+            $this->logger->alert('LDAP - Unable to use StartTLS');
             throw new LdapErrorException();
         }
         ErrorHandler::stop();
@@ -165,7 +165,7 @@ class Client implements ClientInterface
         ErrorHandler::stop();
         if (false === $success) {
             $errno = ldap_errno($this->ldap);
-            $this->logger->alert("LDAP - Bind error $errno (".ldap_error($this->ldap).")");
+            $this->logger->alert("LDAP - Bind error $errno (".ldap_error($this->ldap).')');
             throw new LdapErrorException();
         }
 
@@ -175,7 +175,7 @@ class Client implements ClientInterface
     /**
      * @inheritdoc
      */
-    public function fetchUserEntryContext($login, $wanted)
+    public function fetchUserEntryContext(string $login, array $wanted): array
     {
         $context = [];
 
@@ -206,12 +206,12 @@ class Client implements ClientInterface
     /**
      * @inheritdoc
      */
-    public function checkOldPassword($oldpassword, &$context)
+    public function checkOldPassword(string $oldpassword, array &$context): void
     {
         $success = $this->verifyPasswordWithBind($context['user_dn'], $oldpassword);
         if (false === $success) {
             $errno = ldap_errno($this->ldap);
-            $this->logger->notice("LDAP - Bind user error $errno  (".ldap_error($this->ldap).")");
+            $this->logger->notice("LDAP - Bind user error $errno  (".ldap_error($this->ldap).')');
             throw new LdapInvalidUserCredentialsException();
         }
     }
@@ -219,13 +219,13 @@ class Client implements ClientInterface
     /**
      * @inheritdoc
      */
-    public function checkQuestionAnswer($login, $question, $answer, &$context)
+    public function checkQuestionAnswer(string $login, string $question, string $answer, array &$context): bool
     {
         $match = false;
 
         // Match with user submitted values
         foreach ($context['user_answers'] as $questionValue) {
-            $answer = preg_quote("$answer", "/");
+            $answer = preg_quote($answer, '/');
             if (preg_match("/^\{$question\}$answer$/i", $questionValue)) {
                 $match = true;
             }
@@ -243,7 +243,7 @@ class Client implements ClientInterface
     /**
      * @inheritdoc
      */
-    public function checkMail($login, $mail)
+    public function checkMail(string $login, string $mail): bool
     {
         $fetchMailFromLdap = $this->mailAddressUseLdap;
 
@@ -280,7 +280,7 @@ class Client implements ClientInterface
     /**
      * @inheritdoc
      */
-    public function changeQuestion($userdn, $question, $answer)
+    public function changeQuestion(string $userdn, string $question, string $answer): void
     {
         // Rebind as Manager if needed
         if ('manager' === $this->whoChangePassword) {
@@ -304,7 +304,7 @@ class Client implements ClientInterface
             // Answer objectClass is not present, add it
             array_push($ocValues, $this->answerObjectClass);
             $ocValues = array_values($ocValues);
-            $userdata["objectClass"] = $ocValues;
+            $userdata['objectClass'] = $ocValues;
         }
 
         // Question/Answer
@@ -314,7 +314,7 @@ class Client implements ClientInterface
         $success = ldap_mod_replace($this->ldap, $userdn, $userdata);
         if (false === $success) {
             $errno = ldap_errno($this->ldap);
-            $this->logger->critical("LDAP - Modify answer (error $errno (".ldap_error($this->ldap).")");
+            $this->logger->critical("LDAP - Modify answer (error $errno (".ldap_error($this->ldap).')');
             throw new LdapUpdateFailedException();
         }
     }
@@ -322,7 +322,7 @@ class Client implements ClientInterface
     /**
      * @inheritdoc
      */
-    public function changePassword($entryDn, $newpassword, $oldpassword, $context = [])
+    public function changePassword(string $entryDn, string $newpassword, string $oldpassword, array $context = []): void
     {
         // Rebind as Manager if needed
         // TODO detect if needed ?
@@ -342,7 +342,7 @@ class Client implements ClientInterface
         }
 
         // Special case: AD mode with password changed as user
-        if ($this->adMode and 'user' === $this->whoChangePassword) {
+        if ($this->adMode && 'user' === $this->whoChangePassword) {
             // The AD password change procedure is modifying the attribute unicodePwd by
             // first deleting unicodePwd with the current password and them adding it with the
             // the new password
@@ -357,7 +357,7 @@ class Client implements ClientInterface
             $success = ldap_modify_batch($this->ldap, $entryDn, $modifications);
             if (!$success) {
                 $errno = ldap_errno($this->ldap);
-                $this->logger->critical("LDAP - Modify password error $errno (".ldap_error($this->ldap).")");
+                $this->logger->critical("LDAP - Modify password error $errno (".ldap_error($this->ldap).')');
                 throw new LdapUpdateFailedException();
             }
 
@@ -426,7 +426,7 @@ class Client implements ClientInterface
         ErrorHandler::stop();
         if (!$success) {
             $errno = ldap_errno($this->ldap);
-            $this->logger->critical("LDAP - Modify password error $errno (".ldap_error($this->ldap).")");
+            $this->logger->critical("LDAP - Modify password error $errno (".ldap_error($this->ldap).')');
             throw new LdapUpdateFailedException();
         }
     }
@@ -436,15 +436,13 @@ class Client implements ClientInterface
      *
      * @return string
      */
-    private function findHash($entryDn)
+    private function findHash(string $entryDn): string
     {
         $searchUserPassword = ldap_read($this->ldap, $entryDn, '(objectClass=*)', ['userPassword']);
         if ($searchUserPassword) {
             $userPassword = ldap_get_values($this->ldap, ldap_first_entry($this->ldap, $searchUserPassword), 'userPassword');
-            if (isset($userPassword)) {
-                if (preg_match('/^\{(\w+)\}/', $userPassword[0], $matches)) {
-                    return strtoupper($matches[1]);
-                }
+            if (false !== $userPassword && preg_match('/^\{(\w+)\}/', $userPassword[0], $matches)) {
+                return strtoupper($matches[1]);
             }
         }
 
@@ -454,7 +452,7 @@ class Client implements ClientInterface
     /**
      * @inheritdoc
      */
-    public function changeSshKey($entryDn, $sshkey)
+    public function changeSshKey(string $entryDn, string $sshkey): void
     {
         // Rebind as Manager if needed
         if ('manager' === $this->whoChangeSshKey) {
@@ -469,7 +467,7 @@ class Client implements ClientInterface
 
         if (false === $success) {
             $errno = ldap_errno($this->ldap);
-            $this->logger->critical("LDAP - Modify $this->sshKeyAttribute error $errno (".ldap_error($this->ldap).")");
+            $this->logger->critical("LDAP - Modify $this->sshKeyAttribute error $errno (".ldap_error($this->ldap).')');
             throw new LdapUpdateFailedException();
         }
     }
@@ -479,10 +477,10 @@ class Client implements ClientInterface
      *
      * @throws LdapErrorException
      */
-    private function throwLdapError($error)
+    private function throwLdapError($error): void
     {
         $errno = ldap_errno($this->ldap);
-        $this->logger->notice("LDAP - $error $errno (".ldap_error($this->ldap).")");
+        $this->logger->notice("LDAP - $error $errno (".ldap_error($this->ldap).')');
         throw new LdapErrorException();
     }
 
@@ -494,7 +492,7 @@ class Client implements ClientInterface
      * @throws LdapErrorException
      * @throws LdapInvalidUserCredentialsException
      */
-    private function getUserEntry($login)
+    private function getUserEntry(string $login)
     {
         $escapedLogin = ldap_escape($login, null, LDAP_ESCAPE_FILTER);
         // Search for user
@@ -519,7 +517,7 @@ class Client implements ClientInterface
      * @param resource $entry
      * @param array    $context
      */
-    private function updateContextDn($entry, &$context)
+    private function updateContextDn($entry, array &$context): void
     {
         $userdn = ldap_get_dn($this->ldap, $entry);
         $context['user_dn'] = $userdn;
@@ -529,7 +527,7 @@ class Client implements ClientInterface
      * @param resource $entry
      * @param array    $context
      */
-    private function updateContextDisplayName($entry, &$context)
+    private function updateContextDisplayName($entry, array &$context): void
     {
         $displayname = ldap_get_values($this->ldap, $entry, $this->fullnameAttribute);
         //TODO rigor
@@ -540,7 +538,7 @@ class Client implements ClientInterface
      * @param resource $entry
      * @param array    $context
      */
-    private function updateContextMail($entry, &$context)
+    private function updateContextMail($entry, &$context): void
     {
         ErrorHandler::start(E_WARNING);
         $mailValues = ldap_get_values($this->ldap, $entry, $this->mailAttribute);
@@ -572,7 +570,7 @@ class Client implements ClientInterface
      * @param resource $entry
      * @param array    $context
      */
-    private function updateContextSms($entry, &$context)
+    private function updateContextSms($entry, array &$context): void
     {
         $smsSanitizeNumber = $this->config['sms_sanitize_number'];
         $smsTruncateNumber = $this->config['sms_truncate_number'];
@@ -585,11 +583,11 @@ class Client implements ClientInterface
         $context['user_sms'] = null;
 
         // Check sms number
-        if ($smsValues["count"] > 0) {
+        if ($smsValues['count'] > 0) {
             $sms = $smsValues[0];
             $context['user_sms_raw'] = $sms;
             if ($smsSanitizeNumber) {
-                $sms = preg_replace('/[^0-9]/', '', $sms);
+                $sms = preg_replace('/\D/', '', $sms);
             }
             if ($smsTruncateNumber) {
                 $sms = substr($sms, -$smsTruncateLength);
@@ -602,11 +600,11 @@ class Client implements ClientInterface
      * @param resource $entry
      * @param array    $context
      */
-    private function updateContextSambaAndShadow($entry, &$context)
+    private function updateContextSambaAndShadow($entry, array &$context): void
     {
         // Check objectClass to allow samba and shadow updates
         $ocValues = ldap_get_values($this->ldap, $entry, 'objectClass');
-        if (!in_array('sambaSamAccount', $ocValues) and !in_array('sambaSAMAccount', $ocValues)) {
+        if (!in_array('sambaSamAccount', $ocValues) && !in_array('sambaSAMAccount', $ocValues)) {
             $context['user_is_samba_account'] = false;
         } else {
             $context['user_is_samba_account'] = true;
@@ -622,7 +620,7 @@ class Client implements ClientInterface
      * @param resource $entry
      * @param array    $context
      */
-    private function updateContextQuestions($entry, &$context)
+    private function updateContextQuestions($entry, array &$context): void
     {
         // Get question/answer values
         $questionValues = ldap_get_values($this->ldap, $entry, $this->answerAttribute);
@@ -641,7 +639,7 @@ class Client implements ClientInterface
      *
      * @return bool
      */
-    private function verifyPasswordWithBind($dn, $password)
+    private function verifyPasswordWithBind(string $dn, string $password): bool
     {
         // Bind with current password
         $success = @ldap_bind($this->ldap, $dn, $password);
@@ -649,15 +647,15 @@ class Client implements ClientInterface
             $errno = ldap_errno($this->ldap);
             if ((49 === $errno) && $this->adMode) {
                 if (ldap_get_option($this->ldap, 0x0032, $extendedError)) {
-                    $this->logger->notice("LDAP - Bind user extended_error $extendedError  (".ldap_error($this->ldap).")");
+                    $this->logger->notice("LDAP - Bind user extended_error $extendedError  (".ldap_error($this->ldap).')');
                     $extendedError = explode(', ', $extendedError);
-                    if (strpos($extendedError[2], '773') or strpos($extendedError[0], 'NT_STATUS_PASSWORD_MUST_CHANGE')) {
-                        $this->logger->notice("LDAP - Bind user password needs to be changed");
+                    if (strpos($extendedError[2], '773') || strpos($extendedError[0], 'NT_STATUS_PASSWORD_MUST_CHANGE')) {
+                        $this->logger->notice('LDAP - Bind user password needs to be changed');
 
                         return true;
                     }
-                    if (( strpos($extendedError[2], '532') or strpos($extendedError[0], 'NT_STATUS_ACCOUNT_EXPIRED')) and $this->adOptions['enable_change_expired_password']) {
-                        $this->logger->notice("LDAP - Bind user password is expired");
+                    if ($this->adOptions['enable_change_expired_password'] && ( strpos($extendedError[2], '532') || strpos($extendedError[0], 'NT_STATUS_ACCOUNT_EXPIRED'))) {
+                        $this->logger->notice('LDAP - Bind user password is expired');
 
                         return true;
                     }
@@ -670,7 +668,7 @@ class Client implements ClientInterface
         return true;
     }
 
-    private function rebindAsManager()
+    private function rebindAsManager(): void
     {
         ldap_bind($this->ldap, $this->ldapBindDn, $this->ldapBindPw);
     }

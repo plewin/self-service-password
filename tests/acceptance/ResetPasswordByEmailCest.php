@@ -15,7 +15,7 @@ class ResetPasswordByEmailCest
     /**
      * @param AcceptanceTester $I
      */
-    public function accessingFromMenuWorks(AcceptanceTester $I)
+    public function accessingFromMenuWorks(AcceptanceTester $I): void
     {
         $I->amOnPage('/');
         $I->expectTo('see Email in the menu');
@@ -29,7 +29,7 @@ class ResetPasswordByEmailCest
     /**
      * @param TesterWithValidToken $I
      */
-    public function resetPasswordByEmailWorks(TesterWithValidToken $I)
+    public function resetPasswordByEmailWorks(TesterWithValidToken $I): void
     {
         $url = $I->getValidUrlWithToken();
         $I->amOnPage($url);
@@ -51,7 +51,7 @@ class ResetPasswordByEmailCest
      * @param AcceptanceTester $I
      * @param ResetByEmailPage $resetByEmailPage
      */
-    public function resetPasswordFailsWhenLoginIsMissing(AcceptanceTester $I, ResetByEmailPage $resetByEmailPage)
+    public function resetPasswordFailsWhenLoginIsMissing(AcceptanceTester $I, ResetByEmailPage $resetByEmailPage): void
     {
         $resetByEmailPage->askResetEmail(null, 'user1@example.com');
         $I->see('Your login is required');
@@ -62,7 +62,7 @@ class ResetPasswordByEmailCest
      * @param AcceptanceTester $I
      * @param ResetByEmailPage $resetByEmailPage
      */
-    public function resetPasswordFailsWhenLoginHasInvalidCharacters(AcceptanceTester $I, ResetByEmailPage $resetByEmailPage)
+    public function resetPasswordFailsWhenLoginHasInvalidCharacters(AcceptanceTester $I, ResetByEmailPage $resetByEmailPage): void
     {
         $resetByEmailPage->askResetEmail('{&é"\'(-è_çà', 'user1@example.com');
         $I->see('Login or password incorrect');
@@ -73,7 +73,7 @@ class ResetPasswordByEmailCest
      * @param AcceptanceTester $I
      * @param ResetByEmailPage $resetByEmailPage
      */
-    public function resetPasswordFailsWhenEmailIsMissing(AcceptanceTester $I, ResetByEmailPage $resetByEmailPage)
+    public function resetPasswordFailsWhenEmailIsMissing(AcceptanceTester $I, ResetByEmailPage $resetByEmailPage): void
     {
         $resetByEmailPage->askResetEmail('user1', null);
         $I->see('Your email address is required');
@@ -84,7 +84,7 @@ class ResetPasswordByEmailCest
      * @param AcceptanceTester $I
      * @param ResetByEmailPage $resetByEmailPage
      */
-    public function resetPasswordFailsWhenEmailIsIncorrect(AcceptanceTester $I, ResetByEmailPage $resetByEmailPage)
+    public function resetPasswordFailsWhenEmailIsIncorrect(AcceptanceTester $I, ResetByEmailPage $resetByEmailPage): void
     {
         $resetByEmailPage->askResetEmail('user1', 'notuser1@example.com');
         $I->see('The email address does not match the submitted user name');
@@ -95,7 +95,7 @@ class ResetPasswordByEmailCest
      * @param AcceptanceTester $I
      * @param ResetByEmailPage $resetByEmailPage
      */
-    public function resetPasswordFailsWhenAccountDoesNotExist(AcceptanceTester $I, ResetByEmailPage $resetByEmailPage)
+    public function resetPasswordFailsWhenAccountDoesNotExist(AcceptanceTester $I, ResetByEmailPage $resetByEmailPage): void
     {
         $resetByEmailPage->askResetEmail('user34567890', 'user34567890@example.com');
         //TODO fix message, "password incorrect does not make sense here"
@@ -107,7 +107,7 @@ class ResetPasswordByEmailCest
      * @param TesterWithValidToken $I
      * @param ResetPasswordPage $resetPasswordPage
      */
-    public function tokenCannotBeReused(TesterWithValidToken $I, ResetPasswordPage $resetPasswordPage)
+    public function tokenCannotBeReused(TesterWithValidToken $I, ResetPasswordPage $resetPasswordPage): void
     {
         $url = $I->getValidUrlWithToken();
         $I->amOnPage($url);
@@ -129,7 +129,7 @@ class ResetPasswordByEmailCest
      * @param TesterWithValidToken $I
      * @param ResetPasswordPage $resetPasswordPage
      */
-    public function resetPasswordFailWhenPasswordAndConfirmMismatch(TesterWithValidToken $I, ResetPasswordPage $resetPasswordPage)
+    public function resetPasswordFailWhenPasswordAndConfirmMismatch(TesterWithValidToken $I, ResetPasswordPage $resetPasswordPage): void
     {
         $url = $I->getValidUrlWithToken();
         $I->amOnPage($url);
@@ -142,7 +142,7 @@ class ResetPasswordByEmailCest
      * @param TesterWithValidToken $I
      * @param ResetPasswordPage $resetPasswordPage
      */
-    public function resetPasswordFailsWhenPasswordRefusedByServer(TesterWithValidToken $I, ResetPasswordPage $resetPasswordPage)
+    public function resetPasswordFailsWhenPasswordRefusedByServer(TesterWithValidToken $I, ResetPasswordPage $resetPasswordPage): void
     {
         $url = $I->getValidUrlWithToken('user10');
         $I->amOnPage($url);
@@ -155,7 +155,7 @@ class ResetPasswordByEmailCest
      * @param AcceptanceTester $I
      * @param ResetPasswordPage $resetPasswordPage
      */
-    public function resetPasswordFailsWhenTokenMissing(AcceptanceTester $I, ResetPasswordPage $resetPasswordPage)
+    public function resetPasswordFailsWhenTokenMissing(AcceptanceTester $I, ResetPasswordPage $resetPasswordPage): void
     {
         $I->amOnPage($resetPasswordPage::$URL);
         $I->see('Token is required');

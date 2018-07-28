@@ -24,6 +24,7 @@ use App\Utils\MailSender;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Twig\Environment;
+use App\Twig\AppExtension;
 
 /**
  * Class MailNotificationService
@@ -48,7 +49,7 @@ class MailNotificationService implements LoggerAwareInterface
      * @param string      $mailFromAddress
      * @param string      $mailFromName
      */
-    public function __construct(Environment $twig, $mailerSender, $mailFromAddress, $mailFromName)
+    public function __construct(Environment $twig, MailSender $mailerSender, string $mailFromAddress, string $mailFromName)
     {
         $this->twig = $twig;
         $this->mailSender = $mailerSender;
@@ -60,9 +61,9 @@ class MailNotificationService implements LoggerAwareInterface
      * @param string $template Twig template name
      * @param array  $data
      *
-     * @return boolean
+     * @return bool
      */
-    public function send($template, $data)
+    public function send(string $template, array $data): bool
     {
         $template = $this->twig->load($template.'.mail.twig');
 
@@ -73,7 +74,7 @@ class MailNotificationService implements LoggerAwareInterface
         $bodyText = $template->renderBlock('body_text', $data);
 
         /** @var \App\Twig\AppExtension $extension */
-        $extension = $this->twig->getExtension('\App\Twig\AppExtension');
+        $extension = $this->twig->getExtension(AppExtension::class);
 
         $metadata = $extension->getMeta();
 
@@ -97,7 +98,7 @@ class MailNotificationService implements LoggerAwareInterface
      *
      * @return array
      */
-    private function array2addresses($e)
+    private function array2addresses(array $e): array
     {
         return [
             $e['address'] => $e['name'],

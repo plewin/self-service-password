@@ -16,14 +16,14 @@ class GregwarCaptchaTest extends CaptchaTestCase
 {
     protected function setUp()
     {
-        if (getenv('TRAVIS') == 'true' && version_compare(getenv('TRAVIS_PHP_VERSION'), '5.6', '<')) {
+        if (getenv('TRAVIS') === 'true' && version_compare(getenv('TRAVIS_PHP_VERSION'), '5.6', '<')) {
             $this->markTestSkipped('Skipping because gd module is broken on travis php 5.5, cf https://github.com/travis-ci/travis-ci/issues/8510');
         }
     }
 
-    public function testChangePasswordGregwarCaptchaVisibleController()
+    public function testChangePasswordGregwarCaptchaVisibleController(): void
     {
-        $client = $this->createClient();
+        $client = self::createClient();
         $changePasswordController = new ChangePasswordController();
 
         $request = new Request();
@@ -57,9 +57,9 @@ class GregwarCaptchaTest extends CaptchaTestCase
         $this->assertContains('placeholder="Captcha"', $content);
     }
 
-    public function testChangePasswordRecaptchaNotSubmittedFormController()
+    public function testChangePasswordRecaptchaNotSubmittedFormController(): void
     {
-        $client = $this->createClient();
+        $client = self::createClient();
         $changePasswordController = new ChangePasswordController();
 
         $request = new Request(
@@ -98,9 +98,9 @@ class GregwarCaptchaTest extends CaptchaTestCase
         $this->assertContains('captcharequired', $content);
     }
 
-    public function testChangePasswordGregwarCaptchaSubmittedFormInvalidController()
+    public function testChangePasswordGregwarCaptchaSubmittedFormInvalidController(): void
     {
-        $client = $this->createClient();
+        $client = self::createClient();
         $changePasswordController = new ChangePasswordController();
 
         $request1 = new Request();
@@ -149,9 +149,9 @@ class GregwarCaptchaTest extends CaptchaTestCase
         $this->assertContains('CAPTCHA was not entered correctly', $content);
     }
 
-    public function testChangePasswordGregwarCaptchaSubmittedFormValidController()
+    public function testChangePasswordGregwarCaptchaSubmittedFormValidController(): void
     {
-        $client = $this->createClient();
+        $client = self::createClient();
         $changePasswordController = new ChangePasswordController();
 
         $request1 = new Request();
@@ -171,7 +171,7 @@ class GregwarCaptchaTest extends CaptchaTestCase
             'password_strength_checker' => $this->createMockPasswordStrengthChecker(),
             'recaptcha_service' => $this->createMockRecaptchaService(false),
             'ldap_client' => $this->createMockLdapClient(),
-            'event_dispatcher' => $this->getMock(EventDispatcher::class),
+            'event_dispatcher' => $this->getMockBuilder(EventDispatcher::class)->getMock(),
             'security.csrf.token_manager' => $this->createMockCsrfTokenManager(),
         ];
 

@@ -36,7 +36,7 @@ interface ClientInterface extends LoggerAwareInterface
      *
      * @return true on success
      */
-    public function connect();
+    public function connect(): bool;
 
     /**
      * @param string $login
@@ -47,7 +47,7 @@ interface ClientInterface extends LoggerAwareInterface
      *
      * @return array Modified context
      */
-    public function fetchUserEntryContext($login, $wanted);
+    public function fetchUserEntryContext(string $login, array $wanted): array;
 
     /**
      * @param string $oldpassword
@@ -55,7 +55,7 @@ interface ClientInterface extends LoggerAwareInterface
      *
      * @throws LdapInvalidUserCredentialsException
      */
-    public function checkOldPassword($oldpassword, &$context);
+    public function checkOldPassword(string $oldpassword, array &$context): void;
 
 
     // TODO move out ?
@@ -67,7 +67,7 @@ interface ClientInterface extends LoggerAwareInterface
      *
      * @return bool
      */
-    public function checkQuestionAnswer($login, $question, $answer, &$context);
+    public function checkQuestionAnswer(string $login, string $question, string $answer, array &$context): bool;
 
     /**
      * @param string $login
@@ -79,7 +79,7 @@ interface ClientInterface extends LoggerAwareInterface
      *
      * @return true Always true, on error, exceptions
      */
-    public function checkMail($login, $mail);
+    public function checkMail(string $login, string $mail): bool;
 
     /**
      * @param string $userdn
@@ -89,7 +89,7 @@ interface ClientInterface extends LoggerAwareInterface
      * @throws LdapErrorException
      * @throws LdapUpdateFailedException
      */
-    public function changeQuestion($userdn, $question, $answer);
+    public function changeQuestion(string $userdn, string $question, string $answer): void;
 
     /**
      * @param string $entryDn
@@ -99,7 +99,7 @@ interface ClientInterface extends LoggerAwareInterface
      *
      * @throws LdapUpdateFailedException
      */
-    public function changePassword($entryDn, $newpassword, $oldpassword, $context = []);
+    public function changePassword(string $entryDn, string $newpassword, string $oldpassword, array $context = []): void;
 
     /**
      * Change sshPublicKey attribute
@@ -109,7 +109,7 @@ interface ClientInterface extends LoggerAwareInterface
      *
      * @throws LdapUpdateFailedException
      */
-    public function changeSshKey($entryDn, $sshkey);
+    public function changeSshKey(string $entryDn, string $sshkey): void;
 
     /**
      * For testing purpose only

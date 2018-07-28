@@ -13,7 +13,7 @@ class ResetPasswordBySecurityQuestionCest
     /**
      * @param AcceptanceTester $I
      */
-    public function accessingFromMenuWorks(AcceptanceTester $I)
+    public function accessingFromMenuWorks(AcceptanceTester $I): void
     {
         $I->amOnPage('/');
         $I->expectTo('see Question in the menu');
@@ -28,7 +28,7 @@ class ResetPasswordBySecurityQuestionCest
      * @param AcceptanceTester $I
      * @param ResetBySecurityQuestionPage $resetBySecurityQuestion
      */
-    public function changePasswordWorks(AcceptanceTester $I, ResetBySecurityQuestionPage $resetBySecurityQuestion)
+    public function changePasswordWorks(AcceptanceTester $I, ResetBySecurityQuestionPage $resetBySecurityQuestion): void
     {
         $I->amGoingTo('fill the form with valid data');
         $resetBySecurityQuestion->resetPassword('user1', 'When is your birthday?', 'goodbirthday1', 'myNewPa0$$', 'myNewPa0$$');
@@ -39,7 +39,7 @@ class ResetPasswordBySecurityQuestionCest
      * @param AcceptanceTester $I
      * @param ResetBySecurityQuestionPage $resetBySecurityQuestion
      */
-    public function changePasswordFailsWhenAnswerIsWrong(AcceptanceTester $I, ResetBySecurityQuestionPage $resetBySecurityQuestion)
+    public function changePasswordFailsWhenAnswerIsWrong(AcceptanceTester $I, ResetBySecurityQuestionPage $resetBySecurityQuestion): void
     {
         $I->amGoingTo('fill the form with valid data');
         $resetBySecurityQuestion->resetPassword('user1', 'When is your birthday?', 'bad answer', 'myNewPa0$$', 'myNewPa0$$');
@@ -51,7 +51,7 @@ class ResetPasswordBySecurityQuestionCest
      * @param AcceptanceTester $I
      * @param ResetBySecurityQuestionPage $resetBySecurityQuestion
      */
-    public function changePasswordFailsWhenAccountDoesNotExists(AcceptanceTester $I, ResetBySecurityQuestionPage $resetBySecurityQuestion)
+    public function changePasswordFailsWhenAccountDoesNotExists(AcceptanceTester $I, ResetBySecurityQuestionPage $resetBySecurityQuestion): void
     {
         $I->amGoingTo('fill the form with valid data');
         $resetBySecurityQuestion->resetPassword('user1ER5T6Y7U890', 'When is your birthday?', 'goodbirthday1', 'myNewPa0$$', 'myNewPa0$$');
@@ -63,7 +63,7 @@ class ResetPasswordBySecurityQuestionCest
      * @param AcceptanceTester $I
      * @param ResetBySecurityQuestionPage $resetBySecurityQuestion
      */
-    public function changePasswordFailsWhenConfirmationIsWrong(AcceptanceTester $I, ResetBySecurityQuestionPage $resetBySecurityQuestion)
+    public function changePasswordFailsWhenConfirmationIsWrong(AcceptanceTester $I, ResetBySecurityQuestionPage $resetBySecurityQuestion): void
     {
         $I->amGoingTo('fill the form with valid data except confirmation');
         $resetBySecurityQuestion->resetPassword('user1', 'When is your birthday?', 'bad answer', 'mynewpass', 'mynewpasd');
@@ -75,7 +75,7 @@ class ResetPasswordBySecurityQuestionCest
      * @param AcceptanceTester $I
      * @param ResetBySecurityQuestionPage $resetBySecurityQuestion
      */
-    public function changePasswordFailsWhenLoginMissing(AcceptanceTester $I, ResetBySecurityQuestionPage $resetBySecurityQuestion)
+    public function changePasswordFailsWhenLoginMissing(AcceptanceTester $I, ResetBySecurityQuestionPage $resetBySecurityQuestion): void
     {
         $I->amGoingTo('fill the form without a login');
         $resetBySecurityQuestion->resetPassword(null, 'When is your birthday?', 'goodbirthday1', 'mynewpass', 'mynewpass');
@@ -87,7 +87,7 @@ class ResetPasswordBySecurityQuestionCest
      * @param AcceptanceTester $I
      * @param ResetBySecurityQuestionPage $resetBySecurityQuestion
      */
-    public function changePasswordFailsWhenAnswerMissing(AcceptanceTester $I, ResetBySecurityQuestionPage $resetBySecurityQuestion)
+    public function changePasswordFailsWhenAnswerMissing(AcceptanceTester $I, ResetBySecurityQuestionPage $resetBySecurityQuestion): void
     {
         $I->amGoingTo('fill the form without a login');
         $resetBySecurityQuestion->resetPassword('user1', 'When is your birthday?', null, 'mynewpass', 'mynewpass');
@@ -99,7 +99,7 @@ class ResetPasswordBySecurityQuestionCest
      * @param AcceptanceTester $I
      * @param ResetBySecurityQuestionPage $resetBySecurityQuestion
      */
-    public function changePasswordFailsWhenNewPasswordMissing(AcceptanceTester $I, ResetBySecurityQuestionPage $resetBySecurityQuestion)
+    public function changePasswordFailsWhenNewPasswordMissing(AcceptanceTester $I, ResetBySecurityQuestionPage $resetBySecurityQuestion): void
     {
         $I->amGoingTo('fill the form without a login');
         $resetBySecurityQuestion->resetPassword('user1', 'When is your birthday?', 'goodbirthday1', null, 'mynewpass');
@@ -111,7 +111,7 @@ class ResetPasswordBySecurityQuestionCest
      * @param AcceptanceTester $I
      * @param ResetBySecurityQuestionPage $resetBySecurityQuestion
      */
-    public function changePasswordFailsWhenConfirmPasswordMissing(AcceptanceTester $I, ResetBySecurityQuestionPage $resetBySecurityQuestion)
+    public function changePasswordFailsWhenConfirmPasswordMissing(AcceptanceTester $I, ResetBySecurityQuestionPage $resetBySecurityQuestion): void
     {
         $I->amGoingTo('fill the form without a login');
         $resetBySecurityQuestion->resetPassword('user1', 'When is your birthday?', 'goodbirthday1', 'mynewpass', null);
@@ -123,7 +123,7 @@ class ResetPasswordBySecurityQuestionCest
      * @param AcceptanceTester $I
      * @param ResetBySecurityQuestionPage $resetBySecurityQuestion
      */
-    public function changePasswordFailsWhenLoginHasInvalidCharacters(AcceptanceTester $I, ResetBySecurityQuestionPage $resetBySecurityQuestion)
+    public function changePasswordFailsWhenLoginHasInvalidCharacters(AcceptanceTester $I, ResetBySecurityQuestionPage $resetBySecurityQuestion): void
     {
         $I->amGoingTo('fill the form without a login');
         $resetBySecurityQuestion->resetPassword('é"(-è_çà)', 'When is your birthday?', 'goodbirthday1', 'mynewpass', 'mynewpass');
@@ -136,7 +136,7 @@ class ResetPasswordBySecurityQuestionCest
      * @param AcceptanceTester $I
      * @param ResetBySecurityQuestionPage $resetBySecurityQuestion
      */
-    public function changePasswordFailsWhenPasswordRefusedByServer(AcceptanceTester $I, ResetBySecurityQuestionPage $resetBySecurityQuestion)
+    public function changePasswordFailsWhenPasswordRefusedByServer(AcceptanceTester $I, ResetBySecurityQuestionPage $resetBySecurityQuestion): void
     {
         $I->amGoingTo('fill the form without a login');
         $resetBySecurityQuestion->resetPassword('user10', 'When is your birthday?', 'goodbirthday10', 'myNewPa0$$', 'myNewPa0$$');

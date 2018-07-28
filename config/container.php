@@ -37,7 +37,6 @@ $container->register('posthook.subscriber', EventSubscriber\PosthookSubscriber::
 
 $container->register('notifier.subscriber', EventSubscriber\NotificationSubscriber::class)
     ->addArgument(new Reference('mail_notification_service'))
-    ->addArgument(new Reference('translator'))
     ->addArgument('%notify_user_on_password_change%')
     ->addArgument('%notify_user_on_sshkey_change%')
     ->addTag('kernel.event_subscriber')

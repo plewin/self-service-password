@@ -41,7 +41,7 @@ class SmsTokenGenerator
      *
      * @return string
      */
-    public function generateSmsCode()
+    public function generateSmsCode(): string
     {
         //TODO remove unnecessary complexity
         $range = explode(',', '48-57');
@@ -49,7 +49,7 @@ class SmsTokenGenerator
         $smstoken = '';
         for ($i = 1; $i <= $this->smsTokenLength; ++$i) {
             $r = random_int(0, $numRanges-1);
-            list ($min, $max) = explode('-', $range[$r]);
+            [$min, $max] = explode('-', $range[$r]);
             $smstoken .= chr(random_int($min, $max));
         }
 

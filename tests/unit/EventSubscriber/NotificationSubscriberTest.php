@@ -6,14 +6,13 @@ use App\Events;
 use App\EventSubscriber\NotificationSubscriber;
 use App\Service\MailNotificationService;
 use Symfony\Component\EventDispatcher\GenericEvent;
-use Symfony\Component\Translation\Translator;
 
 /**
  * Class NotificationSubscriberTest
  */
 class NotificationSubscriberTest extends \PHPUnit_Framework_TestCase
 {
-    public function testNotifyOnPasswordChangedDisabled()
+    public function testNotifyOnPasswordChangedDisabled(): void
     {
         $mailNotificationService = $this
             ->getMockBuilder(MailNotificationService::class)
@@ -25,17 +24,9 @@ class NotificationSubscriberTest extends \PHPUnit_Framework_TestCase
             ->method('send')
         ;
 
-        $translator = $this
-            ->getMockBuilder(Translator::class)
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
-
         /** @var MailNotificationService $mailNotificationService */
-        /** @var Translator $translator */
         $notificationSubscriber = new NotificationSubscriber(
             $mailNotificationService,
-            $translator,
             false,
             true
         );
@@ -45,7 +36,7 @@ class NotificationSubscriberTest extends \PHPUnit_Framework_TestCase
         $notificationSubscriber->onPasswordChanged($event);
     }
 
-    public function testNotifyOnSshKeyChangedDisabled()
+    public function testNotifyOnSshKeyChangedDisabled(): void
     {
         $mailNotificationService = $this
             ->getMockBuilder(MailNotificationService::class)
@@ -57,17 +48,9 @@ class NotificationSubscriberTest extends \PHPUnit_Framework_TestCase
             ->method('send')
         ;
 
-        $translator = $this
-            ->getMockBuilder(Translator::class)
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
-
         /** @var MailNotificationService $mailNotificationService */
-        /** @var Translator $translator */
         $notificationSubscriber = new NotificationSubscriber(
             $mailNotificationService,
-            $translator,
             true,
             false
         );
@@ -77,7 +60,7 @@ class NotificationSubscriberTest extends \PHPUnit_Framework_TestCase
         $notificationSubscriber->onSshKeyChanged($event);
     }
 
-    public function testNotifyOnPasswordChangedEnabled()
+    public function testNotifyOnPasswordChangedEnabled(): void
     {
         $mailNotificationService = $this
             ->getMockBuilder(MailNotificationService::class)
@@ -90,26 +73,9 @@ class NotificationSubscriberTest extends \PHPUnit_Framework_TestCase
             ->method('send')
         ;
 
-        $translator = $this
-            ->getMockBuilder(Translator::class)
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
-
-        $translator
-            ->method('trans')
-            ->withConsecutive(
-                [$this->equalTo('changesubject')],
-                [$this->equalTo('changemessage')]
-            )
-            ->willReturnOnConsecutiveCalls('thesubject', 'thebody')
-        ;
-
         /** @var MailNotificationService $mailNotificationService */
-        /** @var Translator $translator */
         $notificationSubscriber = new NotificationSubscriber(
             $mailNotificationService,
-            $translator,
             true,
             false
         );
@@ -126,7 +92,7 @@ class NotificationSubscriberTest extends \PHPUnit_Framework_TestCase
         $notificationSubscriber->onPasswordChanged($event);
     }
 
-    public function testNotifyOnSshKeyChangedEnabled()
+    public function testNotifyOnSshKeyChangedEnabled(): void
     {
         $mailNotificationService = $this
             ->getMockBuilder(MailNotificationService::class)
@@ -139,26 +105,9 @@ class NotificationSubscriberTest extends \PHPUnit_Framework_TestCase
             ->method('send')
         ;
 
-        $translator = $this
-            ->getMockBuilder(Translator::class)
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
-
-        $translator
-            ->method('trans')
-            ->withConsecutive(
-                [$this->equalTo('changesshkeysubject')],
-                [$this->equalTo('changesshkeymessage')]
-            )
-            ->willReturnOnConsecutiveCalls('thesubject', 'thebody')
-        ;
-
         /** @var MailNotificationService $mailNotificationService */
-        /** @var Translator $translator */
         $notificationSubscriber = new NotificationSubscriber(
             $mailNotificationService,
-            $translator,
             false,
             true
         );

@@ -13,10 +13,10 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class RecaptchaServiceTest extends \PHPUnit_Framework_TestCase
 {
-    public function testRecaptchaService()
+    public function testRecaptchaService(): void
     {
         // this test key return always valid from recaptcha
-        $privateKey = "6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe";
+        $privateKey = '6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe';
         $recaptchaService = new RecaptchaService($privateKey, new Post());
         $recaptchaService->setLogger(new NullLogger());
 

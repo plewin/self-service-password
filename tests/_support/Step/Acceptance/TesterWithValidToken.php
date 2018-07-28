@@ -19,7 +19,7 @@ class TesterWithValidToken extends \AcceptanceTester
      *
      * @return string Url with valid token
      */
-    public function getValidUrlWithToken($user='user1')
+    public function getValidUrlWithToken($user='user1'): string
     {
         $I = $this;
 

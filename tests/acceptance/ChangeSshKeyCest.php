@@ -13,7 +13,7 @@ class ChangeSshKeyCest
     /**
      * @param AcceptanceTester $I
      */
-    public function accessingFromMenuWorks(AcceptanceTester $I)
+    public function accessingFromMenuWorks(AcceptanceTester $I): void
     {
         $I->amOnPage('/');
         $I->expectTo('see SSH Key in the menu');
@@ -28,7 +28,7 @@ class ChangeSshKeyCest
      * @param AcceptanceTester $I
      * @param ChangeSshKeyPage $changeSshKeyPage
      */
-    public function changeSshKeyWorks(AcceptanceTester $I, ChangeSshKeyPage $changeSshKeyPage)
+    public function changeSshKeyWorks(AcceptanceTester $I, ChangeSshKeyPage $changeSshKeyPage): void
     {
         $I->amGoingTo('fill the form with valid data');
         $changeSshKeyPage->changeSshKey('user1', 'password1', 'dftyguijok');
@@ -40,7 +40,7 @@ class ChangeSshKeyCest
      * @param AcceptanceTester $I
      * @param ChangeSshKeyPage $changeSshKeyPage
      */
-    public function changeSshKeyFailsWhenMissingLogin(AcceptanceTester $I, ChangeSshKeyPage $changeSshKeyPage)
+    public function changeSshKeyFailsWhenMissingLogin(AcceptanceTester $I, ChangeSshKeyPage $changeSshKeyPage): void
     {
         $I->amGoingTo('fill the form with valid data without a login');
         $changeSshKeyPage->changeSshKey(null, 'password1', 'dftyguijok');
@@ -52,7 +52,7 @@ class ChangeSshKeyCest
      * @param AcceptanceTester $I
      * @param ChangeSshKeyPage $changeSshKeyPage
      */
-    public function changeSshKeyFailsWhenPasswordWrong(AcceptanceTester $I, ChangeSshKeyPage $changeSshKeyPage)
+    public function changeSshKeyFailsWhenPasswordWrong(AcceptanceTester $I, ChangeSshKeyPage $changeSshKeyPage): void
     {
         $I->amGoingTo('fill the form with valid data without a login');
         $changeSshKeyPage->changeSshKey('user1', 'bad password', 'dftyguijok');
@@ -64,7 +64,7 @@ class ChangeSshKeyCest
      * @param AcceptanceTester $I
      * @param ChangeSshKeyPage $changeSshKeyPage
      */
-    public function changeSshKeyFailsWhenMissingPassword(AcceptanceTester $I, ChangeSshKeyPage $changeSshKeyPage)
+    public function changeSshKeyFailsWhenMissingPassword(AcceptanceTester $I, ChangeSshKeyPage $changeSshKeyPage): void
     {
         $I->amGoingTo('fill the form with valid data without a password');
         $changeSshKeyPage->changeSshKey('user1', null, 'dftyguijok');
@@ -76,7 +76,7 @@ class ChangeSshKeyCest
      * @param AcceptanceTester $I
      * @param ChangeSshKeyPage $changeSshKeyPage
      */
-    public function changeSshKeyFailsWhenMissingSshKey(AcceptanceTester $I, ChangeSshKeyPage $changeSshKeyPage)
+    public function changeSshKeyFailsWhenMissingSshKey(AcceptanceTester $I, ChangeSshKeyPage $changeSshKeyPage): void
     {
         $I->amGoingTo('fill the form with valid data without a ssh key');
         $changeSshKeyPage->changeSshKey('user1', 'password1', null);
@@ -88,7 +88,7 @@ class ChangeSshKeyCest
      * @param AcceptanceTester $I
      * @param ChangeSshKeyPage $changeSshKeyPage
      */
-    public function changeSshKeyFailsWhenLoginHasInvalidCharacters(AcceptanceTester $I, ChangeSshKeyPage $changeSshKeyPage)
+    public function changeSshKeyFailsWhenLoginHasInvalidCharacters(AcceptanceTester $I, ChangeSshKeyPage $changeSshKeyPage): void
     {
         $I->amGoingTo('fill the form with valid data without a ssh key');
         $changeSshKeyPage->changeSshKey('&é"\'(-è_çà)', 'password1', 'dftyguijok');

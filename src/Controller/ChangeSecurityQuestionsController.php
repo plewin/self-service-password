@@ -41,7 +41,7 @@ class ChangeSecurityQuestionsController extends Controller
      *
      * @return Response
      */
-    public function indexAction(Request $request)
+    public function indexAction(Request $request): Response
     {
         if (!$this->getParameter('enable_questions')) {
             throw $this->createAccessDeniedException();
@@ -65,7 +65,7 @@ class ChangeSecurityQuestionsController extends Controller
      *
      * @return bool
      */
-    private function isFormSubmitted(Request $request)
+    private function isFormSubmitted(Request $request): bool
     {
         return $request->request->has('password')
             && $request->request->has('question')
@@ -78,7 +78,7 @@ class ChangeSecurityQuestionsController extends Controller
      *
      * @return Response
      */
-    private function processFormData(Request $request)
+    private function processFormData(Request $request): Response
     {
         if (!$this->isCsrfTokenValid('change_security_question', $request->request->get('_csrf_token'))) {
             throw $this->createAccessDeniedException('Invalid CSRF token');
@@ -103,7 +103,7 @@ class ChangeSecurityQuestionsController extends Controller
         if (empty($answer)) {
             $missings[] = 'answerrequired';
         }
-        if ($this->isCaptchaEnabled() and !$this->isCaptchaSubmitted($request)) {
+        if ($this->isCaptchaEnabled() && !$this->isCaptchaSubmitted($request)) {
             $missings[] = 'captcharequired';
         }
 
@@ -127,7 +127,7 @@ class ChangeSecurityQuestionsController extends Controller
         }
 
         // Check CAPTCHA
-        if ($this->isCaptchaEnabled() and !$this->verifyCaptcha($request, $login)) {
+        if ($this->isCaptchaEnabled() && !$this->verifyCaptcha($request, $login)) {
             return $this->renderFormWithError('', ['badcaptcha'], $request);
         }
 
@@ -162,7 +162,7 @@ class ChangeSecurityQuestionsController extends Controller
      *
      * @return Response
      */
-    private function renderFormWithError($result, array $problems, Request $request)
+    private function renderFormWithError(string $result, array $problems, Request $request): Response
     {
         return $this->render('self-service/change_security_question_form.html.twig', [
             'result' => $result,

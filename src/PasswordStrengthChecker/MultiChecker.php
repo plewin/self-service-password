@@ -48,7 +48,7 @@ class MultiChecker implements CheckerInterface, ContainerAwareInterface
      *
      * @return string[]
      */
-    public function evaluate($newpassword, $oldpassword = null, $login = null)
+    public function evaluate(string $newpassword, ?string $oldpassword = null, ?string $login = null): array
     {
         $violations = [];
 
@@ -62,7 +62,7 @@ class MultiChecker implements CheckerInterface, ContainerAwareInterface
     /**
      * @return array
      */
-    public function getRules()
+    public function getRules(): array
     {
         $rules = [];
 

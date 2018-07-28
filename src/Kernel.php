@@ -34,7 +34,7 @@ class Kernel extends BaseKernel
      *
      * @return BundleInterface[] An array of bundle instances
      */
-    public function registerBundles()
+    public function registerBundles(): array
     {
         $bundles = [];
         $contents = require __DIR__.'/../config/bundles.php';

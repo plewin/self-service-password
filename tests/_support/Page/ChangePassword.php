@@ -27,7 +27,7 @@ class ChangePassword
         $this->tester = $I;
     }
 
-    public function changePassword($login, $oldPassword, $newPassword, $confirmPassword)
+    public function changePassword(?string $login, ?string $oldPassword, ?string $newPassword, ?string $confirmPassword): void
     {
         $I = $this->tester;
 
@@ -37,7 +37,5 @@ class ChangePassword
         $I->fillField(self::$newPasswordField, $newPassword);
         $I->fillField(self::$confirmPasswordField, $confirmPassword);
         $I->click(self::$sendButton);
-
-        return $this;
     }
 }

@@ -9,9 +9,9 @@ use App\Service\PosthookExecutor;
  */
 class PosthookExecutorTest extends \PHPUnit_Framework_TestCase
 {
-    public function testEchoPosthookLinux()
+    public function testEchoPosthookLinux(): void
     {
-        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+        if (0 === stripos(PHP_OS, 'WIN')) {
             $this->markTestSkipped('Skip posthook test for linux because we are not on linux');
         }
 
@@ -30,9 +30,9 @@ class PosthookExecutorTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('login newpassword oldpassword', $result['output'][0]);
     }
 
-    public function testEchoPosthookWindows()
+    public function testEchoPosthookWindows(): void
     {
-        if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') {
+        if (0 !== stripos(PHP_OS, 'WIN')) {
             $this->markTestSkipped('Skip posthook test for windows because we are not on windows');
         }
 

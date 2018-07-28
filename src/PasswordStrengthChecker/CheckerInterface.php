@@ -32,10 +32,10 @@ interface CheckerInterface
      *
      * @return string[]
      */
-    public function evaluate($newpassword, $oldpassword = null, $login = null);
+    public function evaluate(string $newpassword, ?string $oldpassword = null, ?string $login = null): array;
 
     /**
      * @return array
      */
-    public function getRules();
+    public function getRules(): array;
 }

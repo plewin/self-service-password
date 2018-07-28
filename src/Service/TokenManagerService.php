@@ -50,7 +50,7 @@ class TokenManagerService implements LoggerAwareInterface
      * @param EncryptionService $encryptionService
      * @param int|null          $tokenLifetime
      */
-    public function __construct($session, $encryptionService, $tokenLifetime)
+    public function __construct(SessionInterface $session, $encryptionService, ?int $tokenLifetime)
     {
         $this->session = $session;
         $this->encryptionService = $encryptionService;
@@ -62,7 +62,7 @@ class TokenManagerService implements LoggerAwareInterface
      *
      * @return string
      */
-    public function createToken($login)
+    public function createToken(string $login): string
     {
         $token = [
             'login' => $login,
@@ -85,7 +85,7 @@ class TokenManagerService implements LoggerAwareInterface
      * @throws TokenExpiredException
      * @throws TokenNotFoundException
      */
-    public function openToken($token)
+    public function openToken(string $token): string
     {
         // Open session with the token
         $tokenid = $this->encryptionService->decrypt($token);
@@ -109,15 +109,13 @@ class TokenManagerService implements LoggerAwareInterface
             }
         }
 
-        $login = $token['login'];
-
-        return $login;
+        return $token['login'];
     }
 
     /**
      * Destroy token from session
      */
-    public function destroyToken()
+    public function destroyToken(): void
     {
         $this->session->remove('token');
     }

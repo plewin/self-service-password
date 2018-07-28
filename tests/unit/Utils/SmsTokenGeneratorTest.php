@@ -6,7 +6,7 @@ use App\Utils\SmsTokenGenerator;
 
 class SmsTokenGeneratorTest extends \PHPUnit_Framework_TestCase
 {
-    public function testSmsTokenRegex()
+    public function testSmsTokenRegex(): void
     {
         $tg = new SmsTokenGenerator(6);
 
@@ -21,7 +21,7 @@ class SmsTokenGeneratorTest extends \PHPUnit_Framework_TestCase
         $this->assertRegExp('/[0-9]{9}/',  $tg->generateSmsCode());
     }
 
-    public function testSmsTokenRandom()
+    public function testSmsTokenRandom(): void
     {
         $tokenGenerator = new SmsTokenGenerator(9);
 

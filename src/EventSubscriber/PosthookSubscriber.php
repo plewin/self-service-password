@@ -42,7 +42,7 @@ class PosthookSubscriber implements EventSubscriberInterface
      * @param bool             $posthookEnabled
      * @param PosthookExecutor $posthookExecutor
      */
-    public function __construct($posthookEnabled, $posthookExecutor)
+    public function __construct(bool $posthookEnabled, $posthookExecutor)
     {
         $this->posthookEnabled = $posthookEnabled;
         $this->posthookExecutor = $posthookExecutor;
@@ -51,7 +51,7 @@ class PosthookSubscriber implements EventSubscriberInterface
     /**
      * @return array
      */
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             Events::PASSWORD_CHANGED => 'onPasswordChanged',
@@ -61,7 +61,7 @@ class PosthookSubscriber implements EventSubscriberInterface
     /**
      * @param GenericEvent $event
      */
-    public function onPasswordChanged(GenericEvent $event)
+    public function onPasswordChanged(GenericEvent $event): void
     {
         if (!$this->posthookEnabled) {
             return;

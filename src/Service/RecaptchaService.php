@@ -47,7 +47,7 @@ class RecaptchaService implements LoggerAwareInterface
      * @param string $privatekey
      * @param string $requestMethod
      */
-    public function __construct($privatekey, $requestMethod)
+    public function __construct(string $privatekey, string $requestMethod)
     {
         $this->privatekey = $privatekey;
         $this->requestMethod = $requestMethod;
@@ -61,9 +61,9 @@ class RecaptchaService implements LoggerAwareInterface
      *
      * @return string empty string if the response is verified successfully, else string 'badcaptcha'
      */
-    public function verify(Request $request, $login)
+    public function verify(Request $request, string $login): string
     {
-        $recaptcha = new ReCaptcha($this->privatekey, is_null($this->requestMethod) ? null : new $this->requestMethod());
+        $recaptcha = new ReCaptcha($this->privatekey, null === $this->requestMethod ? null : new $this->requestMethod());
         $resp = $recaptcha->verify($request->request->get('g-recaptcha-response'), $request->getClientIp());
 
         if (!$resp->isSuccess()) {

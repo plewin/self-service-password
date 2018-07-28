@@ -12,7 +12,7 @@ class ResetPasswordBySmsCest
     /**
      * @param AcceptanceTester $I
      */
-    public function accessingFromMenuWorks(AcceptanceTester $I)
+    public function accessingFromMenuWorks(AcceptanceTester $I): void
     {
         $I->amOnPage('/');
         $I->expectTo('see SMS in the menu');
@@ -27,7 +27,7 @@ class ResetPasswordBySmsCest
      * @param AcceptanceTester $I
      * @param ResetBySmsPage $resetBySmsPage
      */
-    public function resetPasswordBySmsWorks(AcceptanceTester $I, ResetBySmsPage $resetBySmsPage)
+    public function resetPasswordBySmsWorks(AcceptanceTester $I, ResetBySmsPage $resetBySmsPage): void
     {
         $resetBySmsPage->findUser('user1');
         $I->see('Check that user information are correct and press Send to get SMS token');
@@ -51,7 +51,7 @@ class ResetPasswordBySmsCest
      * @param AcceptanceTester $I
      * @param ResetBySmsPage $resetBySmsPage
      */
-    public function findUserFailsWhenLoginHasInvalidCharacters(AcceptanceTester $I, ResetBySmsPage $resetBySmsPage)
+    public function findUserFailsWhenLoginHasInvalidCharacters(AcceptanceTester $I, ResetBySmsPage $resetBySmsPage): void
     {
         $resetBySmsPage->findUser('&é"\'(-è_)');
         //TODO this message should be better
@@ -64,7 +64,7 @@ class ResetPasswordBySmsCest
      * @param AcceptanceTester $I
      * @param ResetBySmsPage $resetBySmsPage
      */
-    public function findUserFailsWhenAccountDoesNotExist(AcceptanceTester $I, ResetBySmsPage $resetBySmsPage)
+    public function findUserFailsWhenAccountDoesNotExist(AcceptanceTester $I, ResetBySmsPage $resetBySmsPage): void
     {
         $resetBySmsPage->findUser('user456789');
         //TODO this message should be better
@@ -77,7 +77,7 @@ class ResetPasswordBySmsCest
      * @param AcceptanceTester $I
      * @param ResetBySmsPage $resetBySmsPage
      */
-    public function findUserFailsWhenAccountHasNoPhoneNumber(AcceptanceTester $I, ResetBySmsPage $resetBySmsPage)
+    public function findUserFailsWhenAccountHasNoPhoneNumber(AcceptanceTester $I, ResetBySmsPage $resetBySmsPage): void
     {
         $resetBySmsPage->findUser('user3');
         $I->see('Can\'t find mobile number');
@@ -89,7 +89,7 @@ class ResetPasswordBySmsCest
      * @param AcceptanceTester $I
      * @param ResetBySmsPage $resetBySmsPage
      */
-    public function noTokenLinkWhenSmsCodeIsWrong(AcceptanceTester $I, ResetBySmsPage $resetBySmsPage)
+    public function noTokenLinkWhenSmsCodeIsWrong(AcceptanceTester $I, ResetBySmsPage $resetBySmsPage): void
     {
         $resetBySmsPage->findUser('user1');
         $I->expect('The user details to be ok');
@@ -113,7 +113,7 @@ class ResetPasswordBySmsCest
      * @param AcceptanceTester $I
      * @param ResetBySmsPage $resetBySmsPage
      */
-    public function smsCode3AttemptsAllowed(AcceptanceTester $I, ResetBySmsPage $resetBySmsPage)
+    public function smsCode3AttemptsAllowed(AcceptanceTester $I, ResetBySmsPage $resetBySmsPage): void
     {
         $resetBySmsPage->findUser('user1');
         $I->expect('The user details to be ok');

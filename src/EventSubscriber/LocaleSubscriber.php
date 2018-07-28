@@ -43,7 +43,7 @@ class LocaleSubscriber implements EventSubscriberInterface
      * @param TranslatorInterface $translator
      * @param string              $supportedLocales
      */
-    public function __construct($defaultLocale, TranslatorInterface $translator, $supportedLocales)
+    public function __construct(string $defaultLocale, TranslatorInterface $translator, string $supportedLocales)
     {
         $this->defaultLocale = $defaultLocale;
         $this->translator = $translator;
@@ -53,7 +53,7 @@ class LocaleSubscriber implements EventSubscriberInterface
     /**
      * @return array
      */
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             KernelEvents::REQUEST => [['onKernelRequest', 16]],
@@ -63,7 +63,7 @@ class LocaleSubscriber implements EventSubscriberInterface
     /**
      * @param GetResponseEvent $event
      */
-    public function onKernelRequest(GetResponseEvent $event)
+    public function onKernelRequest(GetResponseEvent $event): void
     {
         $request = $event->getRequest();
 

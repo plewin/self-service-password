@@ -8,7 +8,7 @@ use App\Utils\PasswordVerifier;
 
 class LdapIntegrationTestCase extends \PHPUnit_Framework_TestCase
 {
-    protected function assertDirectoryAccountPasswordNotSame(ClientInterface $client, $dn, $expected)
+    protected function assertDirectoryAccountPasswordNotSame(ClientInterface $client, $dn, $expected): void
     {
         $attribute = 'userPassword';
         $connection = $client->getConnection();
@@ -20,7 +20,7 @@ class LdapIntegrationTestCase extends \PHPUnit_Framework_TestCase
     }
 
 
-    protected function assertDirectoryObjectAttributeNotPresent(ClientInterface $client, $dn, $attribute)
+    protected function assertDirectoryObjectAttributeNotPresent(ClientInterface $client, $dn, $attribute): void
     {
         $connection = $client->getConnection();
 
@@ -30,7 +30,7 @@ class LdapIntegrationTestCase extends \PHPUnit_Framework_TestCase
         $this->assertFalse($values);
     }
 
-    protected function assertDirectoryObjectAttributeValueSame(ClientInterface $client, $dn, $attribute, $expected)
+    protected function assertDirectoryObjectAttributeValueSame(ClientInterface $client, $dn, $attribute, $expected): void
     {
         $connection = $client->getConnection();
 
@@ -44,7 +44,7 @@ class LdapIntegrationTestCase extends \PHPUnit_Framework_TestCase
         }
     }
 
-    protected function assertDirectoryObjectAttributeValueNotSame(ClientInterface $client, $dn, $attribute, $expected)
+    protected function assertDirectoryObjectAttributeValueNotSame(ClientInterface $client, $dn, $attribute, $expected): void
     {
         $connection = $client->getConnection();
 
@@ -58,7 +58,7 @@ class LdapIntegrationTestCase extends \PHPUnit_Framework_TestCase
         }
     }
 
-    protected function assertDirectoryAccountPasswordScheme(ClientInterface $client, $dn, $scheme)
+    protected function assertDirectoryAccountPasswordScheme(ClientInterface $client, $dn, $scheme): void
     {
         $connection = $client->getConnection();
 

@@ -32,7 +32,7 @@ class MockClient implements ClientInterface
 {
     use LoggerAwareTrait;
 
-    private $mockData = [];
+    private $mockData;
 
     /**
      * MockClient constructor.
@@ -89,7 +89,7 @@ class MockClient implements ClientInterface
     /**
      * @inheritdoc
      */
-    public function connect()
+    public function connect(): bool
     {
         // fake connect
         return true;
@@ -98,7 +98,7 @@ class MockClient implements ClientInterface
     /**
      * @inheritdoc
      */
-    public function fetchUserEntryContext($login, $wanted)
+    public function fetchUserEntryContext(string $login, array $wanted): array
     {
         $dn = 'uid='.$login.',ou=People,dc=example,dc=com';
 
@@ -107,13 +107,9 @@ class MockClient implements ClientInterface
         }
 
         $context['user_dn'] = $dn;
-        $context['user_sms'] = isset($this->mockData[$dn]['mobile']) ? $this->mockData[$dn]['mobile'] : null;
+        $context['user_sms'] = $this->mockData[$dn]['mobile'] ?? null;
         $context['user_displayname'] = $this->mockData[$dn]['displayName'];
-        if (isset($this->mockData[$dn]['mail'])) {
-            $context['user_mail'] = $this->mockData[$dn]['mail'];
-        } else {
-            $context['user_mail'] = null;
-        }
+        $context['user_mail'] = $this->mockData[$dn]['mail'] ?? null;
 
         return $context;
     }
@@ -121,7 +117,7 @@ class MockClient implements ClientInterface
     /**
      * @inheritdoc
      */
-    public function checkOldPassword($oldpassword, &$context)
+    public function checkOldPassword(string $oldpassword, array &$context): void
     {
         $dn = $context['user_dn'];
 
@@ -133,7 +129,7 @@ class MockClient implements ClientInterface
     /**
      * @inheritdoc
      */
-    public function checkQuestionAnswer($login, $question, $answer, &$context)
+    public function checkQuestionAnswer(string $login, string $question, string $answer, array &$context): bool
     {
         $dn = 'uid='.$login.',ou=People,dc=example,dc=com';
 
@@ -143,7 +139,7 @@ class MockClient implements ClientInterface
     /**
      * @inheritdoc
      */
-    public function checkMail($login, $mail)
+    public function checkMail(string $login, string $mail): bool
     {
         $dn = 'uid='.$login.',ou=People,dc=example,dc=com';
         if (!isset($this->mockData[$dn])) {
@@ -162,7 +158,7 @@ class MockClient implements ClientInterface
     /**
      * @inheritdoc
      */
-    public function changeQuestion($userdn, $question, $answer)
+    public function changeQuestion(string $userdn, string $question, string $answer): void
     {
 
     }
@@ -170,7 +166,7 @@ class MockClient implements ClientInterface
     /**
      * @inheritdoc
      */
-    public function changePassword($entryDn, $newpassword, $oldpassword, $context = [])
+    public function changePassword(string $entryDn, string $newpassword, string $oldpassword, array $context = []): void
     {
         if ('uid=user10,ou=People,dc=example,dc=com' === $entryDn) {
             // poor guy has password change forbidden in password policy
@@ -181,7 +177,7 @@ class MockClient implements ClientInterface
     /**
      * @inheritdoc
      */
-    public function changeSshKey($entryDn, $sshkey)
+    public function changeSshKey(string $entryDn, string $sshkey): void
     {
 
     }

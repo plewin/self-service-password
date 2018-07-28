@@ -49,7 +49,7 @@ class GetTokenBySmsVerificationController extends Controller
      *
      * @return Response
      */
-    public function indexAction(Request $request)
+    public function indexAction(Request $request): Response
     {
         if (!$this->getParameter('enable_reset_by_sms')) {
             throw $this->createAccessDeniedException();
@@ -58,7 +58,7 @@ class GetTokenBySmsVerificationController extends Controller
         $token = $request->get('token');
         $smstoken = $request->get('smstoken');
 
-        if (!empty($token) and !empty($smstoken) and $request->request->has('_csrf_token')) {
+        if (!empty($token) && !empty($smstoken) && $request->request->has('_csrf_token')) {
             if (!$this->isCsrfTokenValid('sms_token_attempt', $request->request->get('_csrf_token'))) {
                 throw $this->createAccessDeniedException('Invalid CSRF token');
             }
@@ -68,7 +68,7 @@ class GetTokenBySmsVerificationController extends Controller
 
         $encryptedSmsLogin = $request->get('encrypted_sms_login');
 
-        if (!empty($encryptedSmsLogin) and $request->request->has('_csrf_token')) {
+        if (!empty($encryptedSmsLogin) && $request->request->has('_csrf_token')) {
             if (!$this->isCsrfTokenValid('send_sms_token', $request->request->get('_csrf_token'))) {
                 throw $this->createAccessDeniedException('Invalid CSRF token');
             }
@@ -78,7 +78,7 @@ class GetTokenBySmsVerificationController extends Controller
 
         $login = $request->get('login');
 
-        if (!empty($login) and $request->request->has('_csrf_token')) {
+        if (!empty($login) && $request->request->has('_csrf_token')) {
             if (!$this->isCsrfTokenValid('user_entry_search', $request->request->get('_csrf_token'))) {
                 throw $this->createAccessDeniedException('Invalid CSRF token');
             }
@@ -99,7 +99,7 @@ class GetTokenBySmsVerificationController extends Controller
      *
      * @return Response
      */
-    private function processSmsTokenAttempt(Request $request)
+    private function processSmsTokenAttempt(Request $request): Response
     {
         /** @var EncryptionService $encryptionService */
         $encryptionService = $this->get('encryption_service');
@@ -185,7 +185,7 @@ class GetTokenBySmsVerificationController extends Controller
      *
      * @return Response
      */
-    private function generateAndSendSmsToken(Request $request)
+    private function generateAndSendSmsToken(Request $request): Response
     {
         /** @var EncryptionService $encryptionService */
         $encryptionService = $this->get('encryption_service');
@@ -193,8 +193,7 @@ class GetTokenBySmsVerificationController extends Controller
         $encryptedSmsLogin = $request->get('encrypted_sms_login');
 
         $decryptedSmsLogin = explode(':', $encryptionService->decrypt($encryptedSmsLogin));
-        $sms = $decryptedSmsLogin[0];
-        $login = $decryptedSmsLogin[1];
+        [$sms, $login] = $decryptedSmsLogin;
 
         // Generate sms token and send by sms
 
@@ -259,7 +258,7 @@ class GetTokenBySmsVerificationController extends Controller
      *
      * @return Response
      */
-    private function processSearchUserFormData(Request $request)
+    private function processSearchUserFormData(Request $request): Response
     {
         $login = $request->get('login');
 
@@ -273,7 +272,7 @@ class GetTokenBySmsVerificationController extends Controller
         }
 
         // Check CAPTCHA
-        if ($this->isCaptchaEnabled() and !$this->verifyCaptcha($request, $login)) {
+        if ($this->isCaptchaEnabled() && !$this->verifyCaptcha($request, $login)) {
             return $this->renderSearchUserFormWithError('', ['badcaptcha'], $request);
         }
 
@@ -318,7 +317,7 @@ class GetTokenBySmsVerificationController extends Controller
             'displayname' => $context['user_displayname'],
             'login' => $login,
             'encrypted_sms_login' => $encryptedSmsLogin,
-            'sms' => $this->getParameter('sms_partially_hide_number') ? (substr_replace($sms, '****', 4, 4)) : $sms,
+            'sms' => $this->getParameter('sms_partially_hide_number') ? substr_replace($sms, '****', 4, 4) : $sms,
         ] + $this->getCaptchaTemplateExtraVars($request));
     }
 
@@ -329,7 +328,7 @@ class GetTokenBySmsVerificationController extends Controller
      *
      * @return Response
      */
-    private function renderSearchUserFormWithError($result, array $problems, Request $request)
+    private function renderSearchUserFormWithError(string $result, array $problems, Request $request): Response
     {
         return $this->render('self-service/sms_verification_user_search_form.html.twig', [
             'result' => $result,
@@ -344,7 +343,7 @@ class GetTokenBySmsVerificationController extends Controller
      *
      * @return Response
      */
-    private function renderTokenForm($result, $token)
+    private function renderTokenForm(string $result, string $token): Response
     {
         return $this->render('self-service/sms_verification_sms_code_form.html.twig', [
             'result' => $result,

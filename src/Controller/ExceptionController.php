@@ -36,7 +36,7 @@ class ExceptionController extends BaseExceptionController
      *
      * @return string
      */
-    protected function findTemplate(Request $request, $format, $code, $showException)
+    protected function findTemplate(Request $request, $format, $code, $showException): string
     {
         // force our own generic template file
         return 'error.html.twig';

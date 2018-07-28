@@ -13,7 +13,7 @@ class HomepageCest
     /**
      * @param AcceptanceTester $I
      */
-    public function frontpageWorks(AcceptanceTester $I)
+    public function frontpageWorks(AcceptanceTester $I): void
     {
         $I->wantTo('See the homepage');
         $I->amOnPage('/');
@@ -23,7 +23,7 @@ class HomepageCest
     /**
      * @param AcceptanceTester $I
      */
-    public function error404(AcceptanceTester $I)
+    public function error404(AcceptanceTester $I): void
     {
         $I->wantTo('See an invalid page');
         $I->amOnPage('/invalid');

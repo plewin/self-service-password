@@ -32,7 +32,7 @@ class PosthookExecutor
      *
      * @param string $command
      */
-    public function __construct($command)
+    public function __construct(string $command)
     {
         $this->command = $command;
     }
@@ -44,7 +44,7 @@ class PosthookExecutor
      *
      * @return array
      */
-    public function execute($login, $newpassword, $oldpassword = null)
+    public function execute(string $login, string $newpassword, ?string $oldpassword = null): string
     {
         $command = escapeshellcmd($this->command).' '.escapeshellarg($login).' '.escapeshellarg($newpassword);
         if (null !== $oldpassword) {

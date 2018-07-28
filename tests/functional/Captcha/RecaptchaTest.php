@@ -5,15 +5,16 @@ namespace App\Tests\Functional\Captcha;
 use App\Controller\ChangePasswordController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
  * Class RecaptchaTest
  */
 class RecaptchaTest extends CaptchaTestCase
 {
-    public function testChangePasswordRecaptchaVisibleController()
+    public function testChangePasswordRecaptchaVisibleController(): void
     {
-        $client = $this->createClient();
+        $client = self::createClient();
         $changePasswordController = new ChangePasswordController();
         $changePasswordController->setContainer($client->getContainer());
 
@@ -48,9 +49,9 @@ class RecaptchaTest extends CaptchaTestCase
         $this->assertContains('https://www.google.com/recaptcha/api.js', $content);
     }
 
-    public function testChangePasswordRecaptchaNotSubmittedFormController()
+    public function testChangePasswordRecaptchaNotSubmittedFormController(): void
     {
-        $client = $this->createClient();
+        $client = self::createClient();
         $changePasswordController = new ChangePasswordController();
         $changePasswordController->setContainer($client->getContainer());
 
@@ -91,9 +92,9 @@ class RecaptchaTest extends CaptchaTestCase
         $this->assertContains('captcharequired', $content);
     }
 
-    public function testChangePasswordRecaptchaSubmittedFormInvalidController()
+    public function testChangePasswordRecaptchaSubmittedFormInvalidController(): void
     {
-        $client = $this->createClient();
+        $client = self::createClient();
         $changePasswordController = new ChangePasswordController();
         $changePasswordController->setContainer($client->getContainer());
 
@@ -137,9 +138,9 @@ class RecaptchaTest extends CaptchaTestCase
         $this->assertContains('CAPTCHA was not entered correctly', $content);
     }
 
-    public function testChangePasswordRecaptchaSubmittedFormValidController()
+    public function testChangePasswordRecaptchaSubmittedFormValidController(): void
     {
-        $client = $this->createClient();
+        $client = self::createClient();
         $changePasswordController = new ChangePasswordController();
         $changePasswordController->setContainer($client->getContainer());
 
@@ -171,7 +172,7 @@ class RecaptchaTest extends CaptchaTestCase
             'password_strength_checker' => $this->createMockPasswordStrengthChecker(),
             'recaptcha_service' => $this->createMockRecaptchaService(true),
             'ldap_client' => $this->createMockLdapClient(),
-            'event_dispatcher' => $this->getMock('Symfony\\Component\\EventDispatcher\\EventDispatcher'),
+            'event_dispatcher' => $this->getMockBuilder(EventDispatcher::class)->getMock(),
             'security.csrf.token_manager' => $this->createMockCsrfTokenManager(),
         ];
 

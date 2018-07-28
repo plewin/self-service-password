@@ -5,6 +5,7 @@ namespace App\Tests\Integration\ActiveDirectory;
 use App\Exception\LdapErrorException;
 use App\Exception\LdapInvalidUserCredentialsException;
 use App\Ldap\Client;
+use App\Ldap\ClientInterface;
 use App\Tests\Integration\LdapIntegrationTestCase;
 use App\Utils\PasswordEncoder;
 use Psr\Log\NullLogger;
@@ -16,7 +17,7 @@ class ActiveDirectoryClientTest extends LdapIntegrationTestCase
 {
     protected function setUp()
     {
-        if (getenv('TRAVIS') == 'true') {
+        if ('true' === getenv('TRAVIS')) {
             $this->markTestSkipped('Cannot test Active Directory integration on Travis');
         }
 
@@ -26,7 +27,7 @@ class ActiveDirectoryClientTest extends LdapIntegrationTestCase
     /**
      * Test that we can connect to Active Directory
      */
-    public function testConnect()
+    public function testConnect(): void
     {
         $client = $this->createLdapClient();
 
@@ -35,16 +36,16 @@ class ActiveDirectoryClientTest extends LdapIntegrationTestCase
         $this->assertTrue($client->connect());
     }
 
-    public function testConnectWrongCredentials()
+    public function testConnectWrongCredentials(): void
     {
         $client = $this->createLdapClient(['ldap_bind_dn' => 'bad_dn']);
 
-        $this->setExpectedException(LdapErrorException::class);
+        $this->expectException(LdapErrorException::class);
         /** @noinspection PhpUnhandledExceptionInspection */
         $this->assertTrue($client->connect());
     }
 
-    public function testCheckOldPassword()
+    public function testCheckOldPassword(): void
     {
         $client = $this->createLdapClient();
 
@@ -59,37 +60,37 @@ class ActiveDirectoryClientTest extends LdapIntegrationTestCase
         $client->checkOldPassword('Passw0rd!', $context);
 
         // now we expect the next one to throw an exception
-        $this->setExpectedException(LdapInvalidUserCredentialsException::class);
+        $this->expectException(LdapInvalidUserCredentialsException::class);
         /** @noinspection PhpUnhandledExceptionInspection */
         $client->checkOldPassword('badpassword1', $context);
     }
 
     /**
      * @param array $options
-     * @return Client
+     * @return ClientInterface
      */
-    private function createLdapClient($options = [])
+    private function createLdapClient(array $options = []): ClientInterface
     {
         $passwordEncoder = new PasswordEncoder([]);
         $ldapUrl = 'ldap://localhost:7389';
-        $ldapUseTls = isset($options['use_tls']) ? $options['use_tls'] : false;
-        $ldapBindDn = isset($options['ldap_bind_dn']) ? $options['ldap_bind_dn'] : 'cn=ssp,ou=service,dc=example,dc=com';
+        $ldapUseTls = $options['use_tls'] ?? false;
+        $ldapBindDn = $options['ldap_bind_dn'] ?? 'cn=ssp,ou=service,dc=example,dc=com';
         $ldapBindPw = 'Passw0rd!';
         $whoChangePassword = 'user';
         $adMode = false;
-        $ldapFilter = isset($options['ldap_filter']) ? $options['ldap_filter'] : '(&(objectClass=person)(uid={login}))';
-        $ldapBase = isset($options['ldap_base']) ? $options['ldap_base'] : 'ou=People,dc=example,dc=com';
-        $hash = isset($options['hash']) ? $options['hash'] : 'clear';
+        $ldapFilter = $options['ldap_filter'] ?? '(&(objectClass=person)(uid={login}))';
+        $ldapBase = $options['ldap_base'] ?? 'ou=People,dc=example,dc=com';
+        $hash = $options['hash'] ?? 'clear';
         $smsAttribute = 'telephoneNumber';
-        $answerObjectClass = "extensibleObject";
+        $answerObjectClass = 'extensibleObject';
         $answerAttribute = 'info';
         $whoChangeSshKey = 'user';
         $sshKeyAttribute = 'sshPublicKey';
         $mailAttribute = 'mail';
         $fullnameAttribute = 'cn';
         $adOptions = [];
-        $sambaMode = isset($options['samba_mode']) ? $options['samba_mode'] : false;
-        $sambaOptions = isset($options['samba_options']) ? $options['samba_options'] : [];
+        $sambaMode = $options['samba_mode'] ?? false;
+        $sambaOptions = $options['samba_options'] ?? [];
         $shadowOptions = [
             'update_shadowLastChange' => false,
             'update_shadowExpire' => false,

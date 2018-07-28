@@ -29,7 +29,7 @@ class ResetBySecurityQuestion
         $this->tester = $I;
     }
 
-    public function resetPassword($login, $question, $answer, $newpassword, $confirmpassword)
+    public function resetPassword(?string $login, ?string $question, ?string $answer, ?string $newpassword, ?string $confirmpassword): void
     {
         $I = $this->tester;
 
@@ -40,7 +40,5 @@ class ResetBySecurityQuestion
         $I->fillField(self::$newPasswordField, $newpassword);
         $I->fillField(self::$confirmPasswordField, $confirmpassword);
         $I->click(self::$sendButton);
-
-        return $this;
     }
 }

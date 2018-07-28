@@ -54,7 +54,7 @@ class AppExtension extends \Twig_Extension implements GlobalsInterface
     /**
      * @return TwigFilter[]
      */
-    public function getFilters()
+    public function getFilters(): array
     {
         return [
             new TwigFilter('fa_class', [$this, 'getFaClass']),
@@ -66,7 +66,7 @@ class AppExtension extends \Twig_Extension implements GlobalsInterface
     /**
      * @return TwigFunction[]
      */
-    public function getFunctions()
+    public function getFunctions(): array
     {
         return [
             new TwigFunction('show_policy_for', [$this, 'showPolicyFor']),
@@ -82,7 +82,7 @@ class AppExtension extends \Twig_Extension implements GlobalsInterface
      *
      * @return string A CSRF token
      */
-    public function renderCsrfToken($tokenId)
+    public function renderCsrfToken(string $tokenId): string
     {
         return $this->csrfTokenManager->getToken($tokenId)->getValue();
     }
@@ -92,9 +92,9 @@ class AppExtension extends \Twig_Extension implements GlobalsInterface
      *
      * @return bool
      */
-    public function showPolicyFor($result)
+    public function showPolicyFor(string $result): bool
     {
-        return ( $this->pwdShowPolicy === 'always' or ( $this->pwdShowPolicy === 'onerror' and $this->isError($result)));
+        return $this->pwdShowPolicy === 'always' || ( $this->pwdShowPolicy === 'onerror' && $this->isError($result));
     }
 
     /**
@@ -104,7 +104,7 @@ class AppExtension extends \Twig_Extension implements GlobalsInterface
      *
      * @return string
      */
-    public function getFaClass($msg)
+    public function getFaClass(string $msg): string
     {
         $criticality = $this->getCriticality($msg);
 
@@ -128,7 +128,7 @@ class AppExtension extends \Twig_Extension implements GlobalsInterface
      *
      * @return string
      */
-    public function getCriticality($msg)
+    public function getCriticality(string $msg): string
     {
         $dangerList = [
             'nophpldap',
@@ -196,7 +196,7 @@ class AppExtension extends \Twig_Extension implements GlobalsInterface
      *
      * @return string
      */
-    public function getMaxCriticality(array $msgs)
+    public function getMaxCriticality(array $msgs): string
     {
         $maxCriticality = 'success';
 
@@ -219,7 +219,7 @@ class AppExtension extends \Twig_Extension implements GlobalsInterface
      *
      * @param array $meta
      */
-    public function setMeta(array $meta)
+    public function setMeta(array $meta): void
     {
         $this->meta = $meta;
     }
@@ -229,7 +229,7 @@ class AppExtension extends \Twig_Extension implements GlobalsInterface
      *
      * @return array
      */
-    public function getMeta()
+    public function getMeta(): array
     {
         return $this->meta;
     }
@@ -239,7 +239,7 @@ class AppExtension extends \Twig_Extension implements GlobalsInterface
      *
      * @return bool
      */
-    private function isError($msg)
+    private function isError($msg): bool
     {
         $errorList = [
             'tooshort',

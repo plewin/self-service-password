@@ -45,7 +45,7 @@ class GetTokenByEmailVerificationController extends Controller
      *
      * @return Response
      */
-    public function indexAction(Request $request)
+    public function indexAction(Request $request): Response
     {
         if (!$this->getParameter('enable_reset_by_email')) {
             throw $this->createAccessDeniedException();
@@ -68,7 +68,7 @@ class GetTokenByEmailVerificationController extends Controller
      *
      * @return bool
      */
-    private function isFormSubmitted(Request $request)
+    private function isFormSubmitted(Request $request): bool
     {
         return ($request->request->has('login') || $request->query->has('login'))
             && ($this->getParameter('mail_address_use_ldap') || $request->request->has('mail'))
@@ -80,7 +80,7 @@ class GetTokenByEmailVerificationController extends Controller
      *
      * @return Response
      */
-    private function processFormData(Request $request)
+    private function processFormData(Request $request): Response
     {
         if (!$this->isCsrfTokenValid('get_token_by_email', $request->request->get('_csrf_token'))) {
             throw $this->createAccessDeniedException('Invalid CSRF token');
@@ -94,11 +94,11 @@ class GetTokenByEmailVerificationController extends Controller
         if (empty($login)) {
             $missings[] = 'loginrequired';
         }
-        if (!$this->getParameter('mail_address_use_ldap') and empty($mail)) {
+        if (empty($mail) && !$this->getParameter('mail_address_use_ldap')) {
             $missings[] = 'mailrequired';
         }
 
-        if ($this->isCaptchaEnabled() and !$this->isCaptchaSubmitted($request)) {
+        if ($this->isCaptchaEnabled() && !$this->isCaptchaSubmitted($request)) {
             $missings[] = 'captcharequired';
         }
 
@@ -122,7 +122,7 @@ class GetTokenByEmailVerificationController extends Controller
         }
 
         // Check CAPTCHA
-        if ($this->isCaptchaEnabled() and !$this->verifyCaptcha($request, $login)) {
+        if ($this->isCaptchaEnabled() && !$this->verifyCaptcha($request, $login)) {
             return $this->renderFormWithError('', ['badcaptcha'], $request);
         }
 
@@ -195,7 +195,7 @@ class GetTokenByEmailVerificationController extends Controller
      *
      * @return Response
      */
-    private function renderFormWithError($result, array $problems, Request $request)
+    private function renderFormWithError(string $result, array $problems, Request $request): Response
     {
         return $this->render('self-service/email_verification_form.html.twig', [
             'result' => $result,

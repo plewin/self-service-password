@@ -27,7 +27,7 @@ class ChangeSecurityQuestion
         $this->tester = $I;
     }
 
-    public function changePassword($login, $password, $question, $answer)
+    public function changePassword(?string $login, ?string $password, ?string $question, ?string $answer): void
     {
         $I = $this->tester;
 
@@ -37,7 +37,5 @@ class ChangeSecurityQuestion
         $I->selectOption(self::$questionField,$question);
         $I->fillField(self::$answerField, $answer);
         $I->click(self::$sendButton);
-
-        return $this;
     }
 }

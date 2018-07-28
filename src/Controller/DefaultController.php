@@ -31,7 +31,7 @@ class DefaultController extends Controller
     /**
      * @return Response
      */
-    public function indexAction()
+    public function indexAction(): Response
     {
         $defaultRoute = $this->getParameter('default_route');
 

@@ -25,7 +25,7 @@ class ChangeSshKey
         $this->tester = $I;
     }
 
-    public function changeSshKey($login, $password, $sshKey)
+    public function changeSshKey(?string $login, ?string $password, ?string$sshKey): void
     {
         $I = $this->tester;
 
@@ -34,7 +34,5 @@ class ChangeSshKey
         $I->fillField(self::$passwordField, $password);
         $I->fillField(self::$sshKeyField, $sshKey);
         $I->click(self::$sendButton);
-
-        return $this;
     }
 }

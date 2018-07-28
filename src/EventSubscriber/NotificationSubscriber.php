@@ -24,7 +24,6 @@ use App\Events;
 use App\Service\MailNotificationService;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\EventDispatcher\GenericEvent;
-use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Class NotificationSubscriber
@@ -34,9 +33,6 @@ class NotificationSubscriber implements EventSubscriberInterface
     /** @var MailNotificationService */
     private $mailNotificationService;
 
-    /** @var TranslatorInterface */
-    private $translator;
-
     private $notifyOnPasswordChanged;
 
     private $notifyOnSshKeyChanged;
@@ -45,14 +41,12 @@ class NotificationSubscriber implements EventSubscriberInterface
      * NotificationSubscriber constructor.
      *
      * @param MailNotificationService $mailNotificationService
-     * @param TranslatorInterface     $translator
-     * @param boolean                 $notifyOnPasswordChanged
-     * @param boolean                 $notifyOnSshKeyChanged
+     * @param bool                    $notifyOnPasswordChanged
+     * @param bool                    $notifyOnSshKeyChanged
      */
-    public function __construct($mailNotificationService, TranslatorInterface $translator, $notifyOnPasswordChanged, $notifyOnSshKeyChanged)
+    public function __construct(MailNotificationService $mailNotificationService, bool $notifyOnPasswordChanged, bool $notifyOnSshKeyChanged)
     {
         $this->mailNotificationService = $mailNotificationService;
-        $this->translator = $translator;
         $this->notifyOnPasswordChanged = $notifyOnPasswordChanged;
         $this->notifyOnSshKeyChanged = $notifyOnSshKeyChanged;
     }
@@ -60,7 +54,7 @@ class NotificationSubscriber implements EventSubscriberInterface
     /**
      * @return array
      */
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             Events::PASSWORD_CHANGED => 'onPasswordChanged',
@@ -71,7 +65,7 @@ class NotificationSubscriber implements EventSubscriberInterface
     /**
      * @param GenericEvent $event
      */
-    public function onPasswordChanged(GenericEvent $event)
+    public function onPasswordChanged(GenericEvent $event): void
     {
         if (!$this->notifyOnPasswordChanged) {
             return;
@@ -97,7 +91,7 @@ class NotificationSubscriber implements EventSubscriberInterface
     /**
      * @param GenericEvent $event
      */
-    public function onSshKeyChanged(GenericEvent $event)
+    public function onSshKeyChanged(GenericEvent $event): void
     {
         if (!$this->notifyOnSshKeyChanged) {
             return;

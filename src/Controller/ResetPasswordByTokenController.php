@@ -46,9 +46,9 @@ class ResetPasswordByTokenController extends Controller
      *
      * @return Response
      */
-    public function indexAction(Request $request)
+    public function indexAction(Request $request): Response
     {
-        if (!($this->getParameter('enable_reset_by_email') or $this->getParameter('enable_reset_by_sms'))) {
+        if (!($this->getParameter('enable_reset_by_email') || $this->getParameter('enable_reset_by_sms'))) {
             throw $this->createAccessDeniedException();
         }
 
@@ -98,7 +98,7 @@ class ResetPasswordByTokenController extends Controller
             $problems[] = 'nomatch';
         }
 
-        if ($this->isCaptchaEnabled() and !$this->isCaptchaSubmitted($request)) {
+        if ($this->isCaptchaEnabled() && !$this->isCaptchaSubmitted($request)) {
             $missings[] = 'captcharequired';
         }
 
@@ -113,7 +113,7 @@ class ResetPasswordByTokenController extends Controller
         }
 
         // Okay the form is submitted but is the CAPTCHA valid ?
-        if ($this->isCaptchaEnabled() and !$this->verifyCaptcha($request, $login)) {
+        if ($this->isCaptchaEnabled() && !$this->verifyCaptcha($request, $login)) {
             return $this->renderErrorPage('', ['badcaptcha'], $request, $login);
         }
 
@@ -143,7 +143,7 @@ class ResetPasswordByTokenController extends Controller
             // between the token creation and usage
             return $this->renderErrorPage('badcredentials', [], $request, $login);
         } catch (LdapUpdateFailedException $e) {
-            // passwors was refused by server
+            // password was refused by server
             return $this->renderErrorPage('', ['passworderror'], $request, $login);
         }
 
@@ -171,7 +171,7 @@ class ResetPasswordByTokenController extends Controller
      *
      * @return Response
      */
-    private function renderEmptyPage(Request $request, $login)
+    private function renderEmptyPage(Request $request, string $login): Response
     {
         return $this->render('self-service/reset_password_by_token_form.html.twig', [
             //TODO refactor translation
@@ -191,7 +191,7 @@ class ResetPasswordByTokenController extends Controller
      *
      * @return Response
      */
-    private function renderErrorPage($result, array $problems, Request $request, $login)
+    private function renderErrorPage(string $result, array $problems, Request $request, $login): Response
     {
         return $this->render('self-service/reset_password_by_token_form.html.twig', [
             'result' => $result,

@@ -58,17 +58,17 @@ class LegacyChecker implements CheckerInterface
      *
      * @return string[]
      */
-    public function evaluate($newpassword, $oldpassword = null, $login = null)
+    public function evaluate(string $newpassword, ?string $oldpassword = null, ?string $login = null): array
     {
         $violations = [];
 
         //TODO hum... why utf8 decode ?
-        $length = strlen(utf8_decode($newpassword));
-        preg_match_all("/[a-z]/", $newpassword, $lowerRes);
+        $length = \strlen(utf8_decode($newpassword));
+        preg_match_all('/[a-z]/', $newpassword, $lowerRes);
         $lower = count($lowerRes[0]);
-        preg_match_all("/[A-Z]/", $newpassword, $upperRes);
+        preg_match_all('/[A-Z]/', $newpassword, $upperRes);
         $upper = count($upperRes[0]);
-        preg_match_all("/[0-9]/", $newpassword, $digitRes);
+        preg_match_all('/\d/', $newpassword, $digitRes);
         $digit = count($digitRes[0]);
 
         $special = 0;
@@ -105,33 +105,33 @@ class LegacyChecker implements CheckerInterface
             }
         }
 
-        // Minimal lenght
-        if ($this->pwdPolicyConfig['pwd_min_length'] and $length < $this->pwdPolicyConfig['pwd_min_length']) {
+        // Minimal length
+        if ($this->pwdPolicyConfig['pwd_min_length'] && $length < $this->pwdPolicyConfig['pwd_min_length']) {
             $violations[] = 'tooshort';
         }
 
-        // Maximal lenght
-        if ($this->pwdPolicyConfig['pwd_max_length'] and $length > $this->pwdPolicyConfig['pwd_max_length']) {
+        // Maximal length
+        if ($this->pwdPolicyConfig['pwd_max_length'] && $length > $this->pwdPolicyConfig['pwd_max_length']) {
             $violations[] = 'toobig';
         }
 
         // Minimal lower chars
-        if ($this->pwdPolicyConfig['pwd_min_lower'] and $lower < $this->pwdPolicyConfig['pwd_min_lower']) {
+        if ($this->pwdPolicyConfig['pwd_min_lower'] && $lower < $this->pwdPolicyConfig['pwd_min_lower']) {
             $violations[] = 'minlower';
         }
 
         // Minimal upper chars
-        if ($this->pwdPolicyConfig['pwd_min_upper'] and $upper < $this->pwdPolicyConfig['pwd_min_upper']) {
+        if ($this->pwdPolicyConfig['pwd_min_upper'] && $upper < $this->pwdPolicyConfig['pwd_min_upper']) {
             $violations[] = 'minupper';
         }
 
         // Minimal digit chars
-        if ($this->pwdPolicyConfig['pwd_min_digit'] and $digit < $this->pwdPolicyConfig['pwd_min_digit']) {
+        if ($this->pwdPolicyConfig['pwd_min_digit'] && $digit < $this->pwdPolicyConfig['pwd_min_digit']) {
             $violations[] = 'mindigit';
         }
 
         // Minimal special chars
-        if ($this->pwdPolicyConfig['pwd_min_special'] and $special < $this->pwdPolicyConfig['pwd_min_special']) {
+        if ($this->pwdPolicyConfig['pwd_min_special'] && $special < $this->pwdPolicyConfig['pwd_min_special']) {
             $violations[] = 'minspecial';
         }
 
@@ -141,12 +141,12 @@ class LegacyChecker implements CheckerInterface
         }
 
         // Same as current password?
-        if ($this->pwdPolicyConfig['pwd_no_reuse'] and $newpassword === $oldpassword) {
+        if ($this->pwdPolicyConfig['pwd_no_reuse'] && $newpassword === $oldpassword) {
             $violations[] = 'sameasold';
         }
 
         // Same as login?
-        if ($this->pwdPolicyConfig['pwd_diff_login'] and $newpassword === $login) {
+        if ($this->pwdPolicyConfig['pwd_diff_login'] && $newpassword === $login) {
             $violations[] = 'sameaslogin';
         }
 
@@ -156,7 +156,7 @@ class LegacyChecker implements CheckerInterface
     /**
      * @return array
      */
-    public function getRules()
+    public function getRules(): array
     {
         $rules = [];
 

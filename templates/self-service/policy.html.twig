@@ -1,6 +1,4 @@
 <div class="{% if style|default(null) == 'alert' %}help alert alert-warning{% else %}passwordPolicyHelp offset-md-4 col-sm-8 form-text text-muted{% endif %}">
-
-
     <p>{{ 'policy'|trans }}</p>
 
     <ul>
@@ -42,6 +40,10 @@
         {% endif %}
     </ul>
     <script>
+        {% if rules is defined %}
         var rulesDefinitions = {{ rules|json_encode|raw }};
+        {% else %}
+        var rulesDefinitions = [];
+        {% endif %}
     </script>
 </div>

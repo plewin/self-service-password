@@ -11,7 +11,7 @@ use Psr\Log\NullLogger;
  */
 class SmsNotificationServiceTest extends \PHPUnit_Framework_TestCase
 {
-    public function testSmsNotificationByApi()
+    public function testSmsNotificationByApi(): void
     {
         $mock = $this
             ->getMockBuilder(MailSender::class)

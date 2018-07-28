@@ -12,7 +12,7 @@ use Symfony\Component\EventDispatcher\GenericEvent;
  */
 class PosthookSubscriberTest extends \PHPUnit_Framework_TestCase
 {
-    public function testPosthookSubscriberEnabled()
+    public function testPosthookSubscriberEnabled(): void
     {
         $mock = $this->getMockBuilder(PosthookExecutor::class)
             ->disableOriginalConstructor()
@@ -37,7 +37,7 @@ class PosthookSubscriberTest extends \PHPUnit_Framework_TestCase
         $posthookSubscriber->onPasswordChanged($event);
     }
 
-    public function testPosthookSubscriberDisabled()
+    public function testPosthookSubscriberDisabled(): void
     {
         $mock = $this->getMockBuilder(PosthookExecutor::class)
             ->disableOriginalConstructor()

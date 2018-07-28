@@ -57,7 +57,7 @@ class DictionaryChecker implements CheckerInterface
      *
      * @return string[]
      */
-    public function evaluate($newpassword, $oldpassword = null, $login = null)
+    public function evaluate(string $newpassword, ?string $oldpassword = null, ?string $login = null): array
     {
         if (!$this->enable){
             return [];
@@ -71,7 +71,7 @@ class DictionaryChecker implements CheckerInterface
         foreach ($finder as $file) {
             $filepath = escapeshellarg($file->getRealPath());
 
-            if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+            if (0 === stripos(PHP_OS, 'WIN')) {
                 // Use findstr on Windows. It is equivalent to grep.
                 // https://technet.microsoft.com/en-us/library/bb490907.aspx
                 $command = "findstr /r /c:$pattern $filepath";
@@ -96,7 +96,7 @@ class DictionaryChecker implements CheckerInterface
     /**
      * @return array
      */
-    public function getRules()
+    public function getRules(): array
     {
         if (!$this->enable) {
             return [];

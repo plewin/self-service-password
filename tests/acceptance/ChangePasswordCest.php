@@ -14,7 +14,7 @@ class ChangePasswordCest
      * @param AcceptanceTester $I
      * @param ChangePasswordPage $passwordChangePage
      */
-    public function changePasswordWorks(AcceptanceTester $I, ChangePasswordPage $passwordChangePage)
+    public function changePasswordWorks(AcceptanceTester $I, ChangePasswordPage $passwordChangePage): void
     {
         $I->amGoingTo('fill the form with valid data');
         $passwordChangePage->changePassword('user1', 'password1', 'myNewpa0$$', 'myNewpa0$$');
@@ -26,7 +26,7 @@ class ChangePasswordCest
      * @param AcceptanceTester $I
      * @param ChangePasswordPage $passwordChangePage
      */
-    public function changePasswordFailsWhenConfirmIsWrong(AcceptanceTester $I, ChangePasswordPage $passwordChangePage)
+    public function changePasswordFailsWhenConfirmIsWrong(AcceptanceTester $I, ChangePasswordPage $passwordChangePage): void
     {
         $I->amGoingTo('fill the form with a wrong confirmation');
         $passwordChangePage->changePassword('user1', 'password1', 'mynewpass', 'notmynewpass');
@@ -39,7 +39,7 @@ class ChangePasswordCest
      * @param AcceptanceTester $I
      * @param ChangePasswordPage $passwordChangePage
      */
-    public function changePasswordFailsWhenOldPasswordIsWrong(AcceptanceTester $I, ChangePasswordPage $passwordChangePage)
+    public function changePasswordFailsWhenOldPasswordIsWrong(AcceptanceTester $I, ChangePasswordPage $passwordChangePage): void
     {
         $I->amGoingTo('fill the form with a wrong current password');
         $passwordChangePage->changePassword('user1', 'invalidpassword', 'myNewPa0$$', 'myNewPa0$$');
@@ -52,7 +52,7 @@ class ChangePasswordCest
      * @param AcceptanceTester $I
      * @param ChangePasswordPage $passwordChangePage
      */
-    public function changePasswordFailsWhenLoginMissing(AcceptanceTester $I, ChangePasswordPage $passwordChangePage)
+    public function changePasswordFailsWhenLoginMissing(AcceptanceTester $I, ChangePasswordPage $passwordChangePage): void
     {
         $I->amGoingTo('fill the form with valid data');
         $passwordChangePage->changePassword(null, 'password1', 'mynewpass', 'mynewpass');
@@ -65,7 +65,7 @@ class ChangePasswordCest
      * @param AcceptanceTester $I
      * @param ChangePasswordPage $passwordChangePage
      */
-    public function changePasswordFailsWhenOldPasswordMissing(AcceptanceTester $I, ChangePasswordPage $passwordChangePage)
+    public function changePasswordFailsWhenOldPasswordMissing(AcceptanceTester $I, ChangePasswordPage $passwordChangePage): void
     {
         $I->amGoingTo('fill the form with valid data');
         $passwordChangePage->changePassword('user1', null, 'mynewpass', 'mynewpass');
@@ -78,7 +78,7 @@ class ChangePasswordCest
      * @param AcceptanceTester $I
      * @param ChangePasswordPage $passwordChangePage
      */
-    public function changePasswordFailsWhenNewPasswordMissing(AcceptanceTester $I, ChangePasswordPage $passwordChangePage)
+    public function changePasswordFailsWhenNewPasswordMissing(AcceptanceTester $I, ChangePasswordPage $passwordChangePage): void
     {
         $I->amGoingTo('fill the form with valid data');
         $passwordChangePage->changePassword('user1', 'password1', null, 'mynewpass');
@@ -91,7 +91,7 @@ class ChangePasswordCest
      * @param AcceptanceTester $I
      * @param ChangePasswordPage $passwordChangePage
      */
-    public function changePasswordFailsWhenConfirmPasswordMissing(AcceptanceTester $I, ChangePasswordPage $passwordChangePage)
+    public function changePasswordFailsWhenConfirmPasswordMissing(AcceptanceTester $I, ChangePasswordPage $passwordChangePage): void
     {
         $I->amGoingTo('fill the form with valid data');
         $passwordChangePage->changePassword('user1', 'password1', 'mynewpass', null);
@@ -104,7 +104,7 @@ class ChangePasswordCest
      * @param AcceptanceTester $I
      * @param ChangePasswordPage $passwordChangePage
      */
-    public function changePasswordFailsWhenLoginContainsInvalidCharacters(AcceptanceTester $I, ChangePasswordPage $passwordChangePage)
+    public function changePasswordFailsWhenLoginContainsInvalidCharacters(AcceptanceTester $I, ChangePasswordPage $passwordChangePage): void
     {
         $I->amGoingTo('fill the form with valid data');
         $passwordChangePage->changePassword('&é"\'(-è_ç)', 'mynewpass', 'password1', 'mynewpass');
@@ -117,7 +117,7 @@ class ChangePasswordCest
      * @param AcceptanceTester $I
      * @param ChangePasswordPage $passwordChangePage
      */
-    public function changePasswordFailsWhenAccountHasForbiddenChangeInPasswordPolicy(AcceptanceTester $I, ChangePasswordPage $passwordChangePage)
+    public function changePasswordFailsWhenAccountHasForbiddenChangeInPasswordPolicy(AcceptanceTester $I, ChangePasswordPage $passwordChangePage): void
     {
         $I->amGoingTo('fill the form with valid data');
         $passwordChangePage->changePassword('user10', 'password10', 'myNewPa0$$', 'myNewPa0$$');

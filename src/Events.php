@@ -33,12 +33,12 @@ final class Events
      *
      * @var string
      */
-    const PASSWORD_CHANGED = 'password.changed';
+    public const PASSWORD_CHANGED = 'password.changed';
 
     /**
      * @Event("Symfony\Component\EventDispatcher\GenericEvent")
      *
      * @var string
      */
-    const SSH_KEY_CHANGED = 'sshkey.changed';
+    public const SSH_KEY_CHANGED = 'sshkey.changed';
 }

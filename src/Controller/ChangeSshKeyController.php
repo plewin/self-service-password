@@ -44,7 +44,7 @@ class ChangeSshKeyController extends Controller
      *
      * @return Response
      */
-    public function indexAction(Request $request)
+    public function indexAction(Request $request): Response
     {
         if (!$this->getParameter('enable_sshkey_change')) {
             throw $this->createAccessDeniedException();
@@ -67,7 +67,7 @@ class ChangeSshKeyController extends Controller
      *
      * @return bool
      */
-    private function isFormSubmitted(Request $request)
+    private function isFormSubmitted(Request $request): bool
     {
         return ($request->request->has('login') || $request->query->has('login'))
             && $request->request->has('password')
@@ -80,7 +80,7 @@ class ChangeSshKeyController extends Controller
      *
      * @return Response
      */
-    private function processFormData(Request $request)
+    private function processFormData(Request $request): Response
     {
         if (!$this->isCsrfTokenValid('change_ssh_key', $request->request->get('_csrf_token'))) {
             throw $this->createAccessDeniedException('Invalid CSRF token');
@@ -124,7 +124,7 @@ class ChangeSshKeyController extends Controller
         }
 
         // Check CAPTCHA
-        if ($this->isCaptchaEnabled() and !$this->verifyCaptcha($request, $login)) {
+        if ($this->isCaptchaEnabled() && !$this->verifyCaptcha($request, $login)) {
             return $this->renderFormWithError('', ['badcaptcha'], $request);
         }
 
@@ -171,7 +171,7 @@ class ChangeSshKeyController extends Controller
      *
      * @return Response
      */
-    private function renderFormWithError($result, array $problems, Request $request)
+    private function renderFormWithError(string $result, array $problems, Request $request): Response
     {
         return $this->render('self-service/change_ssh_key_form.html.twig', [
             'result' => $result,

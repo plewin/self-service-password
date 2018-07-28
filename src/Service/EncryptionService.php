@@ -40,7 +40,7 @@ class EncryptionService implements LoggerAwareInterface
      *
      * @param string $keyphrase Password for encryption
      */
-    public function __construct($keyphrase)
+    public function __construct(string $keyphrase)
     {
         $this->keyphrase = $keyphrase;
         $this->defuseCrypto = new Crypto();
@@ -53,7 +53,7 @@ class EncryptionService implements LoggerAwareInterface
      *
      * @return string Encrypted data, base64 encoded
      */
-    public function encrypt($data)
+    public function encrypt(string $data): string
     {
         return base64_encode($this->defuseCrypto->encryptWithPassword($data, $this->keyphrase, true));
     }
@@ -65,12 +65,12 @@ class EncryptionService implements LoggerAwareInterface
      *
      * @return string Decrypted data
      */
-    public function decrypt($data)
+    public function decrypt(string $data): string
     {
         try {
             return $this->defuseCrypto->decryptWithPassword(base64_decode($data), $this->keyphrase, true);
         } catch (CryptoException $e) {
-            $this->logger->notice("crypto: decryption error ".$e->getMessage());
+            $this->logger->notice('crypto: decryption error '.$e->getMessage());
 
             return '';
         }

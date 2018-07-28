@@ -32,7 +32,7 @@ trait CaptchaTrait
     /**
      * @return bool
      */
-    protected function isCaptchaEnabled()
+    protected function isCaptchaEnabled(): bool
     {
         return $this->getParameter('enable_captcha');
     }
@@ -42,7 +42,7 @@ trait CaptchaTrait
      *
      * @return bool
      */
-    protected function isCaptchaSubmitted(Request $request)
+    protected function isCaptchaSubmitted(Request $request): bool
     {
         $submitted = false;
 
@@ -66,7 +66,7 @@ trait CaptchaTrait
      *
      * @return bool
      */
-    protected function verifyCaptcha(Request $request, $login)
+    protected function verifyCaptcha(Request $request, $login): bool
     {
         $isCaptchaValid = false;
         switch ($this->getParameter('captcha_type')) {
@@ -98,7 +98,7 @@ trait CaptchaTrait
      *
      * @return array
      */
-    protected function getCaptchaTemplateExtraVars(Request $request)
+    protected function getCaptchaTemplateExtraVars(Request $request): array
     {
         if (!$this->isCaptchaEnabled()) {
             return [];
@@ -113,13 +113,12 @@ trait CaptchaTrait
         return $extra;
     }
 
-
     /**
      * @param Request $request
      *
      * @return string
      */
-    private function generateCaptchaImage(Request $request)
+    private function generateCaptchaImage(Request $request): string
     {
         $builder = new CaptchaBuilder();
         $builder->build();

@@ -14,7 +14,7 @@ class ChangeSecurityQuestionCest
      * @param AcceptanceTester $I
      * @param ChangeSecurityQuestionPage $changeSecurityQuestionPage
      */
-    public function changeSecurityQuestionWorks(AcceptanceTester $I, ChangeSecurityQuestionPage $changeSecurityQuestionPage)
+    public function changeSecurityQuestionWorks(AcceptanceTester $I, ChangeSecurityQuestionPage $changeSecurityQuestionPage): void
     {
         $I->amGoingTo('fill the form with valid data');
         $changeSecurityQuestionPage->changePassword('user1', 'password1', 'When is your birthday?', '42');
@@ -26,7 +26,7 @@ class ChangeSecurityQuestionCest
      * @param AcceptanceTester $I
      * @param ChangeSecurityQuestionPage $changeSecurityQuestionPage
      */
-    public function changeSecurityQuestionFailWhenMissingLogin(AcceptanceTester $I, ChangeSecurityQuestionPage $changeSecurityQuestionPage)
+    public function changeSecurityQuestionFailWhenMissingLogin(AcceptanceTester $I, ChangeSecurityQuestionPage $changeSecurityQuestionPage): void
     {
         $I->amGoingTo('fill the form with valid data');
         $changeSecurityQuestionPage->changePassword(null, 'password1', 'When is your birthday?', '42');
@@ -38,7 +38,7 @@ class ChangeSecurityQuestionCest
      * @param AcceptanceTester $I
      * @param ChangeSecurityQuestionPage $changeSecurityQuestionPage
      */
-    public function changeSecurityQuestionFailWhenPasswordWrong(AcceptanceTester $I, ChangeSecurityQuestionPage $changeSecurityQuestionPage)
+    public function changeSecurityQuestionFailWhenPasswordWrong(AcceptanceTester $I, ChangeSecurityQuestionPage $changeSecurityQuestionPage): void
     {
         $I->amGoingTo('fill the form with wrong password');
         $changeSecurityQuestionPage->changePassword('user1', 'badpassword', 'When is your birthday?', '42');
@@ -50,7 +50,7 @@ class ChangeSecurityQuestionCest
      * @param AcceptanceTester $I
      * @param ChangeSecurityQuestionPage $changeSecurityQuestionPage
      */
-    public function changeSecurityQuestionFailWhenMissingPassword(AcceptanceTester $I, ChangeSecurityQuestionPage $changeSecurityQuestionPage)
+    public function changeSecurityQuestionFailWhenMissingPassword(AcceptanceTester $I, ChangeSecurityQuestionPage $changeSecurityQuestionPage): void
     {
         $I->amGoingTo('fill the form with valid data but missing password');
         $changeSecurityQuestionPage->changePassword('user1', null, 'When is your birthday?', '42');
@@ -62,7 +62,7 @@ class ChangeSecurityQuestionCest
      * @param AcceptanceTester $I
      * @param ChangeSecurityQuestionPage $changeSecurityQuestionPage
      */
-    public function changeSecurityQuestionFailWhenMissingAnswer(AcceptanceTester $I, ChangeSecurityQuestionPage $changeSecurityQuestionPage)
+    public function changeSecurityQuestionFailWhenMissingAnswer(AcceptanceTester $I, ChangeSecurityQuestionPage $changeSecurityQuestionPage): void
     {
         $I->amGoingTo('fill the form with valid data but missing answer');
         $changeSecurityQuestionPage->changePassword('user1', 'password1', 'When is your birthday?', null);
@@ -74,7 +74,7 @@ class ChangeSecurityQuestionCest
      * @param AcceptanceTester $I
      * @param ChangeSecurityQuestionPage $changeSecurityQuestionPage
      */
-    public function changeSecurityQuestionFailWhenLoginHasInvalidCharacters(AcceptanceTester $I, ChangeSecurityQuestionPage $changeSecurityQuestionPage)
+    public function changeSecurityQuestionFailWhenLoginHasInvalidCharacters(AcceptanceTester $I, ChangeSecurityQuestionPage $changeSecurityQuestionPage): void
     {
         $I->amGoingTo('fill the form with invalid data');
         $changeSecurityQuestionPage->changePassword('&é"\'(-è_çà)', 'password1', 'When is your birthday?', '42');

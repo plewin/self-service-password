@@ -8,22 +8,25 @@ use App\Service\RecaptchaService;
 use App\Service\UsernameValidityChecker;
 use App\Tests\Functional\FunctionalTestCase;
 use Psr\Log\NullLogger;
+use Symfony\Bridge\Twig\AppVariable;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
+use Twig_Environment;
 
 /**
  * Class CaptchaTestCase
  */
 abstract class CaptchaTestCase extends FunctionalTestCase
 {
-    protected function createOverridedTwig(ContainerInterface $container, array $overrides, $request)
+    protected function createOverridedTwig(ContainerInterface $container, array $overrides, Request $request): Twig_Environment
     {
-        /** @var \Twig_Environment $twig */
+        /** @var Twig_Environment $twig */
         $twig = $container->get('twig');
 
         $globals = $twig->getGlobals();
-        /** @var \Symfony\Bridge\Twig\AppVariable $app */
+        /** @var AppVariable $app */
         $app = $globals['app'];
         // this is only to have a valid app.request.baseUrl global in template
         $stack = new RequestStack();
@@ -37,7 +40,7 @@ abstract class CaptchaTestCase extends FunctionalTestCase
         return $twig;
     }
 
-    protected function createMockRecaptchaService($willVerify)
+    protected function createMockRecaptchaService(bool $willVerify)
     {
         $recaptchaService = $this
             ->getMockBuilder(RecaptchaService::class)
@@ -54,7 +57,11 @@ abstract class CaptchaTestCase extends FunctionalTestCase
 
     protected function createMockUsernameValidityChecker()
     {
-        $usernameValidityChecker = $this->getMock(UsernameValidityChecker::class);
+        $usernameValidityChecker = $this
+            ->getMockBuilder(UsernameValidityChecker::class)
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
         $usernameValidityChecker
             ->expects($this->once())
             ->method('evaluate')
@@ -98,7 +105,11 @@ abstract class CaptchaTestCase extends FunctionalTestCase
             $services_has[] = [$serviceName, true];
         }
 
-        $container = $this->getMock(ContainerInterface::class);
+        $container = $this
+            ->getMockBuilder(ContainerInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
 
         $container
             ->method('getParameter')
@@ -130,7 +141,11 @@ abstract class CaptchaTestCase extends FunctionalTestCase
 
     protected function createMockCsrfTokenManager()
     {
-        $container = $this->getMock(CsrfTokenManagerInterface::class);
+        $container = $this
+            ->getMockBuilder(CsrfTokenManagerInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
         $container
             ->expects($this->any())
             ->method('isTokenValid')

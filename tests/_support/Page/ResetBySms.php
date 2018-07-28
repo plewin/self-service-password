@@ -25,33 +25,27 @@ class ResetBySms
         $this->tester = $I;
     }
 
-    public function findUser($login)
+    public function findUser($login): void
     {
         $I = $this->tester;
 
         $I->amOnPage(self::$URL);
         $I->fillField(self::$loginField, $login);
         $I->click(self::$findUserButton);
-
-        return $this;
     }
 
-    public function sendSms()
+    public function sendSms(): void
     {
         $I = $this->tester;
 
         $I->click(self::$sendSmsButton);
-
-        return $this;
     }
 
-    public function submitSmsCode($code)
+    public function submitSmsCode($code): void
     {
         $I = $this->tester;
 
         $I->fillField(self::$smsCodeField, $code);
         $I->click(self::$submitSmsCodeButton);
-
-        return $this;
     }
 }

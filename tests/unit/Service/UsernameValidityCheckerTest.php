@@ -9,7 +9,7 @@ use Psr\Log\NullLogger;
  */
 class UsernameValidityCheckerTest extends \PHPUnit_Framework_TestCase
 {
-    public function testUsernameCheckerWithoutForbiddenChars()
+    public function testUsernameCheckerWithoutForbiddenChars(): void
     {
         //should only accept alpha numeric usernames
         $uvc = new UsernameValidityChecker();
@@ -22,7 +22,7 @@ class UsernameValidityCheckerTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('badcredentials', $uvc->evaluate('user&name1'));
     }
 
-    public function testUsernameCheckerWithForbiddenChars()
+    public function testUsernameCheckerWithForbiddenChars(): void
     {
         //default forbidden chars
         $uvc = new UsernameValidityChecker('*()&|');
