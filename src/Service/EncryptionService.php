@@ -20,8 +20,10 @@
 
 namespace App\Service;
 
+use App\Exception\CryptographyBrokenException;
 use Defuse\Crypto\Crypto;
-use Defuse\Crypto\Exception\CryptoException;
+use Defuse\Crypto\Exception\EnvironmentIsBrokenException;
+use Defuse\Crypto\Exception\WrongKeyOrModifiedCiphertextException;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 
@@ -33,7 +35,6 @@ class EncryptionService implements LoggerAwareInterface
     use LoggerAwareTrait;
 
     private $keyphrase;
-    private $defuseCrypto;
 
     /**
      * EncryptionService constructor.
@@ -43,7 +44,6 @@ class EncryptionService implements LoggerAwareInterface
     public function __construct(string $keyphrase)
     {
         $this->keyphrase = $keyphrase;
-        $this->defuseCrypto = new Crypto();
     }
 
     /**
@@ -52,10 +52,17 @@ class EncryptionService implements LoggerAwareInterface
      * @param string $data Data to encrypt
      *
      * @return string Encrypted data, base64 encoded
+     *
+     * @throws CryptographyBrokenException
      */
     public function encrypt(string $data): string
     {
-        return base64_encode($this->defuseCrypto->encryptWithPassword($data, $this->keyphrase, true));
+        try {
+            return base64_encode(Crypto::encryptWithPassword($data, $this->keyphrase, true));
+        } catch (EnvironmentIsBrokenException $e) {
+            $this->logger->alert('crypto: encryption error '.$e->getMessage());
+            throw new CryptographyBrokenException('Unable to encrypt data', 500, $e);
+        }
     }
 
     /**
@@ -64,14 +71,18 @@ class EncryptionService implements LoggerAwareInterface
      * @param string $data Encrypted data, base64 encoded
      *
      * @return string Decrypted data
+     *
+     * @throws CryptographyBrokenException
      */
     public function decrypt(string $data): string
     {
         try {
-            return $this->defuseCrypto->decryptWithPassword(base64_decode($data), $this->keyphrase, true);
-        } catch (CryptoException $e) {
+            return Crypto::decryptWithPassword(base64_decode($data), $this->keyphrase, true);
+        } catch (EnvironmentIsBrokenException $e) {
+            $this->logger->alert('crypto: decryption error '.$e->getMessage());
+            throw new CryptographyBrokenException('Unable to encrypt data', 500, $e);
+        } catch (WrongKeyOrModifiedCiphertextException $e) {
             $this->logger->notice('crypto: decryption error '.$e->getMessage());
-
             return '';
         }
     }

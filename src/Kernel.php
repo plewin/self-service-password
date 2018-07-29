@@ -20,7 +20,6 @@
 
 namespace App;
 
-use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
 use Symfony\Component\Config\Loader\LoaderInterface;
 
@@ -29,22 +28,14 @@ use Symfony\Component\Config\Loader\LoaderInterface;
  */
 class Kernel extends BaseKernel
 {
-    /**
-     * Returns an array of bundles to register.
-     *
-     * @return BundleInterface[] An array of bundle instances
-     */
-    public function registerBundles(): array
+    public function registerBundles()
     {
-        $bundles = [];
-        $contents = require __DIR__.'/../config/bundles.php';
+        $contents = require $this->getProjectDir().'/config/bundles.php';
         foreach ($contents as $class => $envs) {
             if (isset($envs['all']) || isset($envs[$this->environment])) {
-                $bundles[] = new $class();
+                yield new $class();
             }
         }
-
-        return $bundles;
     }
 
     /**

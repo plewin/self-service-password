@@ -52,36 +52,36 @@ class LegacyChecker implements CheckerInterface
     }
 
     /**
-     * @param string      $newpassword
-     * @param string|null $oldpassword
+     * @param string      $newPassword
+     * @param string|null $oldPassword
      * @param string|null $login
      *
      * @return string[]
      */
-    public function evaluate(string $newpassword, ?string $oldpassword = null, ?string $login = null): array
+    public function evaluate(string $newPassword, ?string $oldPassword = null, ?string $login = null): array
     {
         $violations = [];
 
         //TODO hum... why utf8 decode ?
-        $length = \strlen(utf8_decode($newpassword));
-        preg_match_all('/[a-z]/', $newpassword, $lowerRes);
+        $length = \strlen(utf8_decode($newPassword));
+        preg_match_all('/[a-z]/', $newPassword, $lowerRes);
         $lower = count($lowerRes[0]);
-        preg_match_all('/[A-Z]/', $newpassword, $upperRes);
+        preg_match_all('/[A-Z]/', $newPassword, $upperRes);
         $upper = count($upperRes[0]);
-        preg_match_all('/\d/', $newpassword, $digitRes);
+        preg_match_all('/\d/', $newPassword, $digitRes);
         $digit = count($digitRes[0]);
 
         $special = 0;
         if (!empty($this->pwdPolicyConfig['pwd_special_chars'])) {
             $specialChars = $this->pwdPolicyConfig['pwd_special_chars'];
-            preg_match_all("/[$specialChars]/", $newpassword, $specialRes);
+            preg_match_all("/[$specialChars]/", $newPassword, $specialRes);
             $special = count($specialRes[0]);
         }
 
         $forbidden = 0;
         if (!empty($this->pwdPolicyConfig['pwd_forbidden_chars'])) {
             $forbiddenChars = $this->pwdPolicyConfig['pwd_forbidden_chars'];
-            preg_match_all("/[$forbiddenChars]/", $newpassword, $forbiddenRes);
+            preg_match_all("/[$forbiddenChars]/", $newPassword, $forbiddenRes);
             $forbidden = count($forbiddenRes[0]);
         }
 
@@ -141,12 +141,12 @@ class LegacyChecker implements CheckerInterface
         }
 
         // Same as current password?
-        if ($this->pwdPolicyConfig['pwd_no_reuse'] && $newpassword === $oldpassword) {
+        if ($this->pwdPolicyConfig['pwd_no_reuse'] && $newPassword === $oldPassword) {
             $violations[] = 'sameasold';
         }
 
         // Same as login?
-        if ($this->pwdPolicyConfig['pwd_diff_login'] && $newpassword === $login) {
+        if ($this->pwdPolicyConfig['pwd_diff_login'] && $newPassword === $login) {
             $violations[] = 'sameaslogin';
         }
 

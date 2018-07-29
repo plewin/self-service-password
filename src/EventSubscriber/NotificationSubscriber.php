@@ -48,7 +48,7 @@ class NotificationSubscriber implements EventSubscriberInterface
     {
         $this->mailNotificationService = $mailNotificationService;
         $this->notifyOnPasswordChanged = $notifyOnPasswordChanged;
-        $this->notifyOnSshKeyChanged = $notifyOnSshKeyChanged;
+        $this->notifyOnSshKeyChanged   = $notifyOnSshKeyChanged;
     }
 
     /**
@@ -58,7 +58,7 @@ class NotificationSubscriber implements EventSubscriberInterface
     {
         return [
             Events::PASSWORD_CHANGED => 'onPasswordChanged',
-            Events::SSH_KEY_CHANGED => 'onSshKeyChanged',
+            Events::SSH_KEY_CHANGED  => 'onSshKeyChanged',
         ];
     }
 

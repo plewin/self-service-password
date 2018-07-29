@@ -20,6 +20,7 @@
 
 namespace App\Controller;
 
+use App\Exception\CryptographyBrokenException;
 use App\Exception\LdapErrorException;
 use App\Exception\LdapInvalidUserCredentialsException;
 use App\Exception\LdapUpdateFailedException;
@@ -28,7 +29,7 @@ use App\Ldap\ClientInterface;
 use App\PasswordStrengthChecker\CheckerInterface;
 use App\Service\TokenManagerService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\GenericEvent;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -45,6 +46,8 @@ class ResetPasswordByTokenController extends Controller
      * @param Request $request
      *
      * @return Response
+     *
+     * @throws CryptographyBrokenException
      */
     public function indexAction(Request $request): Response
     {
@@ -84,29 +87,29 @@ class ResetPasswordByTokenController extends Controller
         }
 
 
-        $newpassword = $request->request->get('newpassword');
-        $confirmpassword = $request->request->get('confirmpassword');
-        if (!$newpassword) {
+        $newPassword = $request->request->get('newpassword');
+        $confirmPassword = $request->request->get('confirmpassword');
+        if (!$newPassword) {
             $problems[] = 'newpasswordrequired';
         }
-        if (!$confirmpassword) {
+        if (!$confirmPassword) {
             $problems[] = 'confirmpasswordrequired';
         }
 
         // Match new and confirm password
-        if ($newpassword !== $confirmpassword) {
+        if ($newPassword !== $confirmPassword) {
             $problems[] = 'nomatch';
         }
 
         if ($this->isCaptchaEnabled() && !$this->isCaptchaSubmitted($request)) {
-            $missings[] = 'captcharequired';
+            $problems[] = 'captcharequired';
         }
 
         /** @var CheckerInterface $passwordChecker */
         $passwordChecker = $this->get('password_strength_checker');
 
         // Check password strength
-        $problems += $passwordChecker->evaluate($newpassword, '', $login);
+        $problems = array_merge($problems, $passwordChecker->evaluate($newPassword, '', $login));
 
         if (count($problems)) {
             return $this->renderErrorPage('', $problems, $request, $login);
@@ -133,7 +136,7 @@ class ResetPasswordByTokenController extends Controller
             }
             $context = $ldapClient->fetchUserEntryContext($login, $wantedContext);
             // Change password
-            $ldapClient->changePassword($context['user_dn'], $newpassword, '', $context);
+            $ldapClient->changePassword($context['user_dn'], $newPassword, '', $context);
         } catch (LdapErrorException $e) {
             // action probably not needed, problem with configuration or ldap is down
             return $this->renderErrorPage('ldaperror', [], $request, $login);
@@ -150,12 +153,12 @@ class ResetPasswordByTokenController extends Controller
         // Delete token if all is ok
         $tokenManagerService->destroyToken();
 
-        /** @var EventDispatcher $eventDispatcher */
+        /** @var EventDispatcherInterface $eventDispatcher */
         $eventDispatcher = $this->get('event_dispatcher');
 
         $event = new GenericEvent();
         $event['login'] = $login;
-        $event['new_password'] = $newpassword;
+        $event['new_password'] = $newPassword;
         $event['old_password'] = null;
         $event['context'] = $context;
 
@@ -175,11 +178,11 @@ class ResetPasswordByTokenController extends Controller
     {
         return $this->render('self-service/reset_password_by_token_form.html.twig', [
             //TODO refactor translation
-            'result' => 'emptyresetbyquestionsform',
+            'result'   => 'emptyresetbyquestionsform',
             'problems' => [],
-            'source' => $request->get('source'),
-            'token' => $request->get('token'),
-            'login' => $login,
+            'source'   => $request->get('source'),
+            'token'    => $request->get('token'),
+            'login'    => $login,
         ] + $this->getCaptchaTemplateExtraVars($request) + $this->getPolicyTemplateExtraVars());
     }
 
@@ -194,11 +197,11 @@ class ResetPasswordByTokenController extends Controller
     private function renderErrorPage(string $result, array $problems, Request $request, $login): Response
     {
         return $this->render('self-service/reset_password_by_token_form.html.twig', [
-            'result' => $result,
+            'result'   => $result,
             'problems' => $problems,
-            'source' => $request->get('source'),
-            'token' => $request->get('token'),
-            'login' => $login,
+            'source'   => $request->get('source'),
+            'token'    => $request->get('token'),
+            'login'    => $login,
         ] + $this->getCaptchaTemplateExtraVars($request) + $this->getPolicyTemplateExtraVars());
     }
 }

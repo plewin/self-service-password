@@ -100,8 +100,6 @@ $container->register('mail_sender', App\Utils\MailSender::class)
 $container->register('mail_notification_service', App\Service\MailNotificationService::class)
     ->addArgument(new Reference('twig'))
     ->addArgument(new Reference('mail_sender'))
-    ->addArgument('%mail_from%')
-    ->addArgument('%mail_from_name%')
     ->addMethodCall('setLogger', [new Reference('logger')])
     ->setPublic(true)
 ;

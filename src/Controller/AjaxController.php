@@ -45,7 +45,7 @@ class AjaxController extends Controller
 
         $result = $dictionaryChecker->evaluate($password);
 
-        return $this->json(['found' => in_array('indictionary', $result)]);
+        return $this->json(['found' => \in_array('indictionary', $result, true)]);
     }
 
 }

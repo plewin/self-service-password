@@ -164,7 +164,7 @@ class AppExtension extends \Twig_Extension implements GlobalsInterface
             'notstrong',
         ];
 
-        if (in_array($msg, $dangerList)) {
+        if (\in_array($msg, $dangerList, true)) {
             return 'danger';
         }
 
@@ -182,7 +182,7 @@ class AppExtension extends \Twig_Extension implements GlobalsInterface
             'sshkeyrequired',
         ];
 
-        if (in_array($msg, $warningList)) {
+        if (\in_array($msg, $warningList, true)) {
             return 'warning';
         }
 
@@ -192,16 +192,16 @@ class AppExtension extends \Twig_Extension implements GlobalsInterface
     /**
      * Get the maximum criticality found in $msgs
      *
-     * @param array $msgs
+     * @param array $messages
      *
      * @return string
      */
-    public function getMaxCriticality(array $msgs): string
+    public function getMaxCriticality(array $messages): string
     {
         $maxCriticality = 'success';
 
-        foreach ($msgs as $msg) {
-            $criticality = $this->getCriticality($msg);
+        foreach ($messages as $message) {
+            $criticality = $this->getCriticality($message);
             if ('danger' === $criticality) {
                 return 'danger';
             }
@@ -255,7 +255,7 @@ class AppExtension extends \Twig_Extension implements GlobalsInterface
             'notstrong',
         ];
 
-        return in_array($msg, $errorList);
+        return \in_array($msg, $errorList, true);
     }
 
     /*

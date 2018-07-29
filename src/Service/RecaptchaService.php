@@ -36,7 +36,7 @@ class RecaptchaService implements LoggerAwareInterface
     /**
      * @var string shared secret with reCAPTCHA server
      */
-    private $privatekey;
+    private $privateKey;
 
     /**
      * @var null|string FQCN of request method, null for default
@@ -45,12 +45,13 @@ class RecaptchaService implements LoggerAwareInterface
 
     /**
      * RecaptchaService constructor.
-     * @param string $privatekey
+     *
+     * @param string $privateKey
      * @param string|RequestMethod $requestMethod
      */
-    public function __construct(string $privatekey, $requestMethod)
+    public function __construct(string $privateKey, $requestMethod)
     {
-        $this->privatekey = $privatekey;
+        $this->privateKey    = $privateKey;
         $this->requestMethod = $requestMethod;
     }
 
@@ -64,7 +65,7 @@ class RecaptchaService implements LoggerAwareInterface
      */
     public function verify(Request $request, string $login): string
     {
-        $recaptcha = new ReCaptcha($this->privatekey, null === $this->requestMethod ? null : new $this->requestMethod());
+        $recaptcha = new ReCaptcha($this->privateKey, null === $this->requestMethod ? null : new $this->requestMethod());
         $resp = $recaptcha->verify($request->request->get('g-recaptcha-response'), $request->getClientIp());
 
         if (!$resp->isSuccess()) {

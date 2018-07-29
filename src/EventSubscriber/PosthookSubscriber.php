@@ -44,7 +44,7 @@ class PosthookSubscriber implements EventSubscriberInterface
      */
     public function __construct(bool $posthookEnabled, $posthookExecutor)
     {
-        $this->posthookEnabled = $posthookEnabled;
+        $this->posthookEnabled  = $posthookEnabled;
         $this->posthookExecutor = $posthookExecutor;
     }
 

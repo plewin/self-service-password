@@ -18,28 +18,11 @@
  * GPL License: http://www.gnu.org/licenses/gpl.txt
  */
 
-namespace App\Controller;
-
-use App\PasswordStrengthChecker\CheckerInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+namespace App\Exception;
 
 /**
- * Trait AsYouType
+ * Class CryptographyException
  */
-trait AsYouTypeTrait
+class CryptographyException extends \Exception
 {
-    protected function getPolicyTemplateExtraVars(): array
-    {
-        /** @var ContainerInterface $container */
-        $container = $this->container;
-
-        if ($container->getParameter('enable_as_you_type_policy_enforcement') !== true) {
-            return [];
-        }
-
-        /** @var CheckerInterface $passwordStrengthChecker */
-        $passwordStrengthChecker = $this->get('password_strength_checker');
-
-        return ['rules' => $passwordStrengthChecker->getRules()];
-    }
 }

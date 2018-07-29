@@ -20,6 +20,8 @@
 
 namespace App\Utils;
 
+use App\Exception\CryptographyBrokenException;
+
 /**
  * Class PasswordEncoder
  */
@@ -43,6 +45,8 @@ class PasswordEncoder
      * @param string|null $salt
      *
      * @return string
+     *
+     * @throws CryptographyBrokenException
      */
     public function hash(string $scheme, string $password, ?string $salt = null): string
     {
@@ -114,10 +118,17 @@ class PasswordEncoder
      * @param string|null $salt
      *
      * @return string
+     *
+     * @throws CryptographyBrokenException
      */
     private function makeSshaPassword(string $password, ?string $salt = null): string
     {
-        $salt = $salt ?? random_bytes(4);
+        try {
+            $salt = $salt ?? random_bytes(4);
+        } catch (\Exception $e) {
+            throw new CryptographyBrokenException('Unable to generate salt');
+        }
+
         return '{SSHA}'.base64_encode(pack('H*', sha1($password.$salt)).$salt);
     }
 
@@ -128,10 +139,16 @@ class PasswordEncoder
      * @param string|null $salt
      *
      * @return string
+     *
+     * @throws CryptographyBrokenException
      */
     private function makeSsha256Password(string $password, ?string $salt = null): string
     {
-        $salt = $salt ?? random_bytes(4);
+        try {
+            $salt = $salt ?? random_bytes(4);
+        } catch (\Exception $e) {
+            throw new CryptographyBrokenException('Unable to generate salt');
+        }
 
         return '{SSHA256}'.base64_encode(pack('H*', hash('sha256', $password.$salt)).$salt);
     }
@@ -139,14 +156,20 @@ class PasswordEncoder
     /**
      * Create SSHA384 password
      *
-     * @param string      $password
+     * @param string $password
      * @param string|null $salt
      *
      * @return string
+     *
+     * @throws CryptographyBrokenException
      */
     private function makeSsha384Password(string $password, ?string $salt = null): string
     {
-        $salt = $salt ?? random_bytes(4);
+        try {
+            $salt = $salt ?? random_bytes(4);
+        } catch (\Exception $e) {
+            throw new CryptographyBrokenException('Unable to generate salt');
+        }
 
         return '{SSHA384}'.base64_encode(pack('H*', hash('sha384', $password.$salt)).$salt);
     }
@@ -158,10 +181,16 @@ class PasswordEncoder
      * @param string|null $salt
      *
      * @return string
+     *
+     * @throws CryptographyBrokenException
      */
     private function makeSsha512Password(string $password, ?string $salt = null): string
     {
-        $salt = $salt ?? random_bytes(4);
+        try {
+            $salt = $salt ?? random_bytes(4);
+        } catch (\Exception $e) {
+            throw new CryptographyBrokenException('Unable to generate salt');
+        }
 
         return '{SSHA512}'.base64_encode(pack('H*', hash('sha512', $password.$salt)).$salt);
     }
@@ -221,10 +250,16 @@ class PasswordEncoder
      * @param string|null $salt
      *
      * @return string
+     *
+     * @throws CryptographyBrokenException
      */
     private function makeSmd5Password(string $password, ?string $salt = null): string
     {
-        $salt = $salt ?? random_bytes(4);
+        try {
+            $salt = $salt ?? random_bytes(4);
+        } catch (\Exception $e) {
+            throw new CryptographyBrokenException('Unable to generate salt');
+        }
 
         return '{SMD5}'.base64_encode(pack('H*', md5($password.$salt)).$salt);
     }
@@ -248,6 +283,8 @@ class PasswordEncoder
      * @param array  $hashOptions
      *
      * @return string
+     *
+     * @throws CryptographyBrokenException
      */
     private function makeCryptPassword(string $password, array $hashOptions): string
     {
@@ -261,8 +298,12 @@ class PasswordEncoder
         $possible = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ./';
         $salt = '';
 
-        while (strlen($salt) < $saltLength) {
-            $salt .= substr($possible, random_int(0, strlen($possible) - 1), 1);
+        while (\strlen($salt) < $saltLength) {
+            try {
+                $salt .= $possible[random_int(0, \strlen($possible) - 1)];
+            } catch (\Exception $e) {
+                throw new CryptographyBrokenException('Unable to generate salt');
+            }
         }
 
         if (isset($hashOptions['crypt_salt_prefix'])) {

@@ -20,6 +20,7 @@
 
 namespace App\Service;
 
+use App\Exception\CryptographyBrokenException;
 use App\Exception\TokenExpiredException;
 use App\Exception\TokenNotFoundException;
 use Psr\Log\LoggerAwareInterface;
@@ -52,15 +53,17 @@ class TokenManagerService implements LoggerAwareInterface
      */
     public function __construct(SessionInterface $session, $encryptionService, ?int $tokenLifetime)
     {
-        $this->session = $session;
+        $this->session           = $session;
         $this->encryptionService = $encryptionService;
-        $this->tokenLifetime = $tokenLifetime;
+        $this->tokenLifetime     = $tokenLifetime;
     }
 
     /**
      * @param string $login
      *
      * @return string
+     *
+     * @throws CryptographyBrokenException
      */
     public function createToken(string $login): string
     {
@@ -84,18 +87,19 @@ class TokenManagerService implements LoggerAwareInterface
      *
      * @throws TokenExpiredException
      * @throws TokenNotFoundException
+     * @throws CryptographyBrokenException
      */
     public function openToken(string $token): string
     {
         // Open session with the token
-        $tokenid = $this->encryptionService->decrypt($token);
+        $sessionId = $this->encryptionService->decrypt($token);
 
-        $this->session->setId($tokenid);
+        $this->session->setId($sessionId);
         $this->session->start();
 
         if (!$this->session->has('token')) {
-            $this->logger->notice("Unable to open session $tokenid");
-            throw new TokenNotFoundException();
+            $this->logger->notice("Unable to open session $sessionId");
+            throw new TokenNotFoundException("Unable to open session $sessionId");
         }
 
         $token = $this->session->get('token');
@@ -105,7 +109,7 @@ class TokenManagerService implements LoggerAwareInterface
             $tokenAgeInSeconds = time() - $tokenTime;
             if ($tokenAgeInSeconds > $this->tokenLifetime) {
                 $this->logger->notice('Token lifetime expired');
-                throw new TokenExpiredException();
+                throw new TokenExpiredException('Token lifetime expired');
             }
         }
 

@@ -27,7 +27,7 @@ use App\Ldap\ClientInterface;
 use App\PasswordStrengthChecker\CheckerInterface;
 use App\Service\UsernameValidityChecker;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\GenericEvent;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -57,9 +57,9 @@ class ResetPasswordByQuestionController extends Controller
 
         // Render empty form
         return $this->render('self-service/reset_password_by_question_form.html.twig', [
-            'result' => 'emptyresetbyquestionsform',
-            'problems' => [],
-            'login' => $request->get('login'),
+            'result'    => 'emptyresetbyquestionsform',
+            'problems'  => [],
+            'login'     => $request->get('login'),
             'questions' => $this->getParameter('questions'),
         ] + $this->getCaptchaTemplateExtraVars($request) + $this->getPolicyTemplateExtraVars());
     }
@@ -93,8 +93,8 @@ class ResetPasswordByQuestionController extends Controller
         $login = $request->get('login', '');
         $question = $request->request->get('question', '');
         $answer = $request->request->get('answer', '');
-        $newpassword = $request->request->get('newpassword', '');
-        $confirmpassword = $request->request->get('confirmpassword', '');
+        $newPassword = $request->request->get('newpassword', '');
+        $confirmPassword = $request->request->get('confirmpassword', '');
 
         $missings = [];
         if (!$login) {
@@ -107,10 +107,10 @@ class ResetPasswordByQuestionController extends Controller
         if (!$answer) {
             $missings[] = 'answerrequired';
         }
-        if (!$newpassword) {
+        if (!$newPassword) {
             $missings[] = 'newpasswordrequired';
         }
-        if (!$confirmpassword) {
+        if (!$confirmPassword) {
             $missings[] = 'confirmpasswordrequired';
         }
 
@@ -134,7 +134,7 @@ class ResetPasswordByQuestionController extends Controller
         }
 
         // Match new and confirm password
-        if ($newpassword !== $confirmpassword) {
+        if ($newPassword !== $confirmPassword) {
             $errors[] = 'nomatch';
         }
 
@@ -142,7 +142,7 @@ class ResetPasswordByQuestionController extends Controller
         /** @var CheckerInterface $passwordChecker */
         $passwordChecker = $this->get('password_strength_checker');
 
-        $errors += $passwordChecker->evaluate($newpassword, '', $login);
+        $errors = array_merge($errors, $passwordChecker->evaluate($newPassword, '', $login));
 
         if (count($errors) > 0) {
             return $this->renderFormWithError('', $errors, $request);
@@ -172,7 +172,7 @@ class ResetPasswordByQuestionController extends Controller
                 return $this->renderFormWithError('', ['answernomatch'], $request);
             }
 
-            $ldapClient->changePassword($context['user_dn'], $newpassword, '', $context);
+            $ldapClient->changePassword($context['user_dn'], $newPassword, '', $context);
         } catch (LdapErrorException $e) {
             // action probably not needed, problem with configuration or ldap is down
             return $this->renderFormWithError('ldaperror', [], $request);
@@ -184,12 +184,12 @@ class ResetPasswordByQuestionController extends Controller
             return $this->renderFormWithError('', ['badcredentials'], $request);
         }
 
-        /** @var EventDispatcher $eventDispatcher */
+        /** @var EventDispatcherInterface $eventDispatcher */
         $eventDispatcher = $this->get('event_dispatcher');
 
         $event = new GenericEvent();
         $event['login'] = $login;
-        $event['new_password'] = $newpassword;
+        $event['new_password'] = $newPassword;
         $event['old_password'] = null;
         $event['context'] = $context;
 
@@ -209,9 +209,9 @@ class ResetPasswordByQuestionController extends Controller
     private function renderFormWithError(string $result, array $problems, Request $request): Response
     {
         return $this->render('self-service/reset_password_by_question_form.html.twig', [
-            'result' => $result,
-            'problems' => $problems,
-            'login' => $request->get('login'),
+            'result'    => $result,
+            'problems'  => $problems,
+            'login'     => $request->get('login'),
             'questions' => $this->getParameter('questions'),
         ] + $this->getCaptchaTemplateExtraVars($request) + $this->getPolicyTemplateExtraVars());
     }

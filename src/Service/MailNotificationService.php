@@ -38,7 +38,7 @@ class MailNotificationService implements LoggerAwareInterface
     private $mailFromAddress;
     private $mailFromName;
 
-    /** @var @var Environment */
+    /** @var Environment */
     private $twig;
 
     /**
@@ -46,15 +46,11 @@ class MailNotificationService implements LoggerAwareInterface
      *
      * @param Environment $twig
      * @param MailSender  $mailerSender
-     * @param string      $mailFromAddress
-     * @param string      $mailFromName
      */
-    public function __construct(Environment $twig, MailSender $mailerSender, string $mailFromAddress, string $mailFromName)
+    public function __construct(Environment $twig, MailSender $mailerSender)
     {
-        $this->twig = $twig;
+        $this->twig       = $twig;
         $this->mailSender = $mailerSender;
-        $this->mailFromAddress = $mailFromAddress;
-        $this->mailFromName = $mailFromName;
     }
 
     /**

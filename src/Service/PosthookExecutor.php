@@ -39,16 +39,16 @@ class PosthookExecutor
 
     /**
      * @param string      $login
-     * @param string      $newpassword
-     * @param string|null $oldpassword
+     * @param string      $newPassword
+     * @param string|null $oldPassword
      *
      * @return array
      */
-    public function execute(string $login, string $newpassword, ?string $oldpassword = null): array
+    public function execute(string $login, string $newPassword, ?string $oldPassword = null): array
     {
-        $command = escapeshellcmd($this->command).' '.escapeshellarg($login).' '.escapeshellarg($newpassword);
-        if (null !== $oldpassword) {
-            $command .= ' '.escapeshellarg($oldpassword);
+        $command = escapeshellcmd($this->command).' '.escapeshellarg($login).' '.escapeshellarg($newPassword);
+        if (null !== $oldPassword) {
+            $command .= ' '.escapeshellarg($oldPassword);
         }
 
         $output = '';

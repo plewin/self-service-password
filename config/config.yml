@@ -72,4 +72,4 @@ twig:
         enable_password_toggle_visibility: '%enable_password_toggle_visibility%'
         enable_form_autocomplete: '%enable_form_autocomplete%'
         mail_from: '%mail_from%'
-        mail_from_name: '%mail_from%'
+        mail_from_name: '%mail_from_name%'

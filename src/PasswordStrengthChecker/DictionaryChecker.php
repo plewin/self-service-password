@@ -44,26 +44,26 @@ class DictionaryChecker implements CheckerInterface
      */
     public function __construct(array $config, RequestStack $requestStack, RouterInterface $router)
     {
-        $this->enable = $config['enable'];
-        $this->dirs = $config['dirs'];
+        $this->enable       = $config['enable'];
+        $this->dirs         = $config['dirs'];
         $this->requestStack = $requestStack;
-        $this->router = $router;
+        $this->router       = $router;
     }
 
     /**
-     * @param string      $newpassword
-     * @param string|null $oldpassword
+     * @param string      $newPassword
+     * @param string|null $oldPassword
      * @param string|null $login
      *
      * @return string[]
      */
-    public function evaluate(string $newpassword, ?string $oldpassword = null, ?string $login = null): array
+    public function evaluate(string $newPassword, ?string $oldPassword = null, ?string $login = null): array
     {
         if (!$this->enable){
             return [];
         }
 
-        $pattern = escapeshellarg('^'.preg_quote($newpassword).'$');
+        $pattern = escapeshellarg('^'.preg_quote($newPassword).'$');
 
         $finder = new Finder();
         $finder->files()->in($this->dirs);
@@ -105,7 +105,6 @@ class DictionaryChecker implements CheckerInterface
         $context = new RequestContext();
         $context->fromRequest($this->requestStack->getCurrentRequest());
         $this->router->setContext($context);
-        // of course, the die is an example
         $apiUrl = $this->router->generate('api-dictionary-check');
 
         return [

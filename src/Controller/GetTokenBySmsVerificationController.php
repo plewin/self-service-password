@@ -20,6 +20,7 @@
 
 namespace App\Controller;
 
+use App\Exception\CryptographyBrokenException;
 use App\Exception\LdapEntryFoundInvalidException;
 use App\Exception\LdapErrorException;
 use App\Exception\LdapInvalidUserCredentialsException;
@@ -48,6 +49,8 @@ class GetTokenBySmsVerificationController extends Controller
      * @param Request $request
      *
      * @return Response
+     *
+     * @throws CryptographyBrokenException
      */
     public function indexAction(Request $request): Response
     {
@@ -56,9 +59,9 @@ class GetTokenBySmsVerificationController extends Controller
         }
 
         $token = $request->get('token');
-        $smstoken = $request->get('smstoken');
+        $smsToken = $request->get('smstoken');
 
-        if (!empty($token) && !empty($smstoken) && $request->request->has('_csrf_token')) {
+        if (!empty($token) && !empty($smsToken) && $request->request->has('_csrf_token')) {
             if (!$this->isCsrfTokenValid('sms_token_attempt', $request->request->get('_csrf_token'))) {
                 throw $this->createAccessDeniedException('Invalid CSRF token');
             }
@@ -98,6 +101,8 @@ class GetTokenBySmsVerificationController extends Controller
      * @param Request $request
      *
      * @return Response
+     *
+     * @throws CryptographyBrokenException
      */
     private function processSmsTokenAttempt(Request $request): Response
     {
@@ -105,7 +110,7 @@ class GetTokenBySmsVerificationController extends Controller
         $encryptionService = $this->get('encryption_service');
 
         // Open session with the token
-        $tokenid = $encryptionService->decrypt($request->get('token'));
+        $tokenId = $encryptionService->decrypt($request->get('token'));
         $receivedSmsCode = $request->get('smstoken');
 
         $session = $this->get('session');
@@ -115,7 +120,7 @@ class GetTokenBySmsVerificationController extends Controller
         $logger = $this->get('logger');
 
         if (!$session->has('smstoken')) {
-            $logger->notice("Unable to open session $tokenid");
+            $logger->notice("Unable to open session $tokenId");
 
             return $this->render('self-service/sms_verification_sms_code_failure.html.twig', [
                 //TODO precise error
@@ -123,16 +128,16 @@ class GetTokenBySmsVerificationController extends Controller
             ]);
         }
 
-        $smstoken = $session->get('smstoken');
+        $smsToken = $session->get('smstoken');
 
-        $login        = $smstoken['login'];
-        $sessiontoken = $smstoken['smstoken'];
-        $attempts     = $smstoken['attempts'];
+        $login        = $smsToken['login'];
+        $sessionToken = $smsToken['smstoken'];
+        $attempts     = $smsToken['attempts'];
 
         if (null !== $this->getParameter('token_lifetime')) {
             // Manage lifetime with session content
-            $tokentime = $smstoken['time'];
-            $smsTokenAgeInSeconds = time() - $tokentime;
+            $tokenTime = $smsToken['time'];
+            $smsTokenAgeInSeconds = time() - $tokenTime;
             if ($smsTokenAgeInSeconds > $this->getParameter('token_lifetime')) {
                 $logger->warning('Token lifetime expired');
                 $session->remove('smstoken');
@@ -145,10 +150,10 @@ class GetTokenBySmsVerificationController extends Controller
         }
 
 
-        if (!hash_equals($sessiontoken, $receivedSmsCode)) {
+        if (!hash_equals($sessionToken, $receivedSmsCode)) {
             if ($attempts < $this->getParameter('max_attempts')) {
-                $smstoken['attempts'] += 1;
-                $session->set('smstoken', $smstoken);
+                $smsToken['attempts'] += 1;
+                $session->set('smstoken', $smsToken);
                 $logger->notice("SMS token $receivedSmsCode not valid, attempt $attempts");
                 $result = 'tokenattempts';
 
@@ -184,6 +189,8 @@ class GetTokenBySmsVerificationController extends Controller
      * @param Request $request
      *
      * @return Response
+     *
+     * @throws CryptographyBrokenException
      */
     private function generateAndSendSmsToken(Request $request): Response
     {
@@ -206,21 +213,21 @@ class GetTokenBySmsVerificationController extends Controller
         /** @var SessionInterface $session */
         $session = $this->get('session');
         $session->start();
-        $smstoken = [
-            'login' => $login,
+        $smsToken = [
+            'login'    => $login,
             'smstoken' => $smsCode,
-            'time' => time(),
+            'time'     => time(),
             'attempts' => 0,
         ];
-        $session->set('smstoken', $smstoken);
+        $session->set('smstoken', $smsToken);
 
         /** @var TranslatorInterface $translator */
         $translator = $this->get('translator');
 
         $data = [
-            'sms_attribute' => $sms,
+            'sms_attribute'   => $sms,
             'smsresetmessage' => $translator->trans('smsresetmessage'),
-            'smstoken' => $smsCode,
+            'smstoken'        => $smsCode,
         ];
 
         /** @var SmsNotificationService $smsService */
@@ -257,6 +264,8 @@ class GetTokenBySmsVerificationController extends Controller
      * @param Request $request
      *
      * @return Response
+     *
+     * @throws CryptographyBrokenException
      */
     private function processSearchUserFormData(Request $request): Response
     {
@@ -290,7 +299,7 @@ class GetTokenBySmsVerificationController extends Controller
                 /** @var LoggerInterface $logger */
                 $logger = $this->get('logger');
                 $logger->critical("No SMS number found for user $login");
-                throw new LdapEntryFoundInvalidException();
+                throw new LdapEntryFoundInvalidException("No SMS number found for user $login");
             }
         } catch (LdapErrorException $e) {
             // action probably not needed, problem with configuration or ldap is down
@@ -313,11 +322,11 @@ class GetTokenBySmsVerificationController extends Controller
 
         // Render search user from entry
         return $this->render('self-service/sms_verification_user_entry_confirmation.html.twig', [
-            'result' => 'smsuserfound',
-            'displayname' => $context['user_displayname'],
-            'login' => $login,
+            'result'              => 'smsuserfound',
+            'displayname'         => $context['user_displayname'],
+            'login'               => $login,
             'encrypted_sms_login' => $encryptedSmsLogin,
-            'sms' => $this->getParameter('sms_partially_hide_number') ? substr_replace($sms, '****', 4, 4) : $sms,
+            'sms'                 => $this->getParameter('sms_partially_hide_number') ? substr_replace($sms, '****', 4, 4) : $sms,
         ] + $this->getCaptchaTemplateExtraVars($request));
     }
 
@@ -331,9 +340,9 @@ class GetTokenBySmsVerificationController extends Controller
     private function renderSearchUserFormWithError(string $result, array $problems, Request $request): Response
     {
         return $this->render('self-service/sms_verification_user_search_form.html.twig', [
-            'result' => $result,
+            'result'   => $result,
             'problems' => $problems,
-            'login' => $request->get('login'),
+            'login'    => $request->get('login'),
         ] + $this->getCaptchaTemplateExtraVars($request));
     }
 
@@ -347,7 +356,7 @@ class GetTokenBySmsVerificationController extends Controller
     {
         return $this->render('self-service/sms_verification_sms_code_form.html.twig', [
             'result' => $result,
-            'token' => $token,
+            'token'  => $token,
         ]);
     }
 }

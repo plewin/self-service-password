@@ -42,18 +42,18 @@ class MultiChecker implements CheckerInterface, ContainerAwareInterface
     }
 
     /**
-     * @param string      $newpassword
-     * @param string|null $oldpassword
+     * @param string      $newPassword
+     * @param string|null $oldPassword
      * @param string|null $login
      *
      * @return string[]
      */
-    public function evaluate(string $newpassword, ?string $oldpassword = null, ?string $login = null): array
+    public function evaluate(string $newPassword, ?string $oldPassword = null, ?string $login = null): array
     {
         $violations = [];
 
         foreach ($this->checkers as $checker) {
-            $violations += $checker->evaluate($newpassword, $oldpassword, $login);
+            $violations += $checker->evaluate($newPassword, $oldPassword, $login);
         }
 
         return $violations;

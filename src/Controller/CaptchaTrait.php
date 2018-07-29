@@ -81,8 +81,8 @@ trait CaptchaTrait
                 break;
             case 'gregwar':
                 $session = $request->getSession();
+                /** @noinspection NullPointerExceptionInspection */
                 $expected = $session->get('captcha');
-                //TODO handle null
 
                 if (hash_equals($expected, $request->request->get('captcha'))) {
                     $isCaptchaValid = true;
@@ -116,17 +116,17 @@ trait CaptchaTrait
     /**
      * @param Request $request
      *
-     * @return string
+     * @return string HTML inline base64
      */
     private function generateCaptchaImage(Request $request): string
     {
         $builder = new CaptchaBuilder();
         $builder->build();
-        $inline = $builder->inline();
         $phrase = $builder->getPhrase();
         $session = $request->getSession();
+        /** @noinspection NullPointerExceptionInspection */
         $session->set('captcha', $phrase);
 
-        return $inline;
+        return $builder->inline();
     }
 }

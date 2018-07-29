@@ -34,7 +34,7 @@ class SmsNotificationService implements LoggerAwareInterface
     private $smsMethod;
     /** @var MailSender */
     private $mailSender;
-    private $smsmailto;
+    private $smsMailTo;
     private $mailFromAddress;
     private $mailFromName;
     private $smsApiLib;
@@ -52,12 +52,12 @@ class SmsNotificationService implements LoggerAwareInterface
     public function __construct(string $smsMethod, $mailSender, string $smsMailTo, string $mailFromAddress, string $mailFromName, string $smsApiLib)
     {
         //TODO translator ?
-        $this->smsMethod = $smsMethod;
-        $this->mailSender = $mailSender;
-        $this->smsmailto = $smsMailTo;
+        $this->smsMethod       = $smsMethod;
+        $this->mailSender      = $mailSender;
+        $this->smsMailTo       = $smsMailTo;
         $this->mailFromAddress = $mailFromAddress;
-        $this->mailFromName = $mailFromName;
-        $this->smsApiLib = $smsApiLib;
+        $this->mailFromName    = $mailFromName;
+        $this->smsApiLib       = $smsApiLib;
     }
 
     /**
@@ -86,7 +86,7 @@ class SmsNotificationService implements LoggerAwareInterface
 
         if ($this->smsMethod === 'mail') {
             $from = [$this->mailFromAddress => $this->mailFromName];
-            $to = $this->smsmailto;
+            $to = $this->smsMailTo;
             if ($this->mailSender->send($to, $from, $smsMailSubject, $smsMessage)) {
                 $this->logger->notice("Send SMS code $smsCode by ".$this->smsMethod." to $sms");
 

@@ -20,6 +20,7 @@
 
 namespace App\Controller;
 
+use App\Exception\CryptographyBrokenException;
 use App\Exception\LdapEntryFoundInvalidException;
 use App\Exception\LdapErrorException;
 use App\Exception\LdapInvalidUserCredentialsException;
@@ -44,6 +45,8 @@ class GetTokenByEmailVerificationController extends Controller
      * @param Request $request
      *
      * @return Response
+     *
+     * @throws CryptographyBrokenException
      */
     public function indexAction(Request $request): Response
     {
@@ -80,6 +83,8 @@ class GetTokenByEmailVerificationController extends Controller
      * @param LoggerInterface $logger
      *
      * @return Response
+     *
+     * @throws CryptographyBrokenException
      */
     private function processFormData(Request $request, LoggerInterface $logger): Response
     {
@@ -141,7 +146,7 @@ class GetTokenByEmailVerificationController extends Controller
 
                 if (null === $context['user_mail']) {
                     $logger->warning("Mail not found for user $login");
-                    throw new LdapEntryFoundInvalidException();
+                    throw new LdapEntryFoundInvalidException("Mail not found for user $login");
                 }
 
                 $mail = $context['user_mail'];
@@ -195,9 +200,9 @@ class GetTokenByEmailVerificationController extends Controller
     private function renderFormWithError(string $result, array $problems, Request $request): Response
     {
         return $this->render('self-service/email_verification_form.html.twig', [
-            'result' => $result,
+            'result'   => $result,
             'problems' => $problems,
-            'login' => $request->get('login'),
+            'login'    => $request->get('login'),
         ] + $this->getCaptchaTemplateExtraVars($request));
     }
 }

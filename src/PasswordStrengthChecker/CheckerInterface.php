@@ -26,13 +26,13 @@ namespace App\PasswordStrengthChecker;
 interface CheckerInterface
 {
     /**
-     * @param string      $newpassword
-     * @param string|null $oldpassword
+     * @param string      $newPassword
+     * @param string|null $oldPassword
      * @param string|null $login
      *
      * @return string[]
      */
-    public function evaluate(string $newpassword, ?string $oldpassword = null, ?string $login = null): array;
+    public function evaluate(string $newPassword, ?string $oldPassword = null, ?string $login = null): array;
 
     /**
      * @return array

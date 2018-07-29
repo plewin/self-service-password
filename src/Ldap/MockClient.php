@@ -103,7 +103,7 @@ class MockClient implements ClientInterface
         $dn = 'uid='.$login.',ou=People,dc=example,dc=com';
 
         if (!isset($this->mockData[$dn])) {
-            throw new LdapInvalidUserCredentialsException();
+            throw new LdapInvalidUserCredentialsException('Could not find user in mock ldap');
         }
 
         $context['user_dn'] = $dn;
@@ -117,12 +117,12 @@ class MockClient implements ClientInterface
     /**
      * @inheritdoc
      */
-    public function checkOldPassword(string $oldpassword, array &$context): void
+    public function checkOldPassword(string $oldPassword, array &$context): void
     {
         $dn = $context['user_dn'];
 
-        if ($this->mockData[$dn]['userPassword'] !== $oldpassword) {
-            throw new LdapInvalidUserCredentialsException();
+        if ($this->mockData[$dn]['userPassword'] !== $oldPassword) {
+            throw new LdapInvalidUserCredentialsException('Old password is incorrect in mock ldap');
         }
     }
 
@@ -143,13 +143,13 @@ class MockClient implements ClientInterface
     {
         $dn = 'uid='.$login.',ou=People,dc=example,dc=com';
         if (!isset($this->mockData[$dn])) {
-            throw new LdapInvalidUserCredentialsException();
+            throw new LdapInvalidUserCredentialsException('Invalid login in mock ldap');
         }
 
         $validMail = $this->mockData[$dn]['mail'];
 
         if ($mail !== $validMail) {
-            throw new LdapEntryFoundInvalidException();
+            throw new LdapEntryFoundInvalidException('Invalid mail in mock ldap');
         }
 
         return true;
@@ -158,7 +158,7 @@ class MockClient implements ClientInterface
     /**
      * @inheritdoc
      */
-    public function changeQuestion(string $userdn, string $question, string $answer): void
+    public function changeQuestion(string $userDn, string $question, string $answer): void
     {
 
     }
@@ -166,18 +166,18 @@ class MockClient implements ClientInterface
     /**
      * @inheritdoc
      */
-    public function changePassword(string $entryDn, string $newpassword, string $oldpassword, array $context = []): void
+    public function changePassword(string $entryDn, string $newPassword, string $oldPassword, array $context = []): void
     {
         if ('uid=user10,ou=People,dc=example,dc=com' === $entryDn) {
             // poor guy has password change forbidden in password policy
-            throw new LdapUpdateFailedException();
+            throw new LdapUpdateFailedException('Password change rejected by password policy');
         }
     }
 
     /**
      * @inheritdoc
      */
-    public function changeSshKey(string $entryDn, string $sshkey): void
+    public function changeSshKey(string $entryDn, string $sshPublicKey): void
     {
 
     }

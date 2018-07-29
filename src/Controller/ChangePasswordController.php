@@ -28,7 +28,7 @@ use App\Ldap\ClientInterface;
 use App\PasswordStrengthChecker\CheckerInterface;
 use App\Service\UsernameValidityChecker;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\GenericEvent;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -92,21 +92,21 @@ class ChangePasswordController extends Controller
         }
 
         $login = $request->get('login', '');
-        $oldpassword = $request->request->get('oldpassword', '');
-        $newpassword = $request->request->get('newpassword', '');
-        $confirmpassword = $request->request->get('confirmpassword', '');
+        $oldPassword = $request->request->get('oldpassword', '');
+        $newPassword = $request->request->get('newpassword', '');
+        $confirmPassword = $request->request->get('confirmpassword', '');
 
         $missings = [];
         if (!$login) {
             $missings[] = 'loginrequired';
         }
-        if (!$oldpassword) {
+        if (!$oldPassword) {
             $missings[] = 'oldpasswordrequired';
         }
-        if (!$newpassword) {
+        if (!$newPassword) {
             $missings[] = 'newpasswordrequired';
         }
-        if (!$confirmpassword) {
+        if (!$confirmPassword) {
             $missings[] = 'confirmpasswordrequired';
         }
 
@@ -130,7 +130,7 @@ class ChangePasswordController extends Controller
         }
 
         // Match new and confirm password
-        if ($newpassword !== $confirmpassword) {
+        if ($newPassword !== $confirmPassword) {
             $errors[] = 'nomatch';
         }
 
@@ -138,7 +138,7 @@ class ChangePasswordController extends Controller
         $passwordChecker = $this->get('password_strength_checker');
 
         // Check password strength
-        $errors += $passwordChecker->evaluate($newpassword, $oldpassword, $login);
+        $errors = array_merge($errors, $passwordChecker->evaluate($newPassword, $oldPassword, $login));
 
         if (count($errors) > 0) {
             return $this->renderFormWithError('', $errors, $request);
@@ -157,8 +157,8 @@ class ChangePasswordController extends Controller
             // we want user's email address if we have to notify
             $wanted = $this->getParameter('notify_user_on_password_change') ? ['dn', 'samba', 'shadow', 'mail'] : ['dn', 'samba', 'shadow'];
             $context = $ldapClient->fetchUserEntryContext($login, $wanted);
-            $ldapClient->checkOldPassword($oldpassword, $context);
-            $ldapClient->changePassword($context['user_dn'], $newpassword, $oldpassword, $context);
+            $ldapClient->checkOldPassword($oldPassword, $context);
+            $ldapClient->changePassword($context['user_dn'], $newPassword, $oldPassword, $context);
         } catch (LdapErrorException $e) {
             // action probably not needed, problem with configuration or ldap is down
             return $this->renderFormWithError('ldaperror', [], $request);
@@ -170,13 +170,13 @@ class ChangePasswordController extends Controller
             return $this->renderFormWithError('', ['passworderror'], $request);
         }
 
-        /** @var EventDispatcher $eventDispatcher */
+        /** @var EventDispatcherInterface $eventDispatcher */
         $eventDispatcher = $this->get('event_dispatcher');
 
         $event = new GenericEvent();
         $event['login'] = $login;
-        $event['new_password'] = $newpassword;
-        $event['old_password'] = $oldpassword;
+        $event['new_password'] = $newPassword;
+        $event['old_password'] = $oldPassword;
         $event['context'] = $context;
 
         $eventDispatcher->dispatch(Events::PASSWORD_CHANGED, $event);

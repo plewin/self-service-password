@@ -27,7 +27,7 @@ use App\Exception\LdapUpdateFailedException;
 use App\Ldap\ClientInterface;
 use App\Service\UsernameValidityChecker;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\GenericEvent;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -88,7 +88,7 @@ class ChangeSshKeyController extends Controller
 
         $login = $request->get('login', '');
         $password = $request->request->get('password', '');
-        $sshkey = $request->request->get('sshkey', '');
+        $sshPublicKey = $request->request->get('sshkey', '');
 
         $missings = [];
         if (!$login) {
@@ -97,7 +97,7 @@ class ChangeSshKeyController extends Controller
         if (!$password) {
             $missings[] = 'passwordrequired';
         }
-        if (!$sshkey) {
+        if (!$sshPublicKey) {
             $missings[] = 'sshkeyrequired';
         }
         if ($this->isCaptchaEnabled() && !$this->isCaptchaSubmitted($request)) {
@@ -137,7 +137,7 @@ class ChangeSshKeyController extends Controller
             $wanted = $this->getParameter('notify_user_on_sshkey_change') ? ['dn', 'mail'] : ['dn'];
             $context = $ldapClient->fetchUserEntryContext($login, $wanted);
             $ldapClient->checkOldPassword($password, $context);
-            $ldapClient->changeSshKey($context['user_dn'], $sshkey);
+            $ldapClient->changeSshKey($context['user_dn'], $sshPublicKey);
         } catch (LdapErrorException $e) {
             // action probably not needed, problem with configuration or ldap is down
             return $this->renderFormWithError('ldaperror', [], $request);
@@ -150,12 +150,12 @@ class ChangeSshKeyController extends Controller
             return $this->renderFormWithError('', ['invalidkeyerror'], $request);
         }
 
-        /** @var EventDispatcher $eventDispatcher */
+        /** @var EventDispatcherInterface $eventDispatcher */
         $eventDispatcher = $this->get('event_dispatcher');
 
         $event = new GenericEvent();
         $event['login'] = $login;
-        $event['ssh_key'] = $sshkey;
+        $event['ssh_key'] = $sshPublicKey;
         $event['context'] = $context;
 
         $eventDispatcher->dispatch(Events::SSH_KEY_CHANGED, $event);
@@ -174,9 +174,9 @@ class ChangeSshKeyController extends Controller
     private function renderFormWithError(string $result, array $problems, Request $request): Response
     {
         return $this->render('self-service/change_ssh_key_form.html.twig', [
-            'result' => $result,
+            'result'   => $result,
             'problems' => $problems,
-            'login' => $request->get('login'),
+            'login'    => $request->get('login'),
         ] + $this->getCaptchaTemplateExtraVars($request));
     }
 }

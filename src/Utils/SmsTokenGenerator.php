@@ -20,6 +20,8 @@
 
 namespace App\Utils;
 
+use App\Exception\CryptographyBrokenException;
+
 /**
  * Class SmsTokenGenerator
  */
@@ -31,7 +33,7 @@ class SmsTokenGenerator
      * SmsTokenGenerator constructor.
      * @param int $smsTokenLength
      */
-    public function __construct($smsTokenLength)
+    public function __construct(int $smsTokenLength)
     {
         $this->smsTokenLength = $smsTokenLength;
     }
@@ -40,19 +42,17 @@ class SmsTokenGenerator
      * Generate SMS token
      *
      * @return string
+     *
+     * @throws CryptographyBrokenException
      */
     public function generateSmsCode(): string
     {
-        //TODO remove unnecessary complexity
-        $range = explode(',', '48-57');
-        $numRanges = count($range);
-        $smstoken = '';
-        for ($i = 1; $i <= $this->smsTokenLength; ++$i) {
-            $r = random_int(0, $numRanges-1);
-            [$min, $max] = explode('-', $range[$r]);
-            $smstoken .= chr(random_int($min, $max));
+        try {
+            $code = random_int(0, $this->smsTokenLength * 10 - 1);
+        } catch (\Exception $e) {
+            throw new CryptographyBrokenException('Could not generate sms code');
         }
 
-        return $smstoken;
+        return str_pad($code, $this->smsTokenLength, '0', STR_PAD_LEFT);
     }
 }

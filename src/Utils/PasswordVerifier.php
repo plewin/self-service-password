@@ -20,6 +20,7 @@
 
 namespace App\Utils;
 
+use App\Exception\CryptographyBrokenException;
 use InvalidArgumentException;
 
 /**
@@ -44,6 +45,8 @@ class PasswordVerifier
      * @param string $ldapHash
      *
      * @return bool
+     *
+     * @throws CryptographyBrokenException
      */
     public function verify(string $password, string $ldapHash): bool
     {
