@@ -9,10 +9,10 @@ Vagrant.configure("2") do |config|
   end
 
   config.vm.define "test-samba4" do |ds389|
-      # Minimal centos 7 with virtualbox guest additions
-      ds389.vm.box = "geerlingguy/centos7"
-      ds389.vm.network "forwarded_port", guest: 389, host: 11389
-    end
+    # Minimal centos 7 with virtualbox guest additions
+    ds389.vm.box = "geerlingguy/centos7"
+    ds389.vm.network "forwarded_port", guest: 389, host: 11389
+  end
 
   config.vm.define "test-apacheds" do |apacheds|
     apacheds.vm.box = "ubuntu/xenial64"

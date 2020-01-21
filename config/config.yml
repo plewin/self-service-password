@@ -27,8 +27,6 @@ framework:
         resource: "%kernel.root_dir%/../config/routing.yml"
         strict_requirements: ~
     csrf_protection: ~
-    templating:
-        engines: ['twig']
     default_locale:  "%locale%"
     trusted_hosts:   ~
     session:

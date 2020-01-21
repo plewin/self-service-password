@@ -21,6 +21,7 @@
 namespace App\Twig;
 
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
+use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
 use Twig\Extension\GlobalsInterface;
@@ -28,7 +29,7 @@ use Twig\Extension\GlobalsInterface;
 /**
  * Class AppExtension
  */
-class AppExtension extends \Twig_Extension implements GlobalsInterface
+class AppExtension extends AbstractExtension implements GlobalsInterface
 {
     /** @var string */
     private $pwdShowPolicy;
@@ -232,6 +233,14 @@ class AppExtension extends \Twig_Extension implements GlobalsInterface
     public function getMeta(): array
     {
         return $this->meta;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getGlobals()
+    {
+        return [];
     }
 
     /**

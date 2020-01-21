@@ -18,27 +18,16 @@
  * GPL License: http://www.gnu.org/licenses/gpl.txt
  */
 
-namespace App;
+namespace App\Events;
 
-/**
- * Class Events
- *
- * For the event naming conventions, see:
- * https://symfony.com/doc/current/components/event_dispatcher.html#naming-conventions.
- */
-final class Events
+use Symfony\Component\EventDispatcher\GenericEvent;
+
+class SshKeyChangedEvent extends GenericEvent
 {
-    /**
-     * @Event("Symfony\Component\EventDispatcher\GenericEvent")
-     *
-     * @var string
-     */
-    public const PASSWORD_CHANGED = 'password.changed';
-
-    /**
-     * @Event("Symfony\Component\EventDispatcher\GenericEvent")
-     *
-     * @var string
-     */
-    public const SSH_KEY_CHANGED = 'sshkey.changed';
+    public function __construct($login, $sshKey, array $context = [])
+    {
+        $this['login'] = $login;
+        $this['ssh_key'] = $sshKey;
+        $this['context'] = $context;
+    }
 }

@@ -20,7 +20,7 @@
 
 namespace App\Controller;
 
-use App\Events;
+use App\Events\SshKeyChangedEvent;
 use App\Exception\LdapErrorException;
 use App\Exception\LdapInvalidUserCredentialsException;
 use App\Exception\LdapUpdateFailedException;
@@ -28,7 +28,6 @@ use App\Ldap\ClientInterface;
 use App\Service\UsernameValidityChecker;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\EventDispatcher\GenericEvent;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -153,12 +152,9 @@ class ChangeSshKeyController extends Controller
         /** @var EventDispatcherInterface $eventDispatcher */
         $eventDispatcher = $this->get('event_dispatcher');
 
-        $event = new GenericEvent();
-        $event['login'] = $login;
-        $event['ssh_key'] = $sshPublicKey;
-        $event['context'] = $context;
+        $event = new SshKeyChangedEvent($login, $sshPublicKey, $context);
 
-        $eventDispatcher->dispatch(Events::SSH_KEY_CHANGED, $event);
+        $eventDispatcher->dispatch($event);
 
         // Render success page
         return $this->render('self-service/change_ssh_key_success.html.twig');

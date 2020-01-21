@@ -13,6 +13,3 @@ monolog:
             level: debug
         console:
             type:  console
-
-#twig:
-#    exception_controller: exception.controller::showError

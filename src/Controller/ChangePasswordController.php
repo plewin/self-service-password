@@ -20,7 +20,7 @@
 
 namespace App\Controller;
 
-use App\Events;
+use App\Events\PasswordChangedEvent;
 use App\Exception\LdapErrorException;
 use App\Exception\LdapInvalidUserCredentialsException;
 use App\Exception\LdapUpdateFailedException;
@@ -29,7 +29,6 @@ use App\PasswordStrengthChecker\CheckerInterface;
 use App\Service\UsernameValidityChecker;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\EventDispatcher\GenericEvent;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -173,13 +172,9 @@ class ChangePasswordController extends Controller
         /** @var EventDispatcherInterface $eventDispatcher */
         $eventDispatcher = $this->get('event_dispatcher');
 
-        $event = new GenericEvent();
-        $event['login'] = $login;
-        $event['new_password'] = $newPassword;
-        $event['old_password'] = $oldPassword;
-        $event['context'] = $context;
+        $event = new PasswordChangedEvent($login, $oldPassword, $newPassword, $context);
 
-        $eventDispatcher->dispatch(Events::PASSWORD_CHANGED, $event);
+        $eventDispatcher->dispatch($event);
 
         // render page success
         return $this->render('self-service/change_password_success.html.twig');

@@ -2,10 +2,10 @@
 
 namespace App\Tests\Unit\EventSubscriber;
 
-use App\Events;
+use App\Events\PasswordChangedEvent;
+use App\Events\SshKeyChangedEvent;
 use App\EventSubscriber\NotificationSubscriber;
 use App\Service\MailNotificationService;
-use Symfony\Component\EventDispatcher\GenericEvent;
 
 /**
  * Class NotificationSubscriberTest
@@ -31,7 +31,7 @@ class NotificationSubscriberTest extends \PHPUnit_Framework_TestCase
             true
         );
 
-        $event = new GenericEvent(Events::PASSWORD_CHANGED, [/*not important*/]);
+        $event = new PasswordChangedEvent('login', 'old_pass', 'new_pass', []);
 
         $notificationSubscriber->onPasswordChanged($event);
     }
@@ -55,7 +55,7 @@ class NotificationSubscriberTest extends \PHPUnit_Framework_TestCase
             false
         );
 
-        $event = new GenericEvent(Events::SSH_KEY_CHANGED, [/*not important*/]);
+        $event = new SshKeyChangedEvent('', '', []);
 
         $notificationSubscriber->onSshKeyChanged($event);
     }
@@ -80,14 +80,14 @@ class NotificationSubscriberTest extends \PHPUnit_Framework_TestCase
             false
         );
 
-        $event = new GenericEvent(Events::PASSWORD_CHANGED, [
-            'login' => 'login',
-            'new_password' => 'new_password',
-            'old_password' => 'old_password',
-            'context' => [
+        $event = new PasswordChangedEvent(
+            'login',
+            'new_password',
+            'old_password',
+            [
                 'user_mail' => 'user1@example.com'
             ]
-        ]);
+        );
 
         $notificationSubscriber->onPasswordChanged($event);
     }
@@ -112,13 +112,7 @@ class NotificationSubscriberTest extends \PHPUnit_Framework_TestCase
             true
         );
 
-        $event = new GenericEvent(Events::PASSWORD_CHANGED, [
-            'login' => 'login',
-            'ssh_key' => 'edrtjiok',
-            'context' => [
-                'user_mail' => 'user1@example.com'
-            ]
-        ]);
+        $event = new SshKeyChangedEvent('login', 'edrtjiok', ['user_mail' => 'user1@example.com']);
 
         $notificationSubscriber->onSshKeyChanged($event);
     }

@@ -2,10 +2,9 @@
 
 namespace App\Tests\Unit\EventSubscriber;
 
-use App\Events;
+use App\Events\PasswordChangedEvent;
 use App\EventSubscriber\PosthookSubscriber;
 use App\Service\PosthookExecutor;
-use Symfony\Component\EventDispatcher\GenericEvent;
 
 /**
  * Class PosthookSubscriberTest
@@ -28,11 +27,12 @@ class PosthookSubscriberTest extends \PHPUnit_Framework_TestCase
 
         $posthookSubscriber = new PosthookSubscriber(true, $mock);
 
-        $event = new GenericEvent(Events::PASSWORD_CHANGED, [
-            'login' => 'login',
-            'new_password' => 'new_password',
-            'old_password' => 'old_password',
-        ]);
+        $event = new PasswordChangedEvent(
+            'login',
+            'old_password',
+            'new_password',
+            []
+        );
 
         $posthookSubscriber->onPasswordChanged($event);
     }
@@ -52,11 +52,12 @@ class PosthookSubscriberTest extends \PHPUnit_Framework_TestCase
 
         $posthookSubscriber = new PosthookSubscriber(false, $mock);
 
-        $event = new GenericEvent(Events::PASSWORD_CHANGED, [
-            'login' => 'login',
-            'new_password' => 'new_password',
-            'old_password' => 'old_password',
-        ]);
+        $event = new PasswordChangedEvent(
+            'login',
+            'old_password',
+            'new_password',
+            []
+        );
 
         $posthookSubscriber->onPasswordChanged($event);
     }

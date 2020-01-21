@@ -20,7 +20,7 @@
 
 namespace App\EventSubscriber;
 
-use App\Events;
+use App\Events\PasswordChangedEvent;
 use App\Service\PosthookExecutor;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\EventDispatcher\GenericEvent;
@@ -54,7 +54,7 @@ class PosthookSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            Events::PASSWORD_CHANGED => 'onPasswordChanged',
+            PasswordChangedEvent::class => 'onPasswordChanged',
         ];
     }
 

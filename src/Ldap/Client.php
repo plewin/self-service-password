@@ -27,6 +27,7 @@ use App\Exception\LdapInvalidUserCredentialsException;
 use App\Exception\LdapUpdateFailedException;
 use App\Utils\PasswordEncoder;
 use Psr\Log\LoggerAwareTrait;
+use function in_array;
 
 /**
  * Class Client
@@ -182,22 +183,22 @@ class Client implements ClientInterface
 
         $entry = $this->getUserEntry($login);
 
-        if (\in_array('dn', $wanted, true)) {
+        if (in_array('dn', $wanted, true)) {
             $this->updateContextDn($entry, $context);
         }
-        if (\in_array('samba', $wanted, true) || \in_array('shadow', $wanted, true)) {
+        if (in_array('samba', $wanted, true) || in_array('shadow', $wanted, true)) {
             $this->updateContextSambaAndShadow($entry, $context);
         }
-        if (\in_array('mail', $wanted, true)) {
+        if (in_array('mail', $wanted, true)) {
             $this->updateContextMail($entry, $context);
         }
-        if (\in_array('sms', $wanted, true)) {
+        if (in_array('sms', $wanted, true)) {
             $this->updateContextSms($entry, $context);
         }
-        if (\in_array('displayname', $wanted, true)) {
+        if (in_array('displayname', $wanted, true)) {
             $this->updateContextDisplayName($entry, $context);
         }
-        if (\in_array('questions', $wanted, true)) {
+        if (in_array('questions', $wanted, true)) {
             $this->updateContextQuestions($entry, $context);
         }
 
@@ -301,7 +302,7 @@ class Client implements ClientInterface
         // Remove 'count' key
         unset($ocValues['count']);
 
-        if (!\in_array($this->answerObjectClass, $ocValues, true)) {
+        if (!in_array($this->answerObjectClass, $ocValues, true)) {
             // Answer objectClass is not present, add it
             array_push($ocValues, $this->answerObjectClass);
             $ocValues = array_values($ocValues);
@@ -608,8 +609,8 @@ class Client implements ClientInterface
         // Check objectClass to allow samba and shadow updates
         $ocValues = ldap_get_values($this->ldap, $entry, 'objectClass');
 
-        $context['user_is_samba_account'] = \in_array('sambaSamAccount', $ocValues, true) || \in_array('sambaSAMAccount', $ocValues, true);
-        $context['user_is_shadow_account'] = \in_array('shadowAccount', $ocValues, true);
+        $context['user_is_samba_account'] = in_array('sambaSamAccount', $ocValues, true) || in_array('sambaSAMAccount', $ocValues, true);
+        $context['user_is_shadow_account'] = in_array('shadowAccount', $ocValues, true);
     }
 
     /**

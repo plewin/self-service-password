@@ -8,7 +8,7 @@
     "ext-ldap": "*",
     "ext-ctype": "*",
     "ext-iconv": "*",
-    "twig/twig": "~1.34",
+    "twig/twig": "^2.12",
     "defuse/php-encryption": "^2.2",
     "google/recaptcha": "~1.1",
     "psr/log": "~1.0",
